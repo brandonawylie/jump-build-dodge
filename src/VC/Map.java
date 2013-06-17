@@ -20,6 +20,7 @@ public class Map{
 	public List<Platform> platforms = new ArrayList<Platform>();
 	public List<CollectableBlock> collectableBlocks = new ArrayList<>();
 	public List<CollectableBlock> placedCollectableBlocks = new ArrayList<>();
+	PatternManager pManager = new PatternManager();
 	//map settings
 	Image bg;
 	int backgroundX, backgroundY;
@@ -64,6 +65,8 @@ public class Map{
 		p.y -= p.height +15;
 		collectableBlocks.add(cb);
 		placedCollectableBlocks.add(cb);
+		pManager.addBlock(cb);
+		pManager.checkPattern();
 	}
 	
 	public void removeBlock(CollectableBlock b){
