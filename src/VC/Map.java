@@ -1,14 +1,9 @@
 package VC;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -24,7 +19,7 @@ public class Map{
 	//game objects that belong to the map
 	public List<Platform> platforms = new ArrayList<Platform>();
 	public List<CollectableBlock> collectableBlocks = new ArrayList<>();
-
+	public List<CollectableBlock> placedCollectableBlocks = new ArrayList<>();
 	//map settings
 	Image bg;
 	int backgroundX, backgroundY;
@@ -49,7 +44,7 @@ public class Map{
 	}
 
 	/**
-	 * 	draws the map and all contained objects
+	 * draws the map and all contained objects
 	 * {Platform, CollectableBlock}
 	 *
 	 * @param g
@@ -57,7 +52,6 @@ public class Map{
 	 * @param viewportY
 	 */
 	public void draw(Graphics g, int viewportX, int viewportY){
-
 		for(Platform p : platforms)
 			p.draw(g, viewportX, viewportY);
 		for(CollectableBlock b : collectableBlocks)
@@ -69,6 +63,14 @@ public class Map{
 		CollectableBlock cb =  new CollectableBlock(p.x, p.y, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, c);
 		p.y -= p.height +15;
 		collectableBlocks.add(cb);
+		placedCollectableBlocks.add(cb);
+	}
+	
+	public void removeBlock(CollectableBlock b){
+		if(collectableBlocks.contains(b))
+			collectableBlocks.remove(b);
+		if(placedCollectableBlocks.contains(b))
+			placedCollectableBlocks.remove(b);
 	}
 
 	/**
