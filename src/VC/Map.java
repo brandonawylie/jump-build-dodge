@@ -24,12 +24,9 @@ public class Map{
 	//game objects that belong to the map
 	public List<Platform> platforms = new ArrayList<Platform>();
 	public List<CollectableBlock> collectableBlocks = new ArrayList<>();
-<<<<<<< HEAD
 	public List<CollectableBlock> placedCollectableBlocks = new ArrayList<>();
 	PatternManager pManager = new PatternManager();
-=======
 
->>>>>>> parent of f749d39... refactored code
 	//map settings
 	Image bg;
 	int backgroundX, backgroundY;
@@ -74,10 +71,9 @@ public class Map{
 		CollectableBlock cb =  new CollectableBlock(p.x, p.y, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, c);
 		p.y -= p.height +15;
 		collectableBlocks.add(cb);
-<<<<<<< HEAD
 		placedCollectableBlocks.add(cb);
 		pManager.addBlock(cb);
-//		pManager.checkPattern();
+		pManager.checkPattern();
 	}
 
 	public void removeBlock(CollectableBlock b){
