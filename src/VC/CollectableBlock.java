@@ -1,9 +1,3 @@
-/**
-* This class is a block that the player can pick up and place to create patterns
-*
-* @author brandon
-*/
-
 package VC;
 import java.util.Random;
 import org.newdawn.slick.Color;
@@ -35,11 +29,11 @@ public class CollectableBlock {
 	public void draw(Graphics g, int shiftX, int shiftY) {
 		//draw the outline of the block
 		g.setColor(outline);
-	    g.drawRect(x - shiftX, y - shiftY, width, height);
+	    g.drawRect(x + width/4 - shiftX, y + height/4 - shiftY, width/2, height/2);
 
 		//fill the block
 	    g.setColor(color);
-	    g.fillRect(x - shiftX + 1, y - shiftY + 1, width - 1, height - 1);
+	    g.fillRect(x + width/4 - shiftX + 1, y + width/4 - shiftY + 1, width/2 - 1, height/2 - 1);
     }
 
 	//returns the x coordinate of this platform
