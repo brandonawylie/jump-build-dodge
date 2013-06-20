@@ -110,7 +110,6 @@ public class GameplayState extends BasicGameState{
 		}
 		//right
 		if(gc.getInput().isKeyDown(Input.KEY_D)){
-			System.out.println("going right");
 			player.moveRight();
 		}else{
 			player.movingRight = false;
@@ -164,8 +163,8 @@ public class GameplayState extends BasicGameState{
 				if(r.intersects(mouseclick)){
 					player.addBlock(b.getColor());
 					map.removeBlock(b);
-					
-					
+
+
 				}
 
 

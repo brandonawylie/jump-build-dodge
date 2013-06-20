@@ -33,15 +33,15 @@ public class Map{
 	 * @param player the map uses the player to react given the circumestances
 	 */
 	public void update(Player player){
-		for(Platform p : platforms){
-			double distance = Math.sqrt(Math.pow((p.x + p.width/2) - (player.x + player.width/2), 2) + Math.pow((p.y + p.height/2) - (player.y + player.height/2), 2));
-			if(!p.isRandom && distance < 16){
-				p.setRandomColor(System.currentTimeMillis());
-			}else if(p.isRandom && distance >= 16)
-				p.resetColor();
-
-			p.update();
-		}
+//		for(Platform p : platforms){
+//			double distance = Math.sqrt(Math.pow((p.x + p.width/2) - (player.x + player.width/2), 2) + Math.pow((p.y + p.height/2) - (player.y + player.height/2), 2));
+//			if(!p.isRandom && distance < 16){
+//				p.setRandomColor(System.currentTimeMillis());
+//			}else if(p.isRandom && distance >= 16)
+//				p.resetColor();
+//
+//			p.update();
+//		}
 	}
 
 	/**
@@ -66,9 +66,9 @@ public class Map{
 		collectableBlocks.add(cb);
 		placedCollectableBlocks.add(cb);
 		pManager.addBlock(cb);
-		pManager.checkPattern();
+//		pManager.checkPattern();
 	}
-	
+
 	public void removeBlock(CollectableBlock b){
 		if(collectableBlocks.contains(b))
 			collectableBlocks.remove(b);
@@ -89,7 +89,7 @@ public class Map{
 	 *  				level_n_n.map
 	 *  				<player>_settings.xml??
 	 *  				players.txt
-	 *  
+	 *
 	 *  Output: Diagnostics
 	 *
 	 *
