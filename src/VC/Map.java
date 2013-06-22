@@ -25,11 +25,8 @@ public class Map{
 	public List<Platform> platforms = new ArrayList<Platform>();
 	public List<CollectableBlock> collectableBlocks = new ArrayList<>();
 	public List<CollectableBlock> placedCollectableBlocks = new ArrayList<>();
-<<<<<<< HEAD
-	PatternManager pManager = new PatternManager();
 
-=======
->>>>>>> parent of e10ca1f... implemented some of the pattern recog stuff
+	PatternManager pManager = new PatternManager();
 	//map settings
 	Image bg;
 	int backgroundX, backgroundY;
@@ -82,8 +79,6 @@ public class Map{
 			collectableBlocks.remove(b);
 		if(placedCollectableBlocks.contains(b))
 			placedCollectableBlocks.remove(b);
-=======
->>>>>>> parent of f749d39... refactored code
 	}
 
 	/**

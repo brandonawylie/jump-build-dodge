@@ -162,14 +162,10 @@ public class GameplayState extends BasicGameState{
 				Rectangle r = new Rectangle(b.getX() - 2, b.getY() - 2, b.width + 12, b.height + 12);
 				if(r.intersects(mouseclick)){
 					player.addBlock(b.getColor());
-<<<<<<< HEAD
 					map.removeBlock(b);
 
-
-=======
 					System.out.println("got it");
 					map.collectableBlocks.remove(i);
->>>>>>> parent of f749d39... refactored code
 				}
 
 
