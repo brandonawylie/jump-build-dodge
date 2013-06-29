@@ -13,6 +13,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 
 public class Map{
 	//info about how the map is rendered. not sure how this fits with the new setup
@@ -64,6 +65,11 @@ public class Map{
 			p.draw(g, viewportX, viewportY);
 		for(CollectableBlock b : collectableBlocks)
 			b.draw(g, viewportX, viewportY);
+		
+		g.setColor(Color.yellow);
+		for(Rectangle r : pManager.patternRects){
+			g.drawRect(r.getX() - viewportX, r.getY() - viewportY, 10, 10);
+		}
 	}
 
 	public void placeCollectableBlock(Player p, Color c){
@@ -72,6 +78,7 @@ public class Map{
 		p.y -= p.height +15;
 		collectableBlocks.add(cb);
 		placedCollectableBlocks.add(cb);
+		pManager.checkPattern(placedCollectableBlocks);
 	}
 
 	public void removeBlock(CollectableBlock b){

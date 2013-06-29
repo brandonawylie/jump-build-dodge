@@ -62,11 +62,11 @@ public class GameplayState extends BasicGameState{
 	 *
 	 */
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-
-		//render the map and all associated objects
-		map.draw(g, VIEWPORT_X, VIEWPORT_Y);
 		//render the player
 		player.render(g, VIEWPORT_X, VIEWPORT_Y);
+		//render the map and all associated objects
+		map.draw(g, VIEWPORT_X, VIEWPORT_Y);
+
 
 	}
 
@@ -75,6 +75,12 @@ public class GameplayState extends BasicGameState{
 	 *
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		
+		//update game elements
+
+		map.update(player);
+		player.update(gc, delta, map);
+
 
 		//adjust the viewport to center around the player. everything will obey this shift.
 		VIEWPORT_X = (int) (player.x - PlatformerGame.WIDTH/2);
@@ -173,10 +179,7 @@ public class GameplayState extends BasicGameState{
 
 		}
 
-		//update game elements
-		player.update(gc, delta, map);
 
-		map.update(player);
 
 	}
 }
