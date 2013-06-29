@@ -17,8 +17,8 @@ import org.newdawn.slick.geom.Rectangle;
 
 public class Map{
 	//info about how the map is rendered. not sure how this fits with the new setup
-	int blockWidth = 10;
-	int blockHeight = 10;
+	public static int blockWidth = 10;
+	public static int blockHeight = 10;
 	//used to position the player
 	public int playerX, playerY;
 

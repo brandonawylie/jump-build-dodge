@@ -47,20 +47,25 @@ public class PatternManager {
 		 *Start Here->[0,0,R,R,B,R,R,0,0,0
 		 *            B,0,0,0,0,0,0,0,0,B]
 		 */
-		Rectangle rect = new Rectangle(lowestX, lowestY, 10, 10);
+		int bWidth = Map.blockWidth*GameplayState.VIEWPORT_RATIO_X;
+		int bHeight = Map.blockHeight*GameplayState.VIEWPORT_RATIO_Y;
 		int r = 0;
-		while(rect.getY() + 10 < highestY){
-			int c = 0;
-			
-			//System.out.println("++ rows ==> (" + rect.getX() + "," + rect.getY() + ")");
-			while(rect.getX() + 10 < highestX){
-				System.out.println("++ columns");
-				rect = new Rectangle(lowestX + 10*c, lowestY + 10*r, 10, 10);
+		int c = 0;
+		float bx = (lowestX - 1) + bWidth*c;
+		float by = (lowestY - 1) + bHeight*r;
+		while(by + bHeight <= highestY){
+			bx = (lowestX - 1) + bWidth*c;
+			by = (lowestY - 1) + bHeight*r;
+			while(bx + bWidth <= highestX){
+				bx = (lowestX - 1) + bWidth*c;
+				by = (lowestY - 1) + bHeight*r;
+				Rectangle rect = new Rectangle(bx,by,bWidth,bHeight);
 				patternRects.add(rect);
 				c++;
 			}
 			r++;
-			rect = new Rectangle(lowestX + 10*c, lowestY + 10*r, 10, 10);
+			bx = (lowestX - 1) + bWidth*c;
+			by = (lowestY - 1) + bHeight*r;
 		}
 	}
 }
