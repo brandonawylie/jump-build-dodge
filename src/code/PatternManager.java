@@ -10,7 +10,7 @@ public class PatternManager {
 	//public List<CollectableBlock> blocks = new ArrayList<CollectableBlock>();
 	public List<Rectangle> patternRects = new ArrayList<Rectangle>();
 	public List<String[][]> patterns = new ArrayList<>();
-
+	String[][] curArr;
 	
 	/***
 	 * This method goes through the blocks and tries to guess the pattern in a String[][]
@@ -56,10 +56,12 @@ public class PatternManager {
 		float bwidth = Map.blockWidth*GameplayState.VIEWPORT_RATIO_X;
 		float bheight = Map.blockWidth*GameplayState.VIEWPORT_RATIO_Y;
 		int r = 0;
+		List<List<String>> pArr = new ArrayList<>();	
 		do{
 			bx = lowestX;
 			by = lowestY + r*bheight;
 			int c = 0;
+			List<String> row = new ArrayList<>();
 			do{
 				bx = lowestX + c*bwidth;
 				c++;
@@ -71,13 +73,21 @@ public class PatternManager {
 					if(brect.intersects(rect)){
 						Color color = block.getColor();
 						if(color.equals(color.red)){
-							
+							row.add("r");
+						}else if(color.equals(color.blue)){
+							row.add("b");
+						}else if(color.equals(color.yellow)){
+							row.add("y");
+						}else if(color.equals(color.pink)){
+							row.add("p");
 						}
 							
 					}
 				}
 			}while(highestX - (bx + bwidth) > bwidth/2);
+			pArr.add(row);
 			r++;
 		}while(highestY - (by + bheight) > bheight/2);
+		curArr =
 	}
 }
