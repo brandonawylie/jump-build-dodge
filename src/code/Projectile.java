@@ -1,4 +1,4 @@
-package VC;
+package code;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;

@@ -1,6 +1,9 @@
-package VC;
-import java.util.*;
+package code;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.newdawn.slick.Color;
 import org.newdawn.slick.geom.Rectangle;
 
 public class PatternManager {
@@ -14,6 +17,7 @@ public class PatternManager {
 	 * 
 	 */
 	public void checkPattern(List<CollectableBlock> blocks){
+		patternRects.clear();
 		//go through all the blocks and see which one is leftmost, topmost, bottommost and rightmost
 		/*
 		 *              top, start here
@@ -47,25 +51,33 @@ public class PatternManager {
 		 *Start Here->[0,0,R,R,B,R,R,0,0,0
 		 *            B,0,0,0,0,0,0,0,0,B]
 		 */
-		int bWidth = Map.blockWidth*GameplayState.VIEWPORT_RATIO_X;
-		int bHeight = Map.blockHeight*GameplayState.VIEWPORT_RATIO_Y;
+		float bx = lowestX;
+		float by = lowestY;
+		float bwidth = Map.blockWidth*GameplayState.VIEWPORT_RATIO_X;
+		float bheight = Map.blockWidth*GameplayState.VIEWPORT_RATIO_Y;
 		int r = 0;
-		int c = 0;
-		float bx = (lowestX - 1) + bWidth*c;
-		float by = (lowestY - 1) + bHeight*r;
-		while(by + bHeight <= highestY){
-			bx = (lowestX - 1) + bWidth*c;
-			by = (lowestY - 1) + bHeight*r;
-			while(bx + bWidth <= highestX){
-				bx = (lowestX - 1) + bWidth*c;
-				by = (lowestY - 1) + bHeight*r;
-				Rectangle rect = new Rectangle(bx,by,bWidth,bHeight);
-				patternRects.add(rect);
+		do{
+			bx = lowestX;
+			by = lowestY + r*bheight;
+			int c = 0;
+			do{
+				bx = lowestX + c*bwidth;
 				c++;
-			}
+				Rectangle rect = new Rectangle(bx, by, bwidth, bheight);
+				patternRects.add(rect);
+				rect = new Rectangle(bx + bwidth/2, by + bheight/2, 1, 1);
+				for(CollectableBlock block : blocks){
+					Rectangle brect = new Rectangle(block.getX(), block.getY(), block.width, block.height);
+					if(brect.intersects(rect)){
+						Color color = block.getColor();
+						if(color.equals(color.red)){
+							
+						}
+							
+					}
+				}
+			}while(highestX - (bx + bwidth) > bwidth/2);
 			r++;
-			bx = (lowestX - 1) + bWidth*c;
-			by = (lowestY - 1) + bHeight*r;
-		}
+		}while(highestY - (by + bheight) > bheight/2);
 	}
 }

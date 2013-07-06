@@ -1,4 +1,4 @@
-package VC;
+package code;
 
 
 import java.io.BufferedReader;
