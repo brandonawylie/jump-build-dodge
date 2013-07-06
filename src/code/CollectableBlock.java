@@ -29,11 +29,11 @@ public class CollectableBlock {
 	public void draw(Graphics g, int shiftX, int shiftY) {
 		//draw the outline of the block
 		g.setColor(outline);
-	    g.drawRect(x + width/4 - shiftX, y + height/4 - shiftY, width/2, height/2);
+	    g.drawRect(x - shiftX, y - shiftY, width, height);
 
 		//fill the block
 	    g.setColor(color);
-	    g.fillRect(x + width/4 - shiftX + 1, y + width/4 - shiftY + 1, width/2 - 1, height/2 - 1);
+	    g.fillRect(x - shiftX + 1, y - shiftY + 1, width - 1, height - 1);
     }
 
 	//returns the x coordinate of this platform

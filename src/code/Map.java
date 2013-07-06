@@ -40,15 +40,15 @@ public class Map{
 	 * @param player the map uses the player to react given the circumestances
 	 */
 	public void update(Player player){
-//		for(Platform p : platforms){
-//			double distance = Math.sqrt(Math.pow((p.x + p.width/2) - (player.x + player.width/2), 2) + Math.pow((p.y + p.height/2) - (player.y + player.height/2), 2));
-//			if(!p.isRandom && distance < 16){
-//				p.setRandomColor(System.currentTimeMillis());
-//			}else if(p.isRandom && distance >= 16)
-//				p.resetColor();
-//
-//			p.update();
-//		}
+		for(Platform p : platforms){
+			double distance = Math.sqrt(Math.pow((p.x + p.width/2) - (player.x + player.width/2), 2) + Math.pow((p.y + p.height/2) - (player.y + player.height/2), 2));
+			if(!p.isRandom && distance < 16){
+				p.setRandomColor(System.currentTimeMillis());
+			}else if(p.isRandom && distance >= 16)
+				p.resetColor();
+
+			p.update();
+		}
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class Map{
 			p.draw(g, viewportX, viewportY);
 		for(CollectableBlock b : collectableBlocks)
 			b.draw(g, viewportX, viewportY);
-		
+
 		g.setColor(Color.yellow);
 		for(Rectangle r : pManager.patternRects){
 			g.drawRect(r.getX() - viewportX, r.getY() - viewportY, 10, 10);

@@ -11,10 +11,10 @@ public class PatternManager {
 	public List<Rectangle> patternRects = new ArrayList<Rectangle>();
 	public List<String[][]> patterns = new ArrayList<>();
 	String[][] curArr;
-	
+
 	/***
 	 * This method goes through the blocks and tries to guess the pattern in a String[][]
-	 * 
+	 *
 	 */
 	public void checkPattern(List<CollectableBlock> blocks){
 		patternRects.clear();
@@ -43,9 +43,9 @@ public class PatternManager {
 				highestY = y + b.height;
 			if(y < lowestY)
 				lowestY = y;
-			
+
 		}
-		
+
 		//go to the right until 2 empty blocks are there
 		/*
 		 *Start Here->[0,0,R,R,B,R,R,0,0,0
@@ -56,7 +56,8 @@ public class PatternManager {
 		float bwidth = Map.blockWidth*GameplayState.VIEWPORT_RATIO_X;
 		float bheight = Map.blockWidth*GameplayState.VIEWPORT_RATIO_Y;
 		int r = 0;
-		List<List<String>> pArr = new ArrayList<>();	
+		//the String[][] holding the pattern
+		List<List<String>> pArr = new ArrayList<>();
 		do{
 			bx = lowestX;
 			by = lowestY + r*bheight;
@@ -66,28 +67,52 @@ public class PatternManager {
 				bx = lowestX + c*bwidth;
 				c++;
 				Rectangle rect = new Rectangle(bx, by, bwidth, bheight);
-				patternRects.add(rect);
+				//patternRects.add(rect);
 				rect = new Rectangle(bx + bwidth/2, by + bheight/2, 1, 1);
+				patternRects.add(rect);
+				String result = "e";
 				for(CollectableBlock block : blocks){
 					Rectangle brect = new Rectangle(block.getX(), block.getY(), block.width, block.height);
 					if(brect.intersects(rect)){
 						Color color = block.getColor();
 						if(color.equals(color.red)){
-							row.add("r");
+							result = "r";
 						}else if(color.equals(color.blue)){
-							row.add("b");
+							result = "b";
 						}else if(color.equals(color.yellow)){
-							row.add("y");
+							result = "y";
 						}else if(color.equals(color.pink)){
-							row.add("p");
+							result = "p";
 						}
-							
 					}
 				}
+				row.add(result);
 			}while(highestX - (bx + bwidth) > bwidth/2);
 			pArr.add(row);
 			r++;
 		}while(highestY - (by + bheight) > bheight/2);
-		curArr =
+
+
+		//change the List<List<String>> to a String arr
+		System.out.println("=================");
+		if(pArr.size() > 0 && pArr.get(0).size() > 0){
+		    r = pArr.size();
+		    int c = pArr.get(0).size();
+		    curArr = new String[r][c];
+		    for(int i = 0; i < r;i++){
+			boolean isFirst = true;
+			for(int j = 0; j < c; j++){
+			    curArr[i][j] = pArr.get(i).get(j);
+
+			    if(isFirst){
+			    System.out.print(curArr[i][j]);
+			    isFirst = false;
+			    }else
+				System.out.print("," + curArr[i][j]);
+
+			}
+			System.out.println();
+		    }
+		}
 	}
 }
