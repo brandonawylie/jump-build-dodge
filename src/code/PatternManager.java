@@ -77,20 +77,27 @@ public class PatternManager {
 						Color color = block.getColor();
 						if(color.equals(color.red)){
 							result = "r";
+							break;
 						}else if(color.equals(color.blue)){
 							result = "b";
+							break;
 						}else if(color.equals(color.yellow)){
 							result = "y";
+							break;
 						}else if(color.equals(color.pink)){
 							result = "p";
+							break;
+						}else if(color.equals(color.green)){
+						    result = "g";
+						    break;
 						}
 					}
 				}
 				row.add(result);
-			}while(highestX - (bx + bwidth) > bwidth/2);
+			}while(highestX - (bx + bwidth) > bwidth);
 			pArr.add(row);
 			r++;
-		}while(highestY - (by + bheight) > bheight/2);
+		}while(highestY - (by + bheight) > bheight);
 
 
 		//change the List<List<String>> to a String arr

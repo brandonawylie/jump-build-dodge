@@ -75,7 +75,7 @@ public class GameplayState extends BasicGameState{
 	 *
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		
+
 		//update game elements
 
 		map.update(player);
@@ -171,7 +171,7 @@ public class GameplayState extends BasicGameState{
 					map.removeBlock(b);
 
 					System.out.println("got it");
-					map.collectableBlocks.remove(i);
+					map.collectableBlocks.remove(b);
 				}
 
 
