@@ -19,6 +19,7 @@ public class Map{
 	//info about how the map is rendered. not sure how this fits with the new setup
 	public static int blockWidth = 10;
 	public static int blockHeight = 10;
+	public static int blocksize = blockWidth;
 	//used to position the player
 	public int playerX, playerY;
 
@@ -210,33 +211,108 @@ public class Map{
 					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
 							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
 				}else if(map[r][c].equals("R")){
-					coloredBlocks.add(new ColoredBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
+					getPattern(map, r, c);
 				}else if(map[r][c].equals("b")){
 					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
 							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
 				}else if(map[r][c].equals("B")){
-					coloredBlocks.add(new ColoredBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
+					getPattern(map, r, c);
 				}else if(map[r][c].equals("p")){
 
 					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
 							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.pink));
 				}else if(map[r][c].equals("P")){
-					coloredBlocks.add(new ColoredBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.pink));
+					getPattern(map, r, c);
 				}else if(map[r][c].equals("g")){
 
 					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
 							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
 				}else if(map[r][c].equals("G")){
-					coloredBlocks.add(new ColoredBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
+					getPattern(map, r, c);
 				}
 			}
 		}
 
 		return true;
+	}
+	
+	public void getPattern(String[][] map, int r, int c){
+		//if this is the top-left of the pattern
+		//counts backwards and upwards to see how many blocks of the same type preceed it.
+				int curR = r - 1;
+				int prevWidthCount = 0;
+				int prevHeightCount = 0;
+				while(curR >= 0 && (map[curR][c].equals("R") || map[curR][c].equals("B") || map[curR][c].equals("P") || map[curR][c].equals("G") )){
+					curR -= 1;
+					prevWidthCount += 1;
+				}
+				int curC = c - 1;
+				while(curC >= 0 && (map[curR][c].equals("R") || map[curR][c].equals("B") || map[curR][c].equals("P") || map[curR][c].equals("G") )){
+					curC -= 1;
+					prevHeightCount += 1;
+				}
+
+
+				if(prevWidthCount % width == 0 && prevHeightCount % height == 0){
+					int mr = 0;
+					int mc = 0;
+					curR = r;
+					curC = c;
+					while(curR < map.length && curC < map[curR].length && (map[curR][curC].equals("R") || map[curR][curC].equals("B") || map[curR][curC].equals("P") || map[curR][curC].equals("G") )){
+						
+						curC = 0;
+						while(curR < map.length && curC < map[curR].length && (map[curR][curC].equals("R") || map[curR][curC].equals("B") || map[curR][curC].equals("P") || map[curR][curC].equals("G") )){
+						
+						
+						
+							curC++;
+							if(mc - curC > 0){
+								mc = curC;
+							}
+						}
+						
+						
+						
+						
+						curR++;
+						if(mr - curR > 0){
+							mr = curR;
+						}
+					}
+					
+				Pattern p = new Pattern(r * blocksize, c * blocksize);
+				String[][] result = new String[mr - r][mc - c];
+				for(curR = r; curR <= mr; curR++){
+					for(curC = c; curC <= mc; curC++){
+						result[curR][curC] = map[curR][curC];
+						switch(map[curR][curC]){
+						case "R":
+							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
+							break;
+						case "G":
+							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
+							break;
+						case "B":
+							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
+							break;
+						case "P":
+							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.pink));
+							break;
+						default:
+							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.gray));
+							break;
+						
+						}
+					}
+				}
+				p.setPatternArray(result);
+				
+				
+				}
+				
+				
+
+			
 	}
 
 	/***
