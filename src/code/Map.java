@@ -26,7 +26,7 @@ public class Map{
 	public List<Platform> platforms = new ArrayList<Platform>();
 	public List<CollectableBlock> collectableBlocks = new ArrayList<>();
 	public List<CollectableBlock> placedCollectableBlocks = new ArrayList<>();
-
+	public List<ColoredBlock> coloredBlocks = new ArrayList<>();
 	PatternManager pManager = new PatternManager();
 	//map settings
 	Image bg;
@@ -69,6 +69,10 @@ public class Map{
 		g.setColor(Color.yellow);
 		for(Rectangle r : pManager.patternRects){
 			g.drawRect(r.getX() - viewportX, r.getY() - viewportY, 10, 10);
+		}
+		
+		for(ColoredBlock b : coloredBlocks){
+			g.drawRect(b.getX() - viewportX, b.getY() - viewportY, b.width, b.height);
 		}
 	}
 
@@ -184,10 +188,6 @@ public class Map{
 					//Image texture = new Image("res/brown_block_reg.png");
 					platforms.add(new Platform(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
 							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y));
-				}else if(map[r][c].equals("r")){
-
-					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
 				}else if(map[r][c].equals("3")){
 					//TODO count the rows & columns
 					//TODO store it
@@ -205,6 +205,33 @@ public class Map{
 				}else if(map[r][c].equals("9")){
 					playerX = x;
 					playerY = y;
+				}else if(map[r][c].equals("r")){
+
+					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
+				}else if(map[r][c].equals("R")){
+					coloredBlocks.add(new ColoredBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
+				}else if(map[r][c].equals("b")){
+					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
+				}else if(map[r][c].equals("B")){
+					coloredBlocks.add(new ColoredBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
+				}else if(map[r][c].equals("p")){
+
+					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.pink));
+				}else if(map[r][c].equals("P")){
+					coloredBlocks.add(new ColoredBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.pink));
+				}else if(map[r][c].equals("g")){
+
+					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
+				}else if(map[r][c].equals("G")){
+					coloredBlocks.add(new ColoredBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
 				}
 			}
 		}
