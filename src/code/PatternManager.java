@@ -122,4 +122,21 @@ public class PatternManager {
 		    }
 		}
 	}
+	
+	public boolean matchPatternArray(String[][] arr){
+		if(arr.length == 0 || arr.length != curArr.length){
+			return false;
+		}
+		for(int r = 0; r < arr.length; r++){
+			if(arr[r].length == 0 || arr[r].length != curArr.length){
+				return false;
+			}
+			for(int c = 0; c < arr[r].length; c++){
+				if(!arr[r][c].equals(curArr[r][c])){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }

@@ -27,7 +27,7 @@ public class Map{
 	public List<Platform> platforms = new ArrayList<Platform>();
 	public List<CollectableBlock> collectableBlocks = new ArrayList<>();
 	public List<CollectableBlock> placedCollectableBlocks = new ArrayList<>();
-	public List<ColoredBlock> coloredBlocks = new ArrayList<>();
+	public List<Pattern> patterns = new ArrayList<>();
 	PatternManager pManager = new PatternManager();
 	//map settings
 	Image bg;
@@ -72,8 +72,8 @@ public class Map{
 			g.drawRect(r.getX() - viewportX, r.getY() - viewportY, 10, 10);
 		}
 		
-		for(ColoredBlock b : coloredBlocks){
-			g.drawRect(b.getX() - viewportX, b.getY() - viewportY, b.width, b.height);
+		for(Pattern p : patterns){
+			p.draw(g, viewportX, viewportY);
 		}
 	}
 
@@ -84,6 +84,19 @@ public class Map{
 		collectableBlocks.add(cb);
 		placedCollectableBlocks.add(cb);
 		pManager.checkPattern(placedCollectableBlocks);
+		//check if the placed pattern 
+		double mdist = 99999;
+		int saveIndex = -1;
+		for(int i = 0; i < patterns.size(); i++){
+			Pattern pattern = patterns.get(i);
+			 double temp = Math.sqrt(Math.pow(p.x - pattern.x, 2) + Math.pow(p.y - pattern.y, 2));
+			 if(temp < mdist){
+				 mdist = temp;
+				 saveIndex = i;
+			 }
+		}
+		if(pManager.matchPatternArray(patterns.get(saveIndex).pArr))
+			patterns.remove(saveIndex);
 	}
 
 	public void removeBlock(CollectableBlock b){
@@ -254,38 +267,38 @@ public class Map{
 
 
 				if(prevWidthCount % width == 0 && prevHeightCount % height == 0){
-					int mr = 0;
-					int mc = 0;
+					int mr = r;
+					int mc = c;
 					curR = r;
 					curC = c;
 					while(curR < map.length && curC < map[curR].length && (map[curR][curC].equals("R") || map[curR][curC].equals("B") || map[curR][curC].equals("P") || map[curR][curC].equals("G") )){
 						
-						curC = 0;
+						curC = c;
 						while(curR < map.length && curC < map[curR].length && (map[curR][curC].equals("R") || map[curR][curC].equals("B") || map[curR][curC].equals("P") || map[curR][curC].equals("G") )){
 						
 						
 						
 							curC++;
-							if(mc - curC > 0){
+							if(curC > mc)
 								mc = curC;
-							}
 						}
 						
 						
 						
 						
 						curR++;
-						if(mr - curR > 0){
+						if(curR > mr){
 							mr = curR;
 						}
 					}
-					
+				System.out.println("r = " + r + ", c = " + c);
+				System.out.println("max r = " + mr + ", max c = " + mc);
 				Pattern p = new Pattern(r * blocksize, c * blocksize);
 				String[][] result = new String[mr - r][mc - c];
-				for(curR = r; curR <= mr; curR++){
-					for(curC = c; curC <= mc; curC++){
-						result[curR][curC] = map[curR][curC];
-						switch(map[curR][curC]){
+				for(curR = r; curR < mr; curR++){
+					for(curC = c; curC < mc; curC++){
+						result[curR - r][curC - c] = map[curR][curC];
+						switch(map[curR - r][curC - c]){
 						case "R":
 							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
 							break;
