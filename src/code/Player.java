@@ -59,7 +59,7 @@ public class Player {
 		n++;
 		greenR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
 	
-		walkingAnimation = new Animation(0, 0, 50, 75, spriteSheet);
+		walkingAnimation = new Animation(0, 80, 56, 80, spriteSheet);
 	}
 
 	public void render(Graphics g, float shiftX, float shiftY){
@@ -69,9 +69,9 @@ public class Player {
 		for(Projectile p : projectiles)
 			p.draw(g, shiftX, shiftY);
 
-
+		g.drawImage(walkingAnimation.images[0].getFlippedCopy(true, false), x - shiftX, y - shiftY);
 		if(movingLeft){
-			walkingAnimation.draw(g, x, - shiftX, y - shiftY, true);
+			walkingAnimation.draw(g, x - shiftX, y - shiftY, true);
 		}else if(movingRight){
 			walkingAnimation.draw(g, x - shiftX, y - shiftY);
 		}
