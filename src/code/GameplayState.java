@@ -4,11 +4,15 @@ import java.io.IOException;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.ResourceLoader;
 
 public class GameplayState extends BasicGameState{
     public static int VIEWPORT_WIDTH = 600;
@@ -37,14 +41,18 @@ public class GameplayState extends BasicGameState{
 		VIEWPORT_RATIO_X = PlatformerGame.WIDTH/VIEWPORT_WIDTH;
 		VIEWPORT_RATIO_Y = PlatformerGame.HEIGHT/VIEWPORT_HEIGHT;
 		//Initialize the player, the x/y coordinates will be set via map.loadMap but defaults to the given 100, 100
-		player = new Player(100, 100, VIEWPORT_RATIO_X, VIEWPORT_RATIO_Y);
+		Texture t = null;
+		try {
+			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/player.png"));
+		} catch (IOException e1) {	}
+		player = new Player(new Image(t), 100, 100, VIEWPORT_RATIO_X, VIEWPORT_RATIO_Y);
 		//Initialize the map, to be loaded in the next line
 		map = new Map();
 
 		//grab the map
 		try {
 			//System.out.println(getClass().getClassLoader().getResource("./res/level_1_1.map").getPath());
-			map.loadMap(getClass().getClassLoader().getResource("./res/level_1_1.map").getPath());
+			map.loadMap(getClass().getClassLoader().getResource("res/level_1_1.map").getPath());
 			player.x = map.playerX;
 			player.y = map.playerY;
 		}catch (Exception e) {
@@ -180,8 +188,18 @@ public class GameplayState extends BasicGameState{
 					System.out.println("got it");
 					map.collectableBlocks.remove(b);
 				}
+			}
+			
+			for(int i = 0; i < map.placedCollectableBlocks.size(); i++){
+				CollectableBlock b = map.placedCollectableBlocks.get(i);
+				Rectangle r = new Rectangle(b.getX() - 2, b.getY() - 2, b.width + 12, b.height + 12);
+				if(r.intersects(mouseclick)){
+					player.addBlock(b.getColor());
+					map.removeBlock(b);
 
-
+					System.out.println("got it");
+					map.collectableBlocks.remove(b);
+				}
 			}
 
 		}

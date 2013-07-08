@@ -75,13 +75,16 @@ public class Map{
 		for(Pattern p : patterns){
 			p.draw(g, viewportX, viewportY);
 		}
+		
+		for(CollectableBlock b : placedCollectableBlocks){
+			b.draw(g, viewportX, viewportY);
+		}
 	}
 
 	public void placeCollectableBlock(Player p, Color c){
 		//do check for collision with other world items
 		CollectableBlock cb =  new CollectableBlock(p.x, p.y, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, c);
 		p.y -= p.height +15;
-		collectableBlocks.add(cb);
 		placedCollectableBlocks.add(cb);
 		pManager.checkPattern(placedCollectableBlocks);
 		//check if the placed pattern 

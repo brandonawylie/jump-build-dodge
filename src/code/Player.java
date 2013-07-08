@@ -5,6 +5,7 @@ import java.util.List;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
 
 
@@ -22,7 +23,9 @@ public class Player {
 	int yellowBlocks = 0;
 	int pinkBlocks = 0;
 	int greenBlocks = 0;
-
+	
+	Animation walkingAnimation;
+	Image spriteSheet;
 	List<Projectile> projectiles = new ArrayList<Projectile>();
 
 	public Rectangle redR;
@@ -39,7 +42,8 @@ public class Player {
 	float delta = 22f;
 
 	int n = 0;
-	public Player(float x, float y, float ratioX, float ratioY){
+	public Player(Image i, float x, float y, float ratioX, float ratioY){
+		spriteSheet = i;
 		this.x = x; this.y = y;
 		dx = 0; dy = 0;
 		this.ratioX = ratioX;
@@ -54,6 +58,8 @@ public class Player {
 		pinkR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
 		n++;
 		greenR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
+	
+		walkingAnimation = new Animation(0, 0, 50, 75, spriteSheet);
 	}
 
 	public void render(Graphics g, float shiftX, float shiftY){
@@ -64,6 +70,11 @@ public class Player {
 			p.draw(g, shiftX, shiftY);
 
 
+		if(movingLeft){
+			walkingAnimation.draw(g, x, - shiftX, y - shiftY, true);
+		}else if(movingRight){
+			walkingAnimation.draw(g, x - shiftX, y - shiftY);
+		}
 		int n = 0;
 		g.setColor(Color.blue);
 		g.fillRect(startx, starty + delta*n, iwidth, iheight);
@@ -95,6 +106,7 @@ public class Player {
 
 	//logic for the player
 	public void update(GameContainer gc, int delta, Map m){
+		walkingAnimation.update(delta);
 
 		//update all of the player's projectiles
 		for(Projectile p : projectiles)
@@ -193,10 +205,30 @@ public class Player {
 				dy = -Helper.GRAVITY;
 			}
 		}
+		
+		prx = new Rectangle(x + dx, y, 10, 10);
+		pry = new Rectangle(x, y + dy, 10, 10);
+		//collides with platforms
+		for(int i = 0; i < m.collectableBlocks.size(); i++){
+			CollectableBlock p = m.collectableBlocks.get(i);
+			Rectangle r = new Rectangle(p.getX() - 2, p.getY() - 2, p.width + 2, p.height + 2);
+			if(prx.intersects(r)){
+				updateX = false;
+				dx = 0;
+			}
+			//check if my dy will cause me to hit a platform
+			if(pry.intersects(r)){
+				//if I am moving down, set falling to false
+				if(dy > 0)
+					fallFlag = false;
+				updateY = false;
+				dy = -Helper.GRAVITY;
+			}
+		}
 
 
 		//Collision with the collectible blocks, implement this with "to the side" pickup later
-		for(CollectableBlock b : m.collectableBlocks){
+		for(CollectableBlock b : m.placedCollectableBlocks){
 			Rectangle r = new Rectangle(b.getX() - 2, b.getY() - 2, b.width + 2, b.height + 2);
 			if(prx.intersects(r)){
 				updateX = false;
