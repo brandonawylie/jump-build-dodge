@@ -319,7 +319,7 @@ public class Map{
 					}
 				}
 				p.setPatternArray(result);
-				
+				patterns.add(p);
 				
 				}
 				
