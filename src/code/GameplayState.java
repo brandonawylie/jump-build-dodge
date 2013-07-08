@@ -53,13 +53,13 @@ public class GameplayState extends BasicGameState{
 
 		//Initialize the viewport shifts by the player startin
 		Pattern p = new Pattern(-20, 20);
-		p.addBlock(new ColoredBlock(-20,20, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
-		p.addBlock(new ColoredBlock(-10,20, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
-		p.addBlock(new ColoredBlock(0,20, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
+		p.addBlock(new ColoredBlock(70,135, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
+		p.addBlock(new ColoredBlock(80,135, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
+		p.addBlock(new ColoredBlock(90,135, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
 		String[][] temp = new String[1][3];
-		temp[0][0] = "G";
-		temp[0][1] = "R";
-		temp[0][2] = "B";
+		temp[0][0] = "g";
+		temp[0][1] = "r";
+		temp[0][2] = "b";
 		p.setPatternArray(temp);
 		map.patterns.add(p);
 	}

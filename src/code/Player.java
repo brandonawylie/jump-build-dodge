@@ -138,6 +138,61 @@ public class Player {
 				dy = -Helper.GRAVITY;
 			}
 		}
+		
+		//detect the player's collisions with things on the map
+		prx = new Rectangle(x + dx, y, 10, 10);
+		pry = new Rectangle(x, y + dy, 10, 10);
+		//collides with platforms
+		for(Pattern p : m.patterns){
+			for(ColoredBlock b : p.blocks){
+				
+				Rectangle r = new Rectangle(b.getX() - 2, b.getY() - 2, b.width + 2, b.height + 2);
+				if(prx.intersects(r)){
+					updateX = false;
+					dx = 0;
+				}
+				//check if my dy will cause me to hit a platform
+				if(pry.intersects(r)){
+					//if I am moving down, set falling to false
+					if(dy > 0)
+						fallFlag = false;
+					updateY = false;
+					dy = -Helper.GRAVITY;
+				}
+			}
+		}
+		
+		//detect the player's collisions with things on the map
+		prx = new Rectangle(x + dx, y, 10, 10);
+		pry = new Rectangle(x, y + dy, 10, 10);
+		//collides with platforms
+		for(int i = 0; i < m.collectableBlocks.size(); i++){
+			CollectableBlock p = m.collectableBlocks.get(i);
+			Rectangle r = new Rectangle(p.getX() - 2, p.getY() - 2, p.width + 2, p.height + 2);
+			if(prx.intersects(r)){
+				updateX = false;
+				dx = 0;
+				
+				if(p.getColor().equals(Color.red)){
+					redBlocks++;
+				}else if(p.getColor().equals(Color.green)){
+					greenBlocks++;
+				}else if(p.getColor().equals(Color.blue)){
+					blueBlocks++;
+				}else if(p.getColor().equals(Color.pink)){
+					pinkBlocks++;
+				}
+				m.collectableBlocks.remove(p);
+			}
+			//check if my dy will cause me to hit a platform
+			if(pry.intersects(r)){
+				//if I am moving down, set falling to false
+				if(dy > 0)
+					fallFlag = false;
+				updateY = false;
+				dy = -Helper.GRAVITY;
+			}
+		}
 
 
 		//Collision with the collectible blocks, implement this with "to the side" pickup later

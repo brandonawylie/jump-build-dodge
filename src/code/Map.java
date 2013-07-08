@@ -85,18 +85,23 @@ public class Map{
 		placedCollectableBlocks.add(cb);
 		pManager.checkPattern(placedCollectableBlocks);
 		//check if the placed pattern 
-		double mdist = 99999;
+		double mdist = 9999999;
 		int saveIndex = -1;
+		Pattern pattern = null;
 		for(int i = 0; i < patterns.size(); i++){
-			Pattern pattern = patterns.get(i);
+			pattern = patterns.get(i);
 			 double temp = Math.sqrt(Math.pow(p.x - pattern.x, 2) + Math.pow(p.y - pattern.y, 2));
 			 if(temp < mdist){
 				 mdist = temp;
 				 saveIndex = i;
 			 }
 		}
-		if(pManager.matchPatternArray(patterns.get(saveIndex).pArr))
+		if(saveIndex != -1 && patterns.size() > saveIndex && pManager.matchPatternArray(patterns.get(saveIndex).pArr))
 			patterns.remove(saveIndex);
+		else{
+			System.out.println("fail");
+			
+		}
 	}
 
 	public void removeBlock(CollectableBlock b){

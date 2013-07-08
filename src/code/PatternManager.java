@@ -124,19 +124,42 @@ public class PatternManager {
 	}
 	
 	public boolean matchPatternArray(String[][] arr){
-		if(arr.length == 0 || arr.length != curArr.length){
-			return false;
-		}
-		for(int r = 0; r < arr.length; r++){
-			if(arr[r].length == 0 || arr[r].length != curArr.length){
-				return false;
+		System.out.println("---------------------------------------");
+		String[][] pArr = arr;
+		for(int r = 0; r < pArr.length; r++){
+			boolean isFirst = true;
+			for(int cc = 0; cc < pArr[r].length; cc++){
+				if(isFirst){
+					System.out.print(pArr[r][cc]);
+					isFirst = false;
+				}else
+					System.out.print(", " + pArr[r][cc]);
+					
 			}
-			for(int c = 0; c < arr[r].length; c++){
-				if(!arr[r][c].equals(curArr[r][c])){
-					return false;
+			System.out.println();
+		}
+		pArr = curArr;
+		for(int r = 0; r < pArr.length; r++){
+			boolean isFirst = true;
+			for(int cc = 0; cc < pArr[r].length; cc++){
+				if(isFirst){
+					System.out.print(pArr[r][cc]);
+					isFirst = false;
+				}else
+					System.out.print(", " + pArr[r][cc]);
+					
+			}
+			System.out.println();
+		}
+		System.out.println("---------------------------------------");
+		try{
+			for(int r = 0; r < arr.length; r++){
+				for(int c = 0; c < arr[r].length; c++){
+					if(!curArr[r][c].equalsIgnoreCase(arr[r][c]))
+						return false;
 				}
 			}
-		}
+		}catch(Exception e){ return false; }
 		return true;
 	}
 }
