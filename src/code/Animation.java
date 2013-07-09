@@ -13,19 +13,20 @@ public class Animation {
 		images = new Image[len];
 		for(int i = 0; i < len; i++){
 			images[i] = spriteSheet.getSubImage(x + width*i, y, width, height);
-			scale = Map.blocksize/width;
+			scale = .3f;//Map.blocksize/width;
+			images[i] = images[i].getScaledCopy(scale);
 		}
 		System.out.println("len = " + len);
-	}
+	};
 	
 	public void draw(Graphics g, float x, float y){
 		g.drawImage(images[curIndex], x - images[curIndex].getWidth()/2, y - images[curIndex].getHeight()/2);
 		System.out.println("index = " + curIndex);
-		g.drawOval(x, y, 10, 10);
+		//g.drawOval(x, y, 10, 10);
 	}
 	
 	public void draw(Graphics g, float x, float y, boolean isFlipped){
-		images[curIndex].getFlippedCopy(true, false).draw(x - images[curIndex].getWidth()/2, y - images[curIndex].getHeight()/2, scale);
+		g.drawImage(images[curIndex].getFlippedCopy(true, false), x - images[curIndex].getWidth()/2, y - images[curIndex].getHeight()/2);
 	}
 	
 	public void update(int delta){

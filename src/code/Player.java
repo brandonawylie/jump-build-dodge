@@ -24,7 +24,7 @@ public class Player {
 	int pinkBlocks = 0;
 	int greenBlocks = 0;
 	
-	Animation walkingAnimation;
+	Animation walkingAnimation, idleAnimation;
 	Image spriteSheet;
 	List<Projectile> projectiles = new ArrayList<Projectile>();
 
@@ -59,22 +59,23 @@ public class Player {
 		n++;
 		greenR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
 	
+		idleAnimation = new Animation(0,0,56,80,spriteSheet);
 		walkingAnimation = new Animation(0, 80, 56, 80, spriteSheet);
+		
+		//height = 30;
 	}
 
 	public void render(Graphics g, float shiftX, float shiftY){
-		g.setColor(Color.white);
-		g.drawRect(x - shiftX, y - shiftY, width*ratioX, height*ratioY);
-
 		for(Projectile p : projectiles)
 			p.draw(g, shiftX, shiftY);
 
-		g.drawImage(walkingAnimation.images[0].getFlippedCopy(true, false), x - shiftX, y - shiftY);
+		//g.drawImage(walkingAnimation.images[0].getFlippedCopy(true, false), x - shiftX, y - shiftY);
 		if(movingLeft){
 			walkingAnimation.draw(g, x - shiftX, y - shiftY, true);
 		}else if(movingRight){
 			walkingAnimation.draw(g, x - shiftX, y - shiftY);
-		}
+		}else
+			idleAnimation.draw(g, x - shiftX, y - shiftY);
 		int n = 0;
 		g.setColor(Color.blue);
 		g.fillRect(startx, starty + delta*n, iwidth, iheight);
@@ -132,8 +133,8 @@ public class Player {
 			dy += .075f;
 
 		//detect the player's collisions with things on the map
-		Rectangle prx = new Rectangle(x + dx, y, 10, 10);
-		Rectangle pry = new Rectangle(x, y + dy, 10, 10);
+		Rectangle prx = new Rectangle(x + dx - width/2, y - height/2, 10, 10);
+		Rectangle pry = new Rectangle(x - width/2, y + dy - height/2, 10, 10);
 		//collides with platforms
 		for(Platform p : m.platforms){
 			Rectangle r = new Rectangle(p.getX() - 2, p.getY() - 2, p.width + 2, p.height + 2);
