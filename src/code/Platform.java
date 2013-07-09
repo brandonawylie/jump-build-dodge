@@ -17,11 +17,11 @@ public class Platform {
 	//this determines how long the randomly generated color stays on the block
 	public int colorStayTimeSecs = 2;
 
-	public Platform(int x, int y, float ratioX, float ratioY){
+	public Platform(int x, int y, float width, float height){
 		this.x = x;
 		this.y = y;
-		width = 10*ratioX;
-		height = 10*ratioY;
+		this.width = width;
+		this.height = height;
 	}
 
 	//contains most the logic for this platform

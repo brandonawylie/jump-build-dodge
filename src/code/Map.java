@@ -17,8 +17,8 @@ import org.newdawn.slick.geom.Rectangle;
 
 public class Map{
 	//info about how the map is rendered. not sure how this fits with the new setup
-	public static int blockWidth = 10;
-	public static int blockHeight = 10;
+	public static int blockWidth = 20;
+	public static int blockHeight = 20;
 	public static int blocksize = blockWidth;
 	//used to position the player
 	public int playerX, playerY;
@@ -200,8 +200,8 @@ public class Map{
 				//get the current number from the array
 				//int currentDigit = Integer.parseInt(map[r][c]);
 				//the x and y coordinates are the row & column * 18.
-				int x = c * 10;
-				int y = r * 10;
+				int x = c * blocksize;
+				int y = r * blocksize;
 
 				//Will create the object at the top left corner of the !!RECTANGULAR!! map representation.
 				if(map[r][c].equals("0")){
@@ -209,7 +209,7 @@ public class Map{
 				}else if(map[r][c].equals("1")){
 					//Image texture = new Image("res/brown_block_reg.png");
 					platforms.add(new Platform(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y));
+							blocksize*GameplayState.VIEWPORT_RATIO_X, blocksize*GameplayState.VIEWPORT_RATIO_Y));
 				}else if(map[r][c].equals("3")){
 					//TODO count the rows & columns
 					//TODO store it

@@ -45,7 +45,7 @@ public class GameplayState extends BasicGameState{
 		try {
 			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/player.png"));
 		} catch (IOException e1) {	}
-		player = new Player(new Image(t), 100, 100, VIEWPORT_RATIO_X, VIEWPORT_RATIO_Y);
+		player = new Player(new Image(t), 100, 100);
 		//Initialize the map, to be loaded in the next line
 		map = new Map();
 

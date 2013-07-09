@@ -11,9 +11,9 @@ import org.newdawn.slick.geom.Rectangle;
 
 public class Player {
 	float x, y, dx, dy, speed, ratioX, ratioY;
-	int width = 10;
-	int height = 10;
-	float jumpSpeed = 3f;
+	float width = 10;
+	float height = 10;
+	float jumpSpeed = 4f*GameplayState.VIEWPORT_RATIO_Y;
 	boolean movingLeft = false;
 	boolean movingRight = false;
 	boolean inAir = false;
@@ -23,6 +23,9 @@ public class Player {
 	int yellowBlocks = 0;
 	int pinkBlocks = 0;
 	int greenBlocks = 0;
+	
+	public float MAX_SPEED = 5*GameplayState.VIEWPORT_RATIO_X;
+	
 	
 	Animation walkingAnimation, idleAnimation;
 	Image spriteSheet;
@@ -42,13 +45,11 @@ public class Player {
 	float delta = 22f;
 
 	int n = 0;
-	public Player(Image i, float x, float y, float ratioX, float ratioY){
+	public Player(Image i, float x, float y){
 		spriteSheet = i;
 		this.x = x; this.y = y;
 		dx = 0; dy = 0;
-		this.ratioX = ratioX;
-		this.ratioY = ratioY;
-		speed = .075f*ratioX;
+		speed = .075f*GameplayState.VIEWPORT_RATIO_X;
 		redR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
 		n++;
 		blueR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
@@ -61,7 +62,8 @@ public class Player {
 	
 		idleAnimation = new Animation(0,0,56,80,spriteSheet);
 		walkingAnimation = new Animation(0, 80, 56, 80, spriteSheet);
-		
+		width = idleAnimation.width;
+		height = idleAnimation.height;
 		//height = 30;
 	}
 
@@ -133,8 +135,8 @@ public class Player {
 			dy += .075f;
 
 		//detect the player's collisions with things on the map
-		Rectangle prx = new Rectangle(x + dx - width/2, y - height/2, 10, 10);
-		Rectangle pry = new Rectangle(x - width/2, y + dy - height/2, 10, 10);
+		Rectangle prx = new Rectangle(x + dx, y, width, height);
+		Rectangle pry = new Rectangle(x, y + dy, width, height);
 		//collides with platforms
 		for(Platform p : m.platforms){
 			Rectangle r = new Rectangle(p.getX() - 2, p.getY() - 2, p.width + 2, p.height + 2);
@@ -151,10 +153,7 @@ public class Player {
 				dy = -Helper.GRAVITY;
 			}
 		}
-		
-		//detect the player's collisions with things on the map
-		prx = new Rectangle(x + dx, y, 10, 10);
-		pry = new Rectangle(x, y + dy, 10, 10);
+	
 		//collides with platforms
 		for(Pattern p : m.patterns){
 			for(ColoredBlock b : p.blocks){
@@ -175,9 +174,6 @@ public class Player {
 			}
 		}
 		
-		//detect the player's collisions with things on the map
-		prx = new Rectangle(x + dx, y, 10, 10);
-		pry = new Rectangle(x, y + dy, 10, 10);
 		//collides with platforms
 		for(int i = 0; i < m.collectableBlocks.size(); i++){
 			CollectableBlock p = m.collectableBlocks.get(i);
@@ -207,25 +203,6 @@ public class Player {
 			}
 		}
 		
-		prx = new Rectangle(x + dx, y, 10, 10);
-		pry = new Rectangle(x, y + dy, 10, 10);
-		//collides with platforms
-		for(int i = 0; i < m.collectableBlocks.size(); i++){
-			CollectableBlock p = m.collectableBlocks.get(i);
-			Rectangle r = new Rectangle(p.getX() - 2, p.getY() - 2, p.width + 2, p.height + 2);
-			if(prx.intersects(r)){
-				updateX = false;
-				dx = 0;
-			}
-			//check if my dy will cause me to hit a platform
-			if(pry.intersects(r)){
-				//if I am moving down, set falling to false
-				if(dy > 0)
-					fallFlag = false;
-				updateY = false;
-				dy = -Helper.GRAVITY;
-			}
-		}
 
 
 		//Collision with the collectible blocks, implement this with "to the side" pickup later
@@ -254,14 +231,14 @@ public class Player {
 
 	public void moveLeft(){
 		movingLeft = true;
-		if(dx > -3.6f){
+		if(dx > -MAX_SPEED){
 			dx -= .2f;
 		}
 	}
 
 	public void moveRight(){
 		movingRight = true;
-		if(dx < 3.6f){
+		if(dx < MAX_SPEED){
 			dx += .2f;
 		}
 	}
