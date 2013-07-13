@@ -11,11 +11,11 @@ public class ColoredBlock {
 		private Color color = Color.black;
 		private Color outline = Color.white;
 
-		public ColoredBlock(float x, float y, float ratioX, float ratioY, Color color){
+		public ColoredBlock(float x, float y, Color color){
 			this.x = x;
 			this.y = y;
-			width = 10*ratioX;
-			height = 10*ratioY;
+			width = Map.blocksize*GameplayState.VIEWPORT_RATIO_X;
+			height = Map.blocksize*GameplayState.VIEWPORT_RATIO_Y;
 			this.color = color;
 		}
 

@@ -9,7 +9,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
 
 
-public class Player {
+public class Player implements ColorObservable{
 	float x, y, dx, dy, speed, ratioX, ratioY;
 	float width = 10;
 	float height = 10;
@@ -182,15 +182,7 @@ public class Player {
 				updateX = false;
 				dx = 0;
 				
-				if(p.getColor().equals(Color.red)){
-					redBlocks++;
-				}else if(p.getColor().equals(Color.green)){
-					greenBlocks++;
-				}else if(p.getColor().equals(Color.blue)){
-					blueBlocks++;
-				}else if(p.getColor().equals(Color.pink)){
-					pinkBlocks++;
-				}
+				addBlock(p.getColor());
 				m.collectableBlocks.remove(p);
 			}
 			//check if my dy will cause me to hit a platform
@@ -293,13 +285,26 @@ public class Player {
 		green
 	*/
 	public void addBlock(Color c){
-		//if(c == Color.blue)
+		if(c == Color.blue)
 			blueBlocks++;
-		//else if(c == Color.yellow)
+		else if(c == Color.yellow)
 				yellowBlocks++;
-		//else if (c == Color.pink)
+		else if (c == Color.pink)
 				pinkBlocks++;
-		//else if(c == Color.green)
+		else if(c == Color.green)
 				greenBlocks++;
+		notifyColorChange();
+	}
+
+	@Override
+	public void notifyColorChange() {
+		int[] res = new int[4];
+		res[0] = blueBlocks;
+		res[1] = greenBlocks;
+		res[2] = redBlocks;
+		res[3] = pinkBlocks;
+		for(ColorObserver o : obs)
+			o.changeColorNotification(res);
+				
 	}
 }

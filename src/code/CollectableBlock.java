@@ -15,8 +15,8 @@ public class CollectableBlock {
 	public CollectableBlock(float x, float y, float ratioX, float ratioY, Color color){
 		this.x = x;
 		this.y = y;
-		width = 10*ratioX;
-		height = 10*ratioY;
+		width = Map.blocksize*ratioX;
+		height = Map.blocksize*ratioY;
 		this.color = color;
 	}
 

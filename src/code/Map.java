@@ -18,7 +18,7 @@ import org.newdawn.slick.geom.Rectangle;
 public class Map{
 	//info about how the map is rendered. not sure how this fits with the new setup
 	public static int blockWidth = 20;
-	public static int blockHeight = 20;
+	public static int blockHeight = 10;
 	public static int blocksize = blockWidth;
 	//used to position the player
 	public int playerX, playerY;
@@ -43,7 +43,7 @@ public class Map{
 	public void update(Player player){
 		for(Platform p : platforms){
 			double distance = Math.sqrt(Math.pow((p.x + p.width/2) - (player.x + player.width/2), 2) + Math.pow((p.y + p.height/2) - (player.y + player.height/2), 2));
-			if(!p.isRandom && distance < 16){
+			if(!p.isRandom && distance < 30){
 				p.setRandomColor(System.currentTimeMillis());
 			}else if(p.isRandom && distance >= 16)
 				p.resetColor();
@@ -69,7 +69,7 @@ public class Map{
 
 		g.setColor(Color.yellow);
 		for(Rectangle r : pManager.patternRects){
-			g.drawRect(r.getX() - viewportX, r.getY() - viewportY, 10, 10);
+			g.drawRect(r.getX() - viewportX, r.getY() - viewportY, blocksize, blocksize);
 		}
 		
 		for(Pattern p : patterns){
@@ -308,19 +308,19 @@ public class Map{
 						result[curR - r][curC - c] = map[curR][curC];
 						switch(map[curR - r][curC - c]){
 						case "R":
-							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
+							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize,Color.red));
 							break;
 						case "G":
-							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
+							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, Color.green));
 							break;
 						case "B":
-							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
+							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, Color.blue));
 							break;
 						case "P":
-							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.pink));
+							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, Color.pink));
 							break;
 						default:
-							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.gray));
+							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, Color.gray));
 							break;
 						
 						}

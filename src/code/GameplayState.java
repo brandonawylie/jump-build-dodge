@@ -23,6 +23,7 @@ public class GameplayState extends BasicGameState{
 	Player player;
 	long lastClickTime = 0;
 	Map map;
+	HUD hud;
 	int mouseX = 0; int mouseY = 0;
 	public GameplayState(int ID){
 		this.stateID = ID;
@@ -60,16 +61,30 @@ public class GameplayState extends BasicGameState{
 		}
 
 		//Initialize the viewport shifts by the player startin
-		Pattern p = new Pattern(-20, 20);
-		p.addBlock(new ColoredBlock(70,135, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
-		p.addBlock(new ColoredBlock(80,135, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
-		p.addBlock(new ColoredBlock(90,135, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
-		String[][] temp = new String[1][3];
-		temp[0][0] = "g";
-		temp[0][1] = "r";
-		temp[0][2] = "b";
-		p.setPatternArray(temp);
-		map.patterns.add(p);
+//		Pattern p = new Pattern(70, 135);
+//		p.addBlock(new ColoredBlock(70,135, Color.green));
+//		p.addBlock(new ColoredBlock(90,135, Color.red));
+//		p.addBlock(new ColoredBlock(110,135, Color.blue));
+//		String[][] temp = new String[1][3];
+//		temp[0][0] = "g";
+//		temp[0][1] = "r";
+//		temp[0][2] = "b";
+//		p.setPatternArray(temp);
+//		map.patterns.add(p);
+		
+		
+		//initialize the hud
+		
+		try {
+			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/hud-bottom.png"));
+		} catch (IOException e) {}
+		Image i = new Image(t);
+		float scaleX = i.getWidth()/PlatformerGame.WIDTH;
+		float scaleY = i.getHeight()/PlatformerGame.HEIGHT;
+		hud = new HUD(i.getScaledCopy(PlatformerGame.WIDTH, PlatformerGame.HEIGHT/5));
+		
+		player.obs.add(hud);
+		
 	}
 
 	/**
@@ -81,7 +96,7 @@ public class GameplayState extends BasicGameState{
 		player.render(g, VIEWPORT_X, VIEWPORT_Y);
 		//render the map and all associated objects
 		map.draw(g, VIEWPORT_X, VIEWPORT_Y);
-
+		hud.draw(g);
 
 	}
 
