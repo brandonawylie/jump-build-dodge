@@ -9,7 +9,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
 
 
-public class Player implements ColorObservable{
+public class Player implements Oberservable{
 	float x, y, dx, dy, speed, ratioX, ratioY;
 	float width = 10;
 	float height = 10;
@@ -303,8 +303,10 @@ public class Player implements ColorObservable{
 		res[1] = greenBlocks;
 		res[2] = redBlocks;
 		res[3] = pinkBlocks;
-		for(ColorObserver o : obs)
+		for(Oberserver o : colorObs)
 			o.changeColorNotification(res);
+		for(Oberserver o : positionObs)
+			o.changePositionNotification(x, y);
 				
 	}
 }

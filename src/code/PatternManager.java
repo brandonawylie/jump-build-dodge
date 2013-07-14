@@ -4,19 +4,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
-public class PatternManager {
+public class PatternManager implements Oberserver{
 	//public List<CollectableBlock> blocks = new ArrayList<CollectableBlock>();
 	public List<Rectangle> patternRects = new ArrayList<Rectangle>();
 	public List<String[][]> patterns = new ArrayList<>();
 	String[][] curArr;
-
+	Rectangle[][] pRectArray;
+	float playerX, playerY;
+	public void draw(Graphics g, int vpX, int vpY){
+		System.out.println("Pattern Manager: drawing");
+		if(pRectArray != null){
+			for(int r = 0; r < pRectArray.length; r++){
+				for(int c = 0; c < pRectArray[r].length; c++){
+					System.out.println("Pattern Manager: looping");
+					String temp = curArr[r][c];
+					if(temp.equals("b")){
+						g.setColor(Color.blue);
+					}else if(temp.equals("g")){
+						g.setColor(Color.green);
+					}else if(temp.equals("r")){
+						g.setColor(Color.red);
+					}else if(temp.equals("p")){
+						g.setColor(Color.pink);
+					}else if(temp.equals("e")){
+						g.setColor(Color.white);
+					}
+					Rectangle rec = pRectArray[r][c];
+					g.fillRect(rec.getX() - vpX, rec.getY() - vpY, rec.getWidth(), rec.getHeight());
+				}
+			}
+			g.setColor(Color.white);
+			g.drawLine(pRectArray[0][0].getX(), pRectArray[0][0].getY(), pRectArray[0][0].getX() + pRectArray[pRectArray.length - 1][0].getX(), pRectArray[0][0].getY() + pRectArray[pRectArray.length - 1][0].getY() + 2);
+		}
+	}
 	/***
 	 * This method goes through the blocks and tries to guess the pattern in a String[][]
 	 *
 	 */
-	public void checkPattern(List<CollectableBlock> blocks){
+	public void checkPattern(List<CollectableBlock> blocks, Player player){
 		patternRects.clear();
 		//go through all the blocks and see which one is leftmost, topmost, bottommost and rightmost
 		/*
@@ -55,13 +83,17 @@ public class PatternManager {
 		float by = lowestY;
 		float bwidth = Map.blockWidth*GameplayState.VIEWPORT_RATIO_X;
 		float bheight = Map.blockWidth*GameplayState.VIEWPORT_RATIO_Y;
+		//TODO change this + 5 to a class variable
+
 		int r = 0;
+		int c = 0;
+		Rectangle[][] tempArray = new Rectangle[(int) ((highestX - lowestX)/bwidth + 1)][(int) ((highestY - lowestY)/bheight) + 1	];
 		//the String[][] holding the pattern
 		List<List<String>> pArr = new ArrayList<>();
 		do{
 			bx = lowestX;
 			by = lowestY + r*bheight;
-			int c = 0;
+			c = 0;
 			List<String> row = new ArrayList<>();
 			do{
 				bx = lowestX + c*bwidth;
@@ -70,6 +102,7 @@ public class PatternManager {
 				//patternRects.add(rect);
 				rect = new Rectangle(bx + bwidth/2, by + bheight/2, 1, 1);
 				patternRects.add(rect);
+				//tempArray[r][c] = new Rectangle(ttLowestX + c*2, ttLowestY + r*2, 2, 2);
 				String result = "e";
 				for(CollectableBlock block : blocks){
 					Rectangle brect = new Rectangle(block.getX(), block.getY(), block.width, block.height);
@@ -98,13 +131,22 @@ public class PatternManager {
 			pArr.add(row);
 			r++;
 		}while(highestY - (by + bheight) > bheight);
-
-
+		
+		float ttLowestX = (playerX + player.width) + 5;
+		float ttLowestY = playerY + 5;
+		tempArray = new Rectangle[r][c];
+		for(int i = 0; i < r; i++){
+			for(int j = 0; j < c; j++){
+				tempArray[i][j] = new Rectangle(ttLowestX + j*2, ttLowestY + i*2,2,2);
+			}
+		}
+		pRectArray = tempArray;
+		
 		//change the List<List<String>> to a String arr
 		System.out.println("=================");
 		if(pArr.size() > 0 && pArr.get(0).size() > 0){
 		    r = pArr.size();
-		    int c = pArr.get(0).size();
+		    c = pArr.get(0).size();
 		    curArr = new String[r][c];
 		    for(int i = 0; i < r;i++){
 			boolean isFirst = true;
@@ -161,5 +203,16 @@ public class PatternManager {
 			}
 		}catch(Exception e){ return false; }
 		return true;
+	}
+	@Override
+	public void changeColorNotification(int[] colors) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void changePositionNotification(float x, float y) {
+		playerX = x;
+		playerY = y;
+		
 	}
 }

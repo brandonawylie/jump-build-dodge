@@ -3,7 +3,7 @@ package code;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
-public class HUD implements ColorObserver{
+public class HUD implements Oberserver{
 	private Image hudBottom, hudTop;
 	private int rBlockCount, bBlockCount, pBlockCount, gBlockCount;
 	
@@ -32,5 +32,11 @@ public class HUD implements ColorObserver{
 		gBlockCount = colors[1];
 		rBlockCount = colors[2];
 		pBlockCount = colors[3];
+	}
+
+	@Override
+	public void changePositionNotification(float x, float y) {
+		// TODO Auto-generated method stub
+		
 	}
 }

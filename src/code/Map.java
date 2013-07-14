@@ -79,6 +79,7 @@ public class Map{
 		for(CollectableBlock b : placedCollectableBlocks){
 			b.draw(g, viewportX, viewportY);
 		}
+		pManager.draw(g, viewportX, viewportY);
 	}
 
 	public void placeCollectableBlock(Player p, Color c){
@@ -86,7 +87,7 @@ public class Map{
 		CollectableBlock cb =  new CollectableBlock(p.x, p.y, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, c);
 		p.y -= p.height +15;
 		placedCollectableBlocks.add(cb);
-		pManager.checkPattern(placedCollectableBlocks);
+		pManager.checkPattern(placedCollectableBlocks, p);
 		//check if the placed pattern 
 		double mdist = 9999999;
 		int saveIndex = -1;
