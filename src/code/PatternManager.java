@@ -13,13 +13,13 @@ public class PatternManager implements Oberserver{
 	public List<String[][]> patterns = new ArrayList<>();
 	String[][] curArr;
 	Rectangle[][] pRectArray;
-	float playerX, playerY;
+	float playerX, playerY, playerWidth, playerHeight;
 	public void draw(Graphics g, int vpX, int vpY){
-		System.out.println("Pattern Manager: drawing");
+		//System.out.println("Pattern Manager: drawing");
 		if(pRectArray != null){
 			for(int r = 0; r < pRectArray.length; r++){
 				for(int c = 0; c < pRectArray[r].length; c++){
-					System.out.println("Pattern Manager: looping");
+//					System.out.println("Pattern Manager: looping");
 					String temp = curArr[r][c];
 					if(temp.equals("b")){
 						g.setColor(Color.blue);
@@ -45,6 +45,10 @@ public class PatternManager implements Oberserver{
 	 *
 	 */
 	public void checkPattern(List<CollectableBlock> blocks, Player player){
+		if(playerWidth == 0){
+			playerWidth = player.width;
+			playerHeight = player.height;
+		}
 		patternRects.clear();
 		//go through all the blocks and see which one is leftmost, topmost, bottommost and rightmost
 		/*
@@ -99,14 +103,14 @@ public class PatternManager implements Oberserver{
 				bx = lowestX + c*bwidth;
 				c++;
 				Rectangle rect = new Rectangle(bx, by, bwidth, bheight);
-				//patternRects.add(rect);
-				rect = new Rectangle(bx + bwidth/2, by + bheight/2, 1, 1);
 				patternRects.add(rect);
+				rect = new Rectangle(bx + bwidth/2, by + bheight/2, 1, 1);
+				//patternRects.add(rect);
 				//tempArray[r][c] = new Rectangle(ttLowestX + c*2, ttLowestY + r*2, 2, 2);
 				String result = "e";
 				for(CollectableBlock block : blocks){
 					Rectangle brect = new Rectangle(block.getX(), block.getY(), block.width, block.height);
-					if(brect.intersects(rect)){
+					if(brect.intersects(rect)){ 
 						Color color = block.getColor();
 						if(color.equals(color.red)){
 							result = "r";
@@ -204,6 +208,15 @@ public class PatternManager implements Oberserver{
 		}catch(Exception e){ return false; }
 		return true;
 	}
+	
+	public void updateToolTipBlocks(){
+		for(int r = 0; r < pRectArray.length; r++){
+			for(int c = 0; c < pRectArray[r].length; c++){
+				pRectArray[r][c].setX(playerX + playerWidth + 5);
+				pRectArray[r][c].setY(playerY);
+			}
+		}
+	}
 	@Override
 	public void changeColorNotification(int[] colors) {
 		// TODO Auto-generated method stub
@@ -213,6 +226,8 @@ public class PatternManager implements Oberserver{
 	public void changePositionNotification(float x, float y) {
 		playerX = x;
 		playerY = y;
-		
+		if(pRectArray != null)
+			updateToolTipBlocks();
+		//System.out.println("change in pos");
 	}
 }

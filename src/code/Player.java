@@ -215,10 +215,14 @@ public class Player implements Oberservable{
 		}
 		inAir = fallFlag;
 
-		if(updateX)
+		if(updateX){
 			x+=dx*(delta/10);
-		if(updateY)
+			notifyPositionChange();
+		}
+		if(updateY){
 			y+=dy*(delta/10);
+			notifyPositionChange();
+		}
 	}
 
 	public void moveLeft(){
@@ -305,6 +309,11 @@ public class Player implements Oberservable{
 		res[3] = pinkBlocks;
 		for(Oberserver o : colorObs)
 			o.changeColorNotification(res);
+		
+	}
+
+	@Override
+	public void notifyPositionChange() {
 		for(Oberserver o : positionObs)
 			o.changePositionNotification(x, y);
 				

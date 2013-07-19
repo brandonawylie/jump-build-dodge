@@ -84,6 +84,7 @@ public class GameplayState extends BasicGameState{
 		hud = new HUD(i.getScaledCopy(PlatformerGame.WIDTH, PlatformerGame.HEIGHT/5));
 		
 		player.colorObs.add(hud);
+		player.positionObs.add(hud);
 		player.positionObs.add(map.pManager);
 	}
 

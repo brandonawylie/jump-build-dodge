@@ -15,7 +15,7 @@ public class HUD implements Oberserver{
 		gBlockCount = 1;
 	}
 	
-	public void draw(Graphics g){
+	public void draw(Graphics g){  
 		int width = hudBottom.getWidth();
 		int height = hudBottom.getHeight();
 		

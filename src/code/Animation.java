@@ -18,14 +18,14 @@ public class Animation {
 			scale = .4f;//Map.blocksize/width;
 			images[i] = images[i].getScaledCopy(scale);
 		}
-		System.out.println("len = " + len);
+		//System.out.println("len = " + len);
 		this.width = width*scale;
 		this.height = height*scale;
 	};
 	
 	public void draw(Graphics g, float x, float y){
 		g.drawImage(images[curIndex], x, y);
-		System.out.println("index = " + curIndex);
+		//System.out.println("index = " + curIndex);
 		//g.drawOval(x, y, 10, 10);
 	}
 	
@@ -34,7 +34,7 @@ public class Animation {
 	}
 	
 	public void update(int delta){
-		System.out.println("delta = " + delta);
+		//System.out.println("delta = " + delta);
 		if(timeElapsed >= 100){
 			timeElapsed = 0;
 			curIndex++;
