@@ -79,12 +79,13 @@ public class Map{
 		for(CollectableBlock b : placedCollectableBlocks){
 			b.draw(g, viewportX, viewportY);
 		}
+		
 		pManager.draw(g, viewportX, viewportY);
 	}
 
 	public void placeCollectableBlock(Player p, Color c){
 		//do check for collision with other world items
-		CollectableBlock cb =  new CollectableBlock(p.x, p.y, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, c);
+		CollectableBlock cb =  new CollectableBlock(p.x + (p.width - blockWidth)/2, p.y + p.width - blockHeight, GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, c);
 		p.y -= p.height +15;
 		placedCollectableBlocks.add(cb);
 		pManager.checkPattern(placedCollectableBlocks, p);
@@ -94,11 +95,11 @@ public class Map{
 		Pattern pattern = null;
 		for(int i = 0; i < patterns.size(); i++){
 			pattern = patterns.get(i);
-			 double temp = Math.sqrt(Math.pow(p.x - pattern.x, 2) + Math.pow(p.y - pattern.y, 2));
-			 if(temp < mdist){
-				 mdist = temp;
-				 saveIndex = i;
-			 }
+			double temp = Math.sqrt(Math.pow(p.x - pattern.x, 2) + Math.pow(p.y - pattern.y, 2));
+			if(temp < mdist){
+				mdist = temp;
+				saveIndex = i;
+			}
 		}
 		if(saveIndex != -1 && patterns.size() > saveIndex && pManager.matchPatternArray(patterns.get(saveIndex).pArr))
 			patterns.remove(saveIndex);

@@ -19,7 +19,7 @@ public class HUD implements Oberserver{
 		int width = hudBottom.getWidth();
 		int height = hudBottom.getHeight();
 		
-		g.drawImage(hudBottom,0, PlatformerGame.HEIGHT - height);
+//		g.drawImage(hudBottom,0, PlatformerGame.HEIGHT - height);
 		g.drawString("" + bBlockCount, width*4/8, PlatformerGame.HEIGHT - height/2);
 		g.drawString("" + gBlockCount, width*5/8, PlatformerGame.HEIGHT - height/2);
 		g.drawString("" + rBlockCount, width*6/8, PlatformerGame.HEIGHT - height/2);
