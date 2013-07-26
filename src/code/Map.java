@@ -5,15 +5,26 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class Map{
 	//info about how the map is rendered. not sure how this fits with the new setup
@@ -24,15 +35,20 @@ public class Map{
 	public int playerX, playerY;
 
 	//game objects that belong to the map
-	public List<Platform> platforms = new ArrayList<Platform>();
+	public List<TileSet> tilesets = new ArrayList<>();
+	public List<Platform> platforms = new ArrayList<>();
 	public List<CollectableBlock> collectableBlocks = new ArrayList<>();
 	public List<CollectableBlock> placedCollectableBlocks = new ArrayList<>();
 	public List<Pattern> patterns = new ArrayList<>();
+	Image[][] tiles;
 	PatternManager pManager = new PatternManager();
+
 	//map settings
 	Image bg;
-	int backgroundX, backgroundY;
-	public int width, height;
+	int mapTileWidth;
+	int mapTileHeight;
+	int mapWidth;
+	int mapHeight;
 
 	/**
 	 * Updates the map, and all game objects that are part of the map:
@@ -71,15 +87,15 @@ public class Map{
 		for(Rectangle r : pManager.patternRects){
 			g.drawRect(r.getX() - viewportX, r.getY() - viewportY, blocksize, blocksize);
 		}
-		
+
 		for(Pattern p : patterns){
 			p.draw(g, viewportX, viewportY);
 		}
-		
+
 		for(CollectableBlock b : placedCollectableBlocks){
 			b.draw(g, viewportX, viewportY);
 		}
-		
+
 		pManager.draw(g, viewportX, viewportY);
 	}
 
@@ -89,7 +105,7 @@ public class Map{
 		p.y -= p.height +15;
 		placedCollectableBlocks.add(cb);
 		pManager.checkPattern(placedCollectableBlocks, p);
-		//check if the placed pattern 
+		//check if the placed pattern
 		double mdist = 9999999;
 		int saveIndex = -1;
 		Pattern pattern = null;
@@ -105,7 +121,7 @@ public class Map{
 			patterns.remove(saveIndex);
 		else{
 			System.out.println("fail");
-			
+
 		}
 	}
 
@@ -117,27 +133,6 @@ public class Map{
 	}
 
 	/**
-	 * Key for the objects referred to in a map
-	 *  Input: .map, located in the /res/directory. If you don't have one, here is the project structure
-	 *
-	 *  	platformer
-	 *  		src
-	 *  			VS
-	 *  				map.java
-	 *  				... etc
-	 *  			Res
-	 *  				level_n_n.map
-	 *  				<player>_settings.xml??
-	 *  				players.txt
-	 *
-	 *  Output: Diagnostics
-	 *
-	 *
-	 *
-	 *
-	 *  1-platform(1x1)
-	 * 	2-player(1x1)
-	 *  3-checkpoint(variable)
 	 * TODO implement checkpoint variability
 	 *  4-
 	 *  5-
@@ -147,6 +142,80 @@ public class Map{
 	 * @throws IOException
 	 */
 	public boolean loadMap(String path) throws SlickException, IOException{
+
+
+	    	DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder;
+		Document doc = null;
+		try {
+		    docBuilder = docBuilderFactory.newDocumentBuilder();
+		    doc = docBuilder.parse (new File(path));
+		} catch (Exception e) {}
+		mapTileWidth = Integer.parseInt(doc.getDocumentElement().getAttribute("tilewidth"));
+		mapTileHeight = Integer.parseInt(doc.getDocumentElement().getAttribute("tileheight"));
+		mapWidth = Integer.parseInt(doc.getDocumentElement().getAttribute("width"))*mapTileWidth;
+		mapHeight = Integer.parseInt(doc.getDocumentElement().getAttribute("height"))*mapTileHeight;
+
+		tiles = new Image[mapTileWidth][mapTileHeight];
+
+		//parse the tilesets
+		NodeList tilesetElements = doc.getElementsByTagName("tileset");
+
+		for(int i = 0; i < tilesetElements.getLength(); i++){
+		    Node n = tilesetElements.item(i);
+		    NamedNodeMap attrList = n.getAttributes();
+		    int firstGid = Integer.parseInt(attrList.getNamedItem("firstgid").getNodeValue());
+		    int lasttGid = Integer.parseInt(attrList.getNamedItem("lastgid").getNodeValue());
+		    int tileWidth = Integer.parseInt(attrList.getNamedItem("tilewidth").getNodeValue());
+		    int tileHeight = Integer.parseInt(attrList.getNamedItem("tileheight").getNodeValue());
+		    String tileName = attrList.getNamedItem("name").getNodeValue();
+		    NodeList imgList = n.getChildNodes();
+		    attrList = imgList.item(0).getAttributes();
+		    String imgPath = attrList.getNamedItem("source").getNodeValue();
+		    Texture t = null;
+			try {
+				t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(imgPath));
+			} catch (IOException e1) {}
+		    Image img = new Image(t);
+		    int imgWidth = Integer.parseInt(attrList.getNamedItem("width").getNodeValue());
+		    int imgHeight = Integer.parseInt(attrList.getNamedItem("height").getNodeValue());
+		    tilesets.add(new TileSet(firstGid, tileName, tileWidth, tileHeight, img, imgWidth, imgHeight));
+		}
+
+		//parse the tiles
+		NodeList tileElements = doc.getElementsByTagName("tile");
+
+		for(int i = 0; i < tileElements.getLength(); i++){
+
+		    Node n = tileElements.item(i);
+		    NamedNodeMap attrList = n.getAttributes();
+		    int gid = Integer.parseInt(attrList.getNamedItem("gid").getNodeValue());
+		    int r = i/mapTileWidth;
+		    int c = i%mapTileWidth;
+		    for(TileSet ts : tilesets){
+			if(ts.hasgid(gid))
+			    tiles[r][c] = ts.getImageAt(gid);
+		    }
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		//reads in the .map file and stores it in a string.
 		BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -168,8 +237,8 @@ public class Map{
 		s = s.substring(s.indexOf("?") + 1);
 		String dimensions = s.substring(0, s.indexOf("?"));
 		//actual dimensions
-		width = Integer.parseInt(dimensions.substring(0, s.indexOf(":")));
-		height = Integer.parseInt(dimensions.substring(s.indexOf(":") + 1));
+//		width = Integer.parseInt(dimensions.substring(0, s.indexOf(":")));
+//		height = Integer.parseInt(dimensions.substring(s.indexOf(":") + 1));
 
 		/*
 		 * *** BOARD
@@ -258,7 +327,7 @@ public class Map{
 
 		return true;
 	}
-	
+
 	public void getPattern(String[][] map, int r, int c){
 		//if this is the top-left of the pattern
 		//counts backwards and upwards to see how many blocks of the same type preceed it.
@@ -276,26 +345,26 @@ public class Map{
 				}
 
 
-				if(prevWidthCount % width == 0 && prevHeightCount % height == 0){
+				if(prevWidthCount % mapWidth == 0 && prevHeightCount % mapHeight == 0){
 					int mr = r;
 					int mc = c;
 					curR = r;
 					curC = c;
 					while(curR < map.length && curC < map[curR].length && (map[curR][curC].equals("R") || map[curR][curC].equals("B") || map[curR][curC].equals("P") || map[curR][curC].equals("G") )){
-						
+
 						curC = c;
 						while(curR < map.length && curC < map[curR].length && (map[curR][curC].equals("R") || map[curR][curC].equals("B") || map[curR][curC].equals("P") || map[curR][curC].equals("G") )){
-						
-						
-						
+
+
+
 							curC++;
 							if(curC > mc)
 								mc = curC;
 						}
-						
-						
-						
-						
+
+
+
+
 						curR++;
 						if(curR > mr){
 							mr = curR;
@@ -324,18 +393,18 @@ public class Map{
 						default:
 							p.addBlock(new ColoredBlock(r * blocksize, c * blocksize, Color.gray));
 							break;
-						
+
 						}
 					}
 				}
 				p.setPatternArray(result);
 				patterns.add(p);
-				
-				}
-				
-				
 
-			
+				}
+
+
+
+
 	}
 
 	/***

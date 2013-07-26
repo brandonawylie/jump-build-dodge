@@ -44,7 +44,7 @@ public class GameplayState extends BasicGameState{
 		//Initialize the player, the x/y coordinates will be set via map.loadMap but defaults to the given 100, 100
 		Texture t = null;
 		try {
-			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/player.png"));
+			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/player.png"));
 		} catch (IOException e1) {	}
 		player = new Player(new Image(t), 100, 100);
 		//Initialize the map, to be loaded in the next line
@@ -53,7 +53,7 @@ public class GameplayState extends BasicGameState{
 		//grab the map
 		try {
 			//System.out.println(getClass().getClassLoader().getResource("./res/level_1_1.map").getPath());
-			map.loadMap(getClass().getClassLoader().getResource("res/level_1_1.map").getPath());
+			map.loadMap(getClass().getClassLoader().getResource("assets/level_1_1.map").getPath());
 			player.x = map.playerX;
 			player.y = map.playerY;
 		}catch (Exception e) {
@@ -71,18 +71,18 @@ public class GameplayState extends BasicGameState{
 //		temp[0][2] = "b";
 //		p.setPatternArray(temp);
 //		map.patterns.add(p);
-		
-		
+
+
 		//initialize the hud
-		
+
 		try {
-			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/hud-bottom.png"));
+			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/hud-bottom.png"));
 		} catch (IOException e) {}
 		Image i = new Image(t);
 		float scaleX = i.getWidth()/PlatformerGame.WIDTH;
 		float scaleY = i.getHeight()/PlatformerGame.HEIGHT;
 		hud = new HUD(i.getScaledCopy(PlatformerGame.WIDTH, PlatformerGame.HEIGHT/5));
-		
+
 		player.colorObs.add(hud);
 		player.positionObs.add(hud);
 		player.positionObs.add(map.pManager);
@@ -205,7 +205,7 @@ public class GameplayState extends BasicGameState{
 					map.collectableBlocks.remove(b);
 				}
 			}
-			
+
 			for(int i = 0; i < map.placedCollectableBlocks.size(); i++){
 				CollectableBlock b = map.placedCollectableBlocks.get(i);
 				Rectangle r = new Rectangle(b.getX() - 2, b.getY() - 2, b.width + 12, b.height + 12);
