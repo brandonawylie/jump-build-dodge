@@ -44,6 +44,7 @@ public class Map{
 	PatternManager pManager = new PatternManager();
 
 	//map settings
+	List<Rectangle> mapColloision = new ArrayList<>();
 	Image bg;
 	int mapTileWidth;
 	int mapTileHeight;
@@ -199,7 +200,33 @@ public class Map{
 		}
 
 
-
+		NodeList objectGroups = doc.getElementsByTagName("objectgroup");
+		
+		for(int i = 0; i < objectGroups.getLength(); i++){
+			Node n = objectGroups.item(i);
+			String name = n.getAttributes().getNamedItem("name").getNodeValue();
+			if(name.equals("collision")){
+				NodeList collisionElements = n.getChildNodes();
+				for(int j = 0; j < collisionElements.getLength(); j++){
+					Node collisionNode = collisionElements.item(j);
+					int x = Integer.parseInt(collisionNode.getAttributes().getNamedItem("x").getNodeValue());
+					int y = Integer.parseInt(collisionNode.getAttributes().getNamedItem("y").getNodeValue());
+					int width = Integer.parseInt(collisionNode.getAttributes().getNamedItem("width").getNodeValue());
+					int height = Integer.parseInt(collisionNode.getAttributes().getNamedItem("height").getNodeValue());
+					mapColloision.add(new Rectangle(x,y,width,height));
+				}
+			}else{
+				NodeList objectElements = n.getChildNodes();
+				for(int j = 0; j < objectElements.getLength(); j++){
+					Node objectNode = objectElements.item(j);
+					int x = Integer.parseInt(objectNode.getAttributes().getNamedItem("x").getNodeValue());
+					int y = Integer.parseInt(objectNode.getAttributes().getNamedItem("y").getNodeValue());
+					int width = Integer.parseInt(objectNode.getAttributes().getNamedItem("width").getNodeValue());
+					int height = Integer.parseInt(objectNode.getAttributes().getNamedItem("height").getNodeValue());
+					String objectName = objectNode.getAttributes().getNamedItem("height").getNodeValue();
+				}
+			}
+		}
 
 
 
