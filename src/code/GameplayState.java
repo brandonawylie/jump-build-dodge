@@ -53,7 +53,7 @@ public class GameplayState extends BasicGameState{
 		//grab the map
 		try {
 			//System.out.println(getClass().getClassLoader().getResource("./res/level_1_1.map").getPath());
-			map.loadMap(getClass().getClassLoader().getResource("assets/level_1_1.map").getPath());
+			map.loadMap(getClass().getClassLoader().getResource("assets/level_1.tmx").getPath());
 			player.x = map.playerX;
 			player.y = map.playerY;
 		}catch (Exception e) {

@@ -26,18 +26,22 @@ public class TileSet{
 		tileAmountWidth = (int) Math.floor(imageWidth / tileWidth);
 		lastgid = (int) (tileAmountWidth * Math.floor(imageHeight / tileHeight) + firstgid - 1);
 
+		System.out.println("fgid = " + firstgid + ", lastgid = " + lastgid + ", length = " + (lastgid - firstgid));
+		
 		// load images for tileset
 		tiles = new Image[lastgid - firstgid];
-		int i = 0;
-		for(int r = 0; r < tileHeight; r++){
-			for(int c = 0; c < tileWidth; c++){
-				tiles[i] = bitmap.getSubImage(c*tileWidth, r*tileHeight, tileWidth, tileHeight);
-				i++;
-			}
+		int r = 0;
+		int c = 0;
+		for(int i = 0; i < tiles.length; i++){
+			r = i*tileWidth/imageWidth;
+			c = (i*tileWidth%imageWidth)/tileWidth;
+			tiles[i] = bitmap.getSubImage(c*tileWidth, r*tileHeight, tileWidth, tileHeight);
+			i++;
 		}
    }
 
 	public boolean hasgid(int gid){
+		System.out.println("gid=" + gid);
 		if(gid >= firstgid && gid <= lastgid){
 			return true;
 		}
@@ -45,6 +49,8 @@ public class TileSet{
 	}
 
 	public Image getImageAt(int gid){
-		return tiles[gid];
+		if(hasgid(gid))
+			return tiles[gid - firstgid];
+		else return null;
 	}
 }

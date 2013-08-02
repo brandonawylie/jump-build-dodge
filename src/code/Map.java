@@ -78,6 +78,13 @@ public class Map{
 	 * @param viewportY
 	 */
 	public void draw(Graphics g, int viewportX, int viewportY){
+		
+		for(int r = 0; r < tiles.length; r++){
+			for(int c = 0; c < tiles[r].length; c++){
+				if(tiles[r][c] != null)
+					g.drawImage(tiles[r][c], c*mapTileWidth - viewportX, r*mapTileHeight - viewportY);
+			}
+		}
 
 		for(Platform p : platforms)
 			p.draw(g, viewportX, viewportY);
@@ -143,15 +150,17 @@ public class Map{
 	 * @throws IOException
 	 */
 	public boolean loadMap(String path) throws SlickException, IOException{
+		System.out.println(path);
 
-
-	    	DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		Document doc = null;
 		try {
 		    docBuilder = docBuilderFactory.newDocumentBuilder();
 		    doc = docBuilder.parse (new File(path));
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		mapTileWidth = Integer.parseInt(doc.getDocumentElement().getAttribute("tilewidth"));
 		mapTileHeight = Integer.parseInt(doc.getDocumentElement().getAttribute("tileheight"));
 		mapWidth = Integer.parseInt(doc.getDocumentElement().getAttribute("width"))*mapTileWidth;
@@ -166,20 +175,24 @@ public class Map{
 		    Node n = tilesetElements.item(i);
 		    NamedNodeMap attrList = n.getAttributes();
 		    int firstGid = Integer.parseInt(attrList.getNamedItem("firstgid").getNodeValue());
-		    int lasttGid = Integer.parseInt(attrList.getNamedItem("lastgid").getNodeValue());
+		    //int lasttGid = Integer.parseInt(attrList.getNamedItem("lastgid").getNodeValue());
 		    int tileWidth = Integer.parseInt(attrList.getNamedItem("tilewidth").getNodeValue());
 		    int tileHeight = Integer.parseInt(attrList.getNamedItem("tileheight").getNodeValue());
 		    String tileName = attrList.getNamedItem("name").getNodeValue();
 		    NodeList imgList = n.getChildNodes();
-		    attrList = imgList.item(0).getAttributes();
-		    String imgPath = attrList.getNamedItem("source").getNodeValue();
+		    for(int j = 0; j < imgList.getLength(); j++){
+		    	Node node = imgList.item(j);
+		    	System.out.println("j = " + j + ", " + node.getNodeName());
+		    }
+		    NamedNodeMap attrList2 = imgList.item(1).getAttributes();
+		    String imgPath = attrList2.getNamedItem("source").getNodeValue();
 		    Texture t = null;
 			try {
-				t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(imgPath));
+				t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/" + imgPath));
 			} catch (IOException e1) {}
 		    Image img = new Image(t);
-		    int imgWidth = Integer.parseInt(attrList.getNamedItem("width").getNodeValue());
-		    int imgHeight = Integer.parseInt(attrList.getNamedItem("height").getNodeValue());
+		    int imgWidth = Integer.parseInt(attrList2.getNamedItem("width").getNodeValue());
+		    int imgHeight = Integer.parseInt(attrList2.getNamedItem("height").getNodeValue());
 		    tilesets.add(new TileSet(firstGid, tileName, tileWidth, tileHeight, img, imgWidth, imgHeight));
 		}
 
@@ -209,24 +222,36 @@ public class Map{
 				NodeList collisionElements = n.getChildNodes();
 				for(int j = 0; j < collisionElements.getLength(); j++){
 					Node collisionNode = collisionElements.item(j);
-					int x = Integer.parseInt(collisionNode.getAttributes().getNamedItem("x").getNodeValue());
-					int y = Integer.parseInt(collisionNode.getAttributes().getNamedItem("y").getNodeValue());
-					int width = Integer.parseInt(collisionNode.getAttributes().getNamedItem("width").getNodeValue());
-					int height = Integer.parseInt(collisionNode.getAttributes().getNamedItem("height").getNodeValue());
-					mapColloision.add(new Rectangle(x,y,width,height));
+					System.out.println("collision ob=" + collisionNode.getNodeName());
+					if(collisionNode.getNodeName().equals("object")){
+						int x = Integer.parseInt(collisionNode.getAttributes().getNamedItem("x").getNodeValue());
+						int y = Integer.parseInt(collisionNode.getAttributes().getNamedItem("y").getNodeValue());
+						int width = Integer.parseInt(collisionNode.getAttributes().getNamedItem("width").getNodeValue());
+						int height = Integer.parseInt(collisionNode.getAttributes().getNamedItem("height").getNodeValue());
+						mapColloision.add(new Rectangle(x,y,width,height));
+					}
 				}
 			}else{
 				NodeList objectElements = n.getChildNodes();
 				for(int j = 0; j < objectElements.getLength(); j++){
 					Node objectNode = objectElements.item(j);
-					int x = Integer.parseInt(objectNode.getAttributes().getNamedItem("x").getNodeValue());
-					int y = Integer.parseInt(objectNode.getAttributes().getNamedItem("y").getNodeValue());
-					int width = Integer.parseInt(objectNode.getAttributes().getNamedItem("width").getNodeValue());
-					int height = Integer.parseInt(objectNode.getAttributes().getNamedItem("height").getNodeValue());
-					String objectName = objectNode.getAttributes().getNamedItem("height").getNodeValue();
+					System.out.println("object=" + objectNode.getNodeName());
+					if(objectNode.getNodeName().equals("object")){
+						try{
+							System.out.println("x = "  + objectNode.getAttributes().getNamedItem("x").getNodeValue()  + "\ny = " + objectNode.getAttributes().getNamedItem("y").getNodeValue()
+									+ "\nwidth = " + objectNode.getAttributes().getNamedItem("width").getNodeValue() + "\nheight = " + objectNode.getAttributes().getNamedItem("height").getNodeValue());
+							int x = Integer.parseInt(objectNode.getAttributes().getNamedItem("x").getNodeValue());
+							int y = Integer.parseInt(objectNode.getAttributes().getNamedItem("y").getNodeValue());
+							int width = Integer.parseInt(objectNode.getAttributes().getNamedItem("width").getNodeValue());
+							int height = Integer.parseInt(objectNode.getAttributes().getNamedItem("height").getNodeValue());
+							String objectName = objectNode.getAttributes().getNamedItem("name").getNodeValue();
+							loadObject(objectName, x, y, width, height);
+						} catch(Exception e){ }
+					}
 				}
 			}
 		}
+		return false;
 
 
 
@@ -239,120 +264,120 @@ public class Map{
 
 
 
-
-
-
-
-
-		//reads in the .map file and stores it in a string.
-		BufferedReader reader = new BufferedReader(new FileReader(path));
-		String s = new String();
-		String line;
-		while((line = reader.readLine()) != null){
-				s += line;
-			}
-
-		//seperate the map image, the dimensions and the board itself
-		/*
-		 *** DIMENSTIONS AND SETTINGS
-		 */
-		s = s.substring(s.indexOf("\"") + 1);
-		String bgname = s.substring(0, s.indexOf("\""));
-		//this is for a potential background image to be loaded in.
-		//bg = new Image(bgname);
-		s = s.substring(s.indexOf(",") + 1);
-		s = s.substring(s.indexOf("?") + 1);
-		String dimensions = s.substring(0, s.indexOf("?"));
-		//actual dimensions
-//		width = Integer.parseInt(dimensions.substring(0, s.indexOf(":")));
-//		height = Integer.parseInt(dimensions.substring(s.indexOf(":") + 1));
-
-		/*
-		 * *** BOARD
-		 */
-		s = s.substring(s.indexOf(";") + 1);
-		String[] mapRows = s.split(";");
-		//the actual mapping of things
-		String[][] map = new String[mapRows.length][];
-		for(int i = 0; i < mapRows.length; i++){
-			map[i] = mapRows[i].split(",");
-		}
-
-		/*THIS IS WHERE THE BOARD IS ACTUALLY PARSED
-		 * .map files will have a nxn array in it
-		 *  0 = space
-		 *  1 = block
-		 *  2 =
-		 *  3 =
-		 *  4 =
-		 *  5 =
-		 *  6 =
-		 *  7 =
-		 *  8 =
-		 *  9 = player
-		 *
-		 */
-		for(int r = 0; r < map.length; r++){
-			for(int c = 0; c < map[r].length; c++){
-				map[r][c] = map[r][c].trim();
-				//get the current number from the array
-				//int currentDigit = Integer.parseInt(map[r][c]);
-				//the x and y coordinates are the row & column * 18.
-				int x = c * blocksize;
-				int y = r * blocksize;
-
-				//Will create the object at the top left corner of the !!RECTANGULAR!! map representation.
-				if(map[r][c].equals("0")){
-
-				}else if(map[r][c].equals("1")){
-					//Image texture = new Image("res/brown_block_reg.png");
-					platforms.add(new Platform(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							blocksize*GameplayState.VIEWPORT_RATIO_X, blocksize*GameplayState.VIEWPORT_RATIO_Y));
-				}else if(map[r][c].equals("3")){
-					//TODO count the rows & columns
-					//TODO store it
-					//TODO use it in isTopLeft :)
-				}else if(map[r][c].equals("4")){
-
-				}else if(map[r][c].equals("5")){
-
-				}else if(map[r][c].equals("6")){
-
-				}else if(map[r][c].equals("7")){
-
-				}else if(map[r][c].equals("8")){
-
-				}else if(map[r][c].equals("9")){
-					playerX = x;
-					playerY = y;
-				}else if(map[r][c].equals("r")){
-
-					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
-				}else if(map[r][c].equals("R")){
-					getPattern(map, r, c);
-				}else if(map[r][c].equals("b")){
-					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
-				}else if(map[r][c].equals("B")){
-					getPattern(map, r, c);
-				}else if(map[r][c].equals("p")){
-
-					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.pink));
-				}else if(map[r][c].equals("P")){
-					getPattern(map, r, c);
-				}else if(map[r][c].equals("g")){
-
-					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
-							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
-				}else if(map[r][c].equals("G")){
-					getPattern(map, r, c);
-				}
-			}
-		}
-
-		return true;
+//
+//
+//
+//
+//
+//		//reads in the .map file and stores it in a string.
+//		BufferedReader reader = new BufferedReader(new FileReader(path));
+//		String s = new String();
+//		String line;
+//		while((line = reader.readLine()) != null){
+//				s += line;
+//			}
+//
+//		//seperate the map image, the dimensions and the board itself
+//		/*
+//		 *** DIMENSTIONS AND SETTINGS
+//		 */
+//		s = s.substring(s.indexOf("\"") + 1);
+//		String bgname = s.substring(0, s.indexOf("\""));
+//		//this is for a potential background image to be loaded in.
+//		//bg = new Image(bgname);
+//		s = s.substring(s.indexOf(",") + 1);
+//		s = s.substring(s.indexOf("?") + 1);
+//		String dimensions = s.substring(0, s.indexOf("?"));
+//		//actual dimensions
+////		width = Integer.parseInt(dimensions.substring(0, s.indexOf(":")));
+////		height = Integer.parseInt(dimensions.substring(s.indexOf(":") + 1));
+//
+//		/*
+//		 * *** BOARD
+//		 */
+//		s = s.substring(s.indexOf(";") + 1);
+//		String[] mapRows = s.split(";");
+//		//the actual mapping of things
+//		String[][] map = new String[mapRows.length][];
+//		for(int i = 0; i < mapRows.length; i++){
+//			map[i] = mapRows[i].split(",");
+//		}
+//
+//		/*THIS IS WHERE THE BOARD IS ACTUALLY PARSED
+//		 * .map files will have a nxn array in it
+//		 *  0 = space
+//		 *  1 = block
+//		 *  2 =
+//		 *  3 =
+//		 *  4 =
+//		 *  5 =
+//		 *  6 =
+//		 *  7 =
+//		 *  8 =
+//		 *  9 = player
+//		 *
+//		 */
+//		for(int r = 0; r < map.length; r++){
+//			for(int c = 0; c < map[r].length; c++){
+//				map[r][c] = map[r][c].trim();
+//				//get the current number from the array
+//				//int currentDigit = Integer.parseInt(map[r][c]);
+//				//the x and y coordinates are the row & column * 18.
+//				int x = c * blocksize;
+//				int y = r * blocksize;
+//
+//				//Will create the object at the top left corner of the !!RECTANGULAR!! map representation.
+//				if(map[r][c].equals("0")){
+//
+//				}else if(map[r][c].equals("1")){
+//					//Image texture = new Image("res/brown_block_reg.png");
+//					platforms.add(new Platform(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+//							blocksize*GameplayState.VIEWPORT_RATIO_X, blocksize*GameplayState.VIEWPORT_RATIO_Y));
+//				}else if(map[r][c].equals("3")){
+//					//TODO count the rows & columns
+//					//TODO store it
+//					//TODO use it in isTopLeft :)
+//				}else if(map[r][c].equals("4")){
+//
+//				}else if(map[r][c].equals("5")){
+//
+//				}else if(map[r][c].equals("6")){
+//
+//				}else if(map[r][c].equals("7")){
+//
+//				}else if(map[r][c].equals("8")){
+//
+//				}else if(map[r][c].equals("9")){
+//					playerX = x;
+//					playerY = y;
+//				}else if(map[r][c].equals("r")){
+//
+//					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+//							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.red));
+//				}else if(map[r][c].equals("R")){
+//					getPattern(map, r, c);
+//				}else if(map[r][c].equals("b")){
+//					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+//							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.blue));
+//				}else if(map[r][c].equals("B")){
+//					getPattern(map, r, c);
+//				}else if(map[r][c].equals("p")){
+//
+//					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+//							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.pink));
+//				}else if(map[r][c].equals("P")){
+//					getPattern(map, r, c);
+//				}else if(map[r][c].equals("g")){
+//
+//					collectableBlocks.add(new CollectableBlock(x*GameplayState.VIEWPORT_RATIO_X, y*GameplayState.VIEWPORT_RATIO_Y,
+//							GameplayState.VIEWPORT_RATIO_X, GameplayState.VIEWPORT_RATIO_Y, Color.green));
+//				}else if(map[r][c].equals("G")){
+//					getPattern(map, r, c);
+//				}
+//			}
+//		}
+//
+//		return true;
 	}
 
 	public void getPattern(String[][] map, int r, int c){
@@ -432,6 +457,35 @@ public class Map{
 
 
 
+	}
+	
+	public void loadObject(String object, int x, int y, int width, int height){
+		System.out.println("object="+object);
+		switch(object){
+			case "player":
+				 playerX = x;
+				 playerY = y;
+				 break;
+			case "CollectableBlock_Red":
+				collectableBlocks.add(new CollectableBlock(x, y, width, height, Color.red));
+				break;
+				
+			case "CollectableBlock_Blue":
+				collectableBlocks.add(new CollectableBlock(x, y, width, height, Color.blue));
+				break;
+				
+			case "CollectableBlock_Green":
+				collectableBlocks.add(new CollectableBlock(x, y, width, height, Color.green));
+				break;
+			
+			case "CollectableBlock_Yellow":
+				collectableBlocks.add(new CollectableBlock(x, y, width, height, Color.yellow));
+				
+			default:
+				System.out.println("map: object not recognized");
+				break;
+				
+		}
 	}
 
 	/***
