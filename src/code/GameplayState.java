@@ -113,7 +113,7 @@ public class GameplayState extends BasicGameState{
 		player.update(gc, delta, map);
 
 
-		//adjust the viewport to center around the player. everything will obey this shift.
+		//adjust the vieaaaaaaort to center around the player. everything will obey this shift.
 		VIEWPORT_X = (int) (player.x - PlatformerGame.WIDTH/2);
 		VIEWPORT_Y = (int) (player.y - PlatformerGame.HEIGHT/2);
 //		if(VIEWPORT_X < 0)

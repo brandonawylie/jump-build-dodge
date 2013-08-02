@@ -1,16 +1,13 @@
 package code;
 
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -19,12 +16,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 public class Map{
 	//info about how the map is rendered. not sure how this fits with the new setup
@@ -44,6 +41,7 @@ public class Map{
 	PatternManager pManager = new PatternManager();
 
 	//map settings
+	TiledMap tiledMap;
 	List<Rectangle> mapColloision = new ArrayList<>();
 	Image bg;
 	int mapTileWidth;
@@ -78,7 +76,7 @@ public class Map{
 	 * @param viewportY
 	 */
 	public void draw(Graphics g, int viewportX, int viewportY){
-		
+		tiledMap.render(-viewportX, -viewportY);
 		for(int r = 0; r < tiles.length; r++){
 			for(int c = 0; c < tiles[r].length; c++){
 				if(tiles[r][c] != null)
@@ -150,114 +148,116 @@ public class Map{
 	 * @throws IOException
 	 */
 	public boolean loadMap(String path) throws SlickException, IOException{
-		System.out.println(path);
-
-	    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder;
-		Document doc = null;
-		try {
-		    docBuilder = docBuilderFactory.newDocumentBuilder();
-		    doc = docBuilder.parse (new File(path));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		mapTileWidth = Integer.parseInt(doc.getDocumentElement().getAttribute("tilewidth"));
-		mapTileHeight = Integer.parseInt(doc.getDocumentElement().getAttribute("tileheight"));
-		mapWidth = Integer.parseInt(doc.getDocumentElement().getAttribute("width"))*mapTileWidth;
-		mapHeight = Integer.parseInt(doc.getDocumentElement().getAttribute("height"))*mapTileHeight;
-
-		tiles = new Image[mapTileWidth][mapTileHeight];
-
-		//parse the tilesets
-		NodeList tilesetElements = doc.getElementsByTagName("tileset");
-
-		for(int i = 0; i < tilesetElements.getLength(); i++){
-		    Node n = tilesetElements.item(i);
-		    NamedNodeMap attrList = n.getAttributes();
-		    int firstGid = Integer.parseInt(attrList.getNamedItem("firstgid").getNodeValue());
-		    //int lasttGid = Integer.parseInt(attrList.getNamedItem("lastgid").getNodeValue());
-		    int tileWidth = Integer.parseInt(attrList.getNamedItem("tilewidth").getNodeValue());
-		    int tileHeight = Integer.parseInt(attrList.getNamedItem("tileheight").getNodeValue());
-		    String tileName = attrList.getNamedItem("name").getNodeValue();
-		    NodeList imgList = n.getChildNodes();
-		    for(int j = 0; j < imgList.getLength(); j++){
-		    	Node node = imgList.item(j);
-		    	System.out.println("j = " + j + ", " + node.getNodeName());
-		    }
-		    NamedNodeMap attrList2 = imgList.item(1).getAttributes();
-		    String imgPath = attrList2.getNamedItem("source").getNodeValue();
-		    Texture t = null;
-			try {
-				t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/" + imgPath));
-			} catch (IOException e1) {}
-		    Image img = new Image(t);
-		    int imgWidth = Integer.parseInt(attrList2.getNamedItem("width").getNodeValue());
-		    int imgHeight = Integer.parseInt(attrList2.getNamedItem("height").getNodeValue());
-		    tilesets.add(new TileSet(firstGid, tileName, tileWidth, tileHeight, img, imgWidth, imgHeight));
-		}
-
-		//parse the tiles
-		NodeList tileElements = doc.getElementsByTagName("tile");
-
-		for(int i = 0; i < tileElements.getLength(); i++){
-
-		    Node n = tileElements.item(i);
-		    NamedNodeMap attrList = n.getAttributes();
-		    int gid = Integer.parseInt(attrList.getNamedItem("gid").getNodeValue());
-		    int r = i/mapTileWidth;
-		    int c = i%mapTileWidth;
-		    for(TileSet ts : tilesets){
-			if(ts.hasgid(gid))
-			    tiles[r][c] = ts.getImageAt(gid);
-		    }
-		}
-
-
-		NodeList objectGroups = doc.getElementsByTagName("objectgroup");
-		
-		for(int i = 0; i < objectGroups.getLength(); i++){
-			Node n = objectGroups.item(i);
-			String name = n.getAttributes().getNamedItem("name").getNodeValue();
-			if(name.equals("collision")){
-				NodeList collisionElements = n.getChildNodes();
-				for(int j = 0; j < collisionElements.getLength(); j++){
-					Node collisionNode = collisionElements.item(j);
-					System.out.println("collision ob=" + collisionNode.getNodeName());
-					if(collisionNode.getNodeName().equals("object")){
-						int x = Integer.parseInt(collisionNode.getAttributes().getNamedItem("x").getNodeValue());
-						int y = Integer.parseInt(collisionNode.getAttributes().getNamedItem("y").getNodeValue());
-						int width = Integer.parseInt(collisionNode.getAttributes().getNamedItem("width").getNodeValue());
-						int height = Integer.parseInt(collisionNode.getAttributes().getNamedItem("height").getNodeValue());
-						mapColloision.add(new Rectangle(x,y,width,height));
-					}
-				}
-			}else{
-				NodeList objectElements = n.getChildNodes();
-				for(int j = 0; j < objectElements.getLength(); j++){
-					Node objectNode = objectElements.item(j);
-					System.out.println("object=" + objectNode.getNodeName());
-					if(objectNode.getNodeName().equals("object")){
-						try{
-							System.out.println("x = "  + objectNode.getAttributes().getNamedItem("x").getNodeValue()  + "\ny = " + objectNode.getAttributes().getNamedItem("y").getNodeValue()
-									+ "\nwidth = " + objectNode.getAttributes().getNamedItem("width").getNodeValue() + "\nheight = " + objectNode.getAttributes().getNamedItem("height").getNodeValue());
-							int x = Integer.parseInt(objectNode.getAttributes().getNamedItem("x").getNodeValue());
-							int y = Integer.parseInt(objectNode.getAttributes().getNamedItem("y").getNodeValue());
-							int width = Integer.parseInt(objectNode.getAttributes().getNamedItem("width").getNodeValue());
-							int height = Integer.parseInt(objectNode.getAttributes().getNamedItem("height").getNodeValue());
-							String objectName = objectNode.getAttributes().getNamedItem("name").getNodeValue();
-							loadObject(objectName, x, y, width, height);
-						} catch(Exception e){ }
-					}
-				}
-			}
-		}
+		tiledMap = new TiledMap(path);
+//		System.out.println(path);
+//
+//	    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+//		DocumentBuilder docBuilder;
+//		Document doc = null;
+//		try {
+//		    docBuilder = docBuilderFactory.newDocumentBuilder();
+//		    doc = docBuilder.parse (new File(path));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		mapTileWidth = Integer.parseInt(doc.getDocumentElement().getAttribute("tilewidth"));
+//		mapTileHeight = Integer.parseInt(doc.getDocumentElement().getAttribute("tileheight"));
+//		mapWidth = Integer.parseInt(doc.getDocumentElement().getAttribute("width"))*mapTileWidth;
+//		mapHeight = Integer.parseInt(doc.getDocumentElement().getAttribute("height"))*mapTileHeight;
+//
+//		tiles = new Image[mapTileWidth][mapTileHeight];
+//
+//		//parse the tilesets
+//		NodeList tilesetElements = doc.getElementsByTagName("tileset");
+//
+//		for(int i = 0; i < tilesetElements.getLength(); i++){
+//		    Node n = tilesetElements.item(i);
+//		    NamedNodeMap attrList = n.getAttributes();
+//		    int firstGid = Integer.parseInt(attrList.getNamedItem("firstgid").getNodeValue());
+//		    //int lasttGid = Integer.parseInt(attrList.getNamedItem("lastgid").getNodeValue());
+//		    int tileWidth = Integer.parseInt(attrList.getNamedItem("tilewidth").getNodeValue());
+//		    int tileHeight = Integer.parseInt(attrList.getNamedItem("tileheight").getNodeValue());
+//		    String tileName = attrList.getNamedItem("name").getNodeValue();
+//		    NodeList imgList = n.getChildNodes();
+//		    for(int j = 0; j < imgList.getLength(); j++){
+//		    	Node node = imgList.item(j);
+//		    	System.out.println("j = " + j + ", " + node.getNodeName());
+//		    }
+//		    NamedNodeMap attrList2 = imgList.item(1).getAttributes();
+//		    String imgPath = attrList2.getNamedItem("source").getNodeValue();
+//		    Texture t = null;
+//			try {
+//				t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/" + imgPath));
+//			} catch (IOException e1) {}
+//		    Image img = new Image(t);
+//		    int imgWidth = Integer.parseInt(attrList2.getNamedItem("width").getNodeValue());
+//		    int imgHeight = Integer.parseInt(attrList2.getNamedItem("height").getNodeValue());
+//		    tilesets.add(new TileSet(firstGid, tileName, tileWidth, tileHeight, img, imgWidth, imgHeight));
+//		}
+//
+//		//parse the tiles
+//		NodeList tileElements = doc.getElementsByTagName("tile");
+//
+//		for(int i = 0; i < tileElements.getLength(); i++){
+//
+//		    Node n = tileElements.item(i);
+//		    NamedNodeMap attrList = n.getAttributes();
+//		    int gid = Integer.parseInt(attrList.getNamedItem("gid").getNodeValue());
+//		    int r = i/mapTileWidth;
+//		    int c = i%mapTileWidth;
+//		    for(TileSet ts : tilesets){
+//			if(ts.hasgid(gid))
+//			    tiles[r][c] = ts.getImageAt(gid);
+//		    }
+//		}
+//
+//
+//		NodeList objectGroups = doc.getElementsByTagName("objectgroup");
+//		
+//		for(int i = 0; i < objectGroups.getLength(); i++){
+//			Node n = objectGroups.item(i);
+//			String name = n.getAttributes().getNamedItem("name").getNodeValue();
+//			if(name.equals("collision")){
+//				NodeList collisionElements = n.getChildNodes();
+//				for(int j = 0; j < collisionElements.getLength(); j++){
+//					Node collisionNode = collisionElements.item(j);
+//					System.out.println("collision ob=" + collisionNode.getNodeName());
+//					if(collisionNode.getNodeName().equals("object")){
+//						int x = Integer.parseInt(collisionNode.getAttributes().getNamedItem("x").getNodeValue());
+//						int y = Integer.parseInt(collisionNode.getAttributes().getNamedItem("y").getNodeValue());
+//						int width = Integer.parseInt(collisionNode.getAttributes().getNamedItem("width").getNodeValue());
+//						int height = Integer.parseInt(collisionNode.getAttributes().getNamedItem("height").getNodeValue());
+//						mapColloision.add(new Rectangle(x,y,width,height));
+//					}
+//				}
+//			}else{
+//				NodeList objectElements = n.getChildNodes();
+//				for(int j = 0; j < objectElements.getLength(); j++){
+//					Node objectNode = objectElements.item(j);
+//					System.out.println("object=" + objectNode.getNodeName());
+//					if(objectNode.getNodeName().equals("object")){
+//						try{
+//							System.out.println("x = "  + objectNode.getAttributes().getNamedItem("x").getNodeValue()  + "\ny = " + objectNode.getAttributes().getNamedItem("y").getNodeValue()
+//									+ "\nwidth = " + objectNode.getAttributes().getNamedItem("width").getNodeValue() + "\nheight = " + objectNode.getAttributes().getNamedItem("height").getNodeValue());
+//							int x = Integer.parseInt(objectNode.getAttributes().getNamedItem("x").getNodeValue());
+//							int y = Integer.parseInt(objectNode.getAttributes().getNamedItem("y").getNodeValue());
+//							int width = Integer.parseInt(objectNode.getAttributes().getNamedItem("width").getNodeValue());
+//							int height = Integer.parseInt(objectNode.getAttributes().getNamedItem("height").getNodeValue());
+//							String objectName = objectNode.getAttributes().getNamedItem("name").getNodeValue();
+//							loadObject(objectName, x, y, width, height);
+//						} catch(Exception e){ }
+//					}
+//				}
+//			}
+//		}
+//		return false;
+//
+//
+//
+//
+//
+//
 		return false;
-
-
-
-
-
-
 
 
 

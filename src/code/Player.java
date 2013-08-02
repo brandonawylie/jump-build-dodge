@@ -13,7 +13,7 @@ public class Player implements Oberservable{
 	float x, y, dx, dy, speed, ratioX, ratioY;
 	float width = 10;
 	float height = 10;
-	float jumpSpeed = 4f*GameplayState.VIEWPORT_RATIO_Y;
+	float jumpSpeed = 2f*GameplayState.VIEWPORT_RATIO_Y;
 	boolean movingLeft = false;
 	boolean movingRight = false;
 	boolean inAir = false;
