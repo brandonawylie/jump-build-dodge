@@ -1,8 +1,12 @@
 package code;
-import java.util.Random;
+import java.io.IOException;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 public class CollectableBlock {
 
@@ -11,13 +15,17 @@ public class CollectableBlock {
 	//colors for the inside and outline of the platform
 	private Color color = Color.black;
 	private Color outline = Color.white;
-
-	public CollectableBlock(float x, float y, float ratioX, float ratioY, Color color){
+	Image image;
+	public CollectableBlock(float x, float y, String path){
 		this.x = x;
 		this.y = y;
-		width = Map.blocksize*ratioX;
-		height = Map.blocksize*ratioY;
-		this.color = color;
+		Texture t = null;
+		try {
+			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path));
+		} catch (IOException e) {}
+		image = new Image(t);
+		width = image.getWidth();
+		height = image.getHeight();
 	}
 
 	//contains most the logic for this collectable block
@@ -27,13 +35,7 @@ public class CollectableBlock {
 
 	//draws this collectableblock
 	public void draw(Graphics g, int shiftX, int shiftY) {
-		//draw the outline of the block
-		g.setColor(outline);
-	    g.drawRect(x - shiftX, y - shiftY, width, height);
-
-		//fill the block
-	    g.setColor(color);
-	    g.fillRect(x - shiftX + 1, y - shiftY + 1, width - 1, height - 1);
+		g.drawImage(image, x - shiftX, y - shiftY);
     }
 
 	//returns the x coordinate of this platform

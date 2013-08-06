@@ -14,8 +14,6 @@ public class ColoredBlock {
 		public ColoredBlock(float x, float y, Color color){
 			this.x = x;
 			this.y = y;
-			width = Map.blocksize*GameplayState.VIEWPORT_RATIO_X;
-			height = Map.blocksize*GameplayState.VIEWPORT_RATIO_Y;
 			this.color = color;
 		}
 

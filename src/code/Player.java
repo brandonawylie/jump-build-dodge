@@ -6,14 +6,19 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 
-
+import org.newdawn.slick.Animation;
 public class Player implements Oberservable{
 	float x, y, dx, dy, speed, ratioX, ratioY;
-	float width = 10;
-	float height = 10;
-	float jumpSpeed = 2f*GameplayState.VIEWPORT_RATIO_Y;
+	int width = 49;
+	int height = 40;
+	int idleRow = 58;
+	int runningRow = 0;
+	int jumpingRow = 1;
+	float jumpSpeed = 5f*GameplayState.VIEWPORT_RATIO_Y;
 	boolean movingLeft = false;
 	boolean movingRight = false;
 	boolean inAir = false;
@@ -26,9 +31,9 @@ public class Player implements Oberservable{
 	
 	public float MAX_SPEED = 5*GameplayState.VIEWPORT_RATIO_X;
 	
-	
-	Animation walkingAnimation, idleAnimation;
-	Image spriteSheet;
+	org.newdawn.slick.Animation walkingLeft, walkingRight, idle, jumping;
+	int jumpAnimationFrames = 3;
+	int fallAnimationFrames = 4;
 	List<Projectile> projectiles = new ArrayList<Projectile>();
 
 	public Rectangle redR;
@@ -41,12 +46,12 @@ public class Player implements Oberservable{
 
 	float iwidth = 10;
 	float iheight = 10;
-
+	
 	float delta = 22f;
 
+	SpriteSheet spriteSheet;
 	int n = 0;
-	public Player(Image i, float x, float y){
-		spriteSheet = i;
+	public Player(String path, float x, float y){
 		this.x = x; this.y = y;
 		dx = 0; dy = 0;
 		speed = .075f*GameplayState.VIEWPORT_RATIO_X;
@@ -59,25 +64,47 @@ public class Player implements Oberservable{
 		pinkR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
 		n++;
 		greenR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
-	
-		idleAnimation = new Animation(0,0,56,80,spriteSheet);
-		walkingAnimation = new Animation(0, 80, 56, 80, spriteSheet);
-		width = idleAnimation.width;
-		height = idleAnimation.height;
+		
+		try {
+			spriteSheet = new SpriteSheet(path, width,height);
+		} catch (SlickException e) { }
+		Image[] walk = {spriteSheet.getSprite(0, runningRow).getSubImage(0, 0, width, height), spriteSheet.getSprite(1, runningRow).getSubImage(0, 0, width, height), 
+				spriteSheet.getSprite(2, runningRow).getSubImage(0, 0, width, height), spriteSheet.getSprite(3, runningRow).getSubImage(0, 0, width, height), spriteSheet.getSprite(4, runningRow).getSubImage(0, 0, width, height), 
+				spriteSheet.getSprite(5, runningRow).getSubImage(0, 0, width, height),spriteSheet.getSprite(6, runningRow).getSubImage(0, 0, width, height),spriteSheet.getSprite(7, runningRow).getSubImage(0, 0, width, height),spriteSheet.getSprite(8, runningRow).getSubImage(0, 0, width, height)};
+		int[] dur = {200,200,200,200,200,200,200,200,200};
+		walkingLeft = new Animation(walk, dur);
+		Image[] walkR = {spriteSheet.getSprite(0, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, 50, 40), spriteSheet.getSprite(1, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, 50, 40), 
+				spriteSheet.getSprite(2, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, 50, 40), spriteSheet.getSprite(3, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, 50, 40), spriteSheet.getSprite(4, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, 50, 40), 
+				spriteSheet.getSprite(5, runningRow).getFlippedCopy(true, false),spriteSheet.getSprite(6, runningRow).getFlippedCopy(true, false),spriteSheet.getSprite(7, runningRow).getFlippedCopy(true, false),spriteSheet.getSprite(8, runningRow).getFlippedCopy(true, false)};
+		walkingRight = new Animation(walkR, dur);
+		Image[] jump = {spriteSheet.getSprite(0, jumpingRow).getFlippedCopy(true, false).getSubImage(0, 0, 50, 40), spriteSheet.getSprite(1, jumpingRow).getFlippedCopy(true, false).getSubImage(0, 0, 50, 40), 
+				spriteSheet.getSprite(2, jumpingRow).getFlippedCopy(true, false).getSubImage(0, 0, 50, 40), spriteSheet.getSprite(3, jumpingRow).getFlippedCopy(true, false).getSubImage(0, 0, 50, 40), spriteSheet.getSprite(4, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, 50, 40), 
+				spriteSheet.getSprite(5, jumpingRow).getFlippedCopy(true, false),spriteSheet.getSprite(6, jumpingRow).getFlippedCopy(true, false),spriteSheet.getSprite(7, jumpingRow).getFlippedCopy(true, false),spriteSheet.getSprite(8, runningRow).getFlippedCopy(true, false)};
+		jumping = new Animation(jump, dur);
+		Image[] run = {spriteSheet.getSprite(0, runningRow), spriteSheet.getSprite(1, runningRow), 
+				spriteSheet.getSprite(2, runningRow), spriteSheet.getSprite(3, runningRow), spriteSheet.getSprite(4, runningRow), 
+				spriteSheet.getSprite(5, runningRow),spriteSheet.getSprite(6, runningRow),spriteSheet.getSprite(7, runningRow),spriteSheet.getSprite(8, runningRow)};
+		idle = new Animation(run, dur);
 		//height = 30;
 	}
-
+	long timer = 0;
 	public void render(Graphics g, float shiftX, float shiftY){
+		idle.draw(x-shiftX, y-shiftY);
 		for(Projectile p : projectiles)
 			p.draw(g, shiftX, shiftY);
 
 		//g.drawImage(walkingAnimation.images[0].getFlippedCopy(true, false), x - shiftX, y - shiftY);
 		if(movingLeft){
-			walkingAnimation.draw(g, x - shiftX, y - shiftY, true);
+			//walkingAnimation.draw(g, x - shiftX, y - shiftY, true);
+			walkingLeft.draw(x-shiftX, y-shiftY);
 		}else if(movingRight){
-			walkingAnimation.draw(g, x - shiftX, y - shiftY);
-		}else
-			idleAnimation.draw(g, x - shiftX, y - shiftY);
+//			walkingAnimation.draw(g, x - shiftX, y - shiftY);
+			walkingRight.draw(x-shiftX, y-shiftY);
+		}else if(inAir){
+			
+		}//else
+//			idleAnimation.draw(g, x - shiftX, y - shiftY);
+//			idle.draw(x-shiftX, y-shiftY);
 		int n = 0;
 		g.setColor(Color.blue);
 		g.fillRect(startx, starty + delta*n, iwidth, iheight);
@@ -109,7 +136,7 @@ public class Player implements Oberservable{
 
 	//logic for the player
 	public void update(GameContainer gc, int delta, Map m){
-		walkingAnimation.update(delta);
+
 
 		//update all of the player's projectiles
 		for(Projectile p : projectiles)
@@ -138,8 +165,7 @@ public class Player implements Oberservable{
 		Rectangle prx = new Rectangle(x + dx, y, width, height);
 		Rectangle pry = new Rectangle(x, y + dy, width, height);
 		//collides with platforms
-		for(Platform p : m.platforms){
-			Rectangle r = new Rectangle(p.getX() - 2, p.getY() - 2, p.width + 2, p.height + 2);
+		for(Rectangle r : m.mapCollision){
 			if(prx.intersects(r)){
 				updateX = false;
 				dx = 0;

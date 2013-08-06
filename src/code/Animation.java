@@ -15,7 +15,7 @@ public class Animation {
 		images = new Image[len];
 		for(int i = 0; i < len; i++){
 			images[i] = spriteSheet.getSubImage(x + width*i, y, width, height);
-			scale = 4;//Map.blocksize/width;
+			scale = 1;//Map.blocksize/width;
 			images[i] = images[i].getScaledCopy(scale);
 		}
 		//System.out.println("len = " + len);

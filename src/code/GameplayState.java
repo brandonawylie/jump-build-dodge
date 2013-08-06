@@ -46,14 +46,14 @@ public class GameplayState extends BasicGameState{
 		try {
 			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/player.png"));
 		} catch (IOException e1) {	}
-		player = new Player(new Image(t), 100, 100);
+		player = new Player("assets/characters/player.png", 100, 100);
 		//Initialize the map, to be loaded in the next line
 		map = new Map();
 
 		//grab the map
 		try {
 			//System.out.println(getClass().getClassLoader().getResource("./res/level_1_1.map").getPath());
-			map.loadMap(getClass().getClassLoader().getResource("assets/level_1.tmx").getPath());
+			map.loadMap(getClass().getClassLoader().getResource("assets/level1.tmx").getPath());
 			player.x = map.playerX;
 			player.y = map.playerY;
 		}catch (Exception e) {
@@ -94,9 +94,10 @@ public class GameplayState extends BasicGameState{
 	 */
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		//render the player
-		player.render(g, VIEWPORT_X, VIEWPORT_Y);
+		
 		//render the map and all associated objects
 		map.draw(g, VIEWPORT_X, VIEWPORT_Y);
+		player.render(g, VIEWPORT_X, VIEWPORT_Y);
 		hud.draw(g);
 
 	}
@@ -106,7 +107,8 @@ public class GameplayState extends BasicGameState{
 	 *
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-
+		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE))
+			gc.exit();
 		//update game elements
 
 		map.update(player);

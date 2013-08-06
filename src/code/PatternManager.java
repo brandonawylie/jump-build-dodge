@@ -34,7 +34,7 @@ public class PatternManager implements Oberserver{
 			
 			g.setColor(Color.gray);
 			//g.fillRoundRect(startX - vpX, startY - vpY, rowSize*pRectArray[0][0].getHeight(), colSize*pRectArray[0][0].getWidth(), 2);
-			for(int r = 0; r < pRectArray.length; r++){
+			for(int r = pRectArray.length - 1; r >= 0 ; r--){
 				for(int c = 0; c < pRectArray[r].length; c++){
 					String temp = curArr[r][c];
 					if(temp.equals("b")){
