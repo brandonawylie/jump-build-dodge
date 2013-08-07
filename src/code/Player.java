@@ -120,7 +120,6 @@ public class Player implements Oberservable{
 		      startJump = false;
 		  }
 		}else if(inAir){
-		    System.out.println("in the air");
 		    if(movingRight)
 			jumpingRight.draw(x-shiftX, y-shiftY);
 		    else
@@ -163,7 +162,8 @@ public class Player implements Oberservable{
 
 	//logic for the player
 	public void update(GameContainer gc, int delta, Map m){
-
+	    	if(Math.abs(dy) < Helper.GRAVITY || !inAir)
+	    	    dy = Helper.GRAVITY;
 
 		//update all of the player's projectiles
 		for(Projectile p : projectiles)
@@ -183,14 +183,14 @@ public class Player implements Oberservable{
 		if(inAir)
 		    dy += Helper.GRAVITY;
 
-//		if(Math.abs(dy) < Helper.GRAVITY)
-//		    dy = Helper.GRAVITY;
-		boolean isInAir = true;
+
+
+		//make sure we dont hit any collison
 		boolean updatex = true;
 		boolean updatey = true;
-		Rectangle prx = new Rectangle(x + dx, y, width, height);
-		Rectangle pry = new Rectangle(x, y + dy, width, height);
 		for(Rectangle r : m.mapCollision){
+		    Rectangle prx = new Rectangle(x + dx, y, width, height);
+		    Rectangle pry = new Rectangle(x, y + dy, width, height);
 		    if(r.intersects(prx)){
 			updatex = false;
 			if(dx > 0){
@@ -203,13 +203,26 @@ public class Player implements Oberservable{
 			updatey = false;
 			dy = Helper.GRAVITY;
 			if(dy > 0){
-			    inAir = false;
 			    y += ((int)r.getY() - (y + height)) - 1;
+			    dy = Helper.GRAVITY;
 			}else{
 			    y -= ((int)r.getY() - (y + height)) - 1;
+			    dy = Helper.GRAVITY;
 			}
 		    }
 		}
+
+		//let's find out if we are in the air ;)
+		if(inAir){
+        		boolean end = true;
+        		Rectangle prect = new Rectangle(x, y + Helper.GRAVITY, width, height);
+        		for(Rectangle r : m.mapCollision){
+        		    if(prect.intersects(r))
+        			end = false;
+        		}
+        		inAir = end;
+		}
+
 		if(updatex){
 		    x += dx;
 		}
