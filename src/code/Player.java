@@ -18,7 +18,7 @@ public class Player implements Oberservable{
 	int idleRow = 0;
 	int runningRow = 1;
 	int jumpingRow = 2;
-	float jumpSpeed = 5f*GameplayState.VIEWPORT_RATIO_Y;
+	float jumpSpeed = 10;
 	boolean movingLeft = false;
 	boolean movingRight = false;
 	boolean inAir = false;
@@ -68,15 +68,16 @@ public class Player implements Oberservable{
 		try {
 			spriteSheet = new SpriteSheet(path, width,height);
 		} catch (SlickException e) { }
-
-		//walking left animation
+		
 		Image[] walkL = {spriteSheet.getSprite(0, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(1, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),
-			spriteSheet.getSprite(2, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(3, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(4, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),
-			spriteSheet.getSprite(5, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(6, runningRow).getFlippedCopy(true, false).getSubImage(0,0,width, height),spriteSheet.getSprite(7, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height)};
+				spriteSheet.getSprite(2, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(3, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(4, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),
+				spriteSheet.getSprite(5, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),spriteSheet.getSprite(6, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),spriteSheet.getSprite(7, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height)};
+		
 		int[] walkDur = {200,200,200,200,200,200,200,200};
 		walkingLeft = new Animation(walkL, walkDur);
 
 		//walking right animation
+
 		Image[] walkR = {spriteSheet.getSprite(0, runningRow).getSubImage(0, 0, width, height), spriteSheet.getSprite(1, runningRow).getSubImage(0, 0, width, height),
 			spriteSheet.getSprite(2, runningRow).getSubImage(0, 0, width, height), spriteSheet.getSprite(3, runningRow).getSubImage(0, 0, width, height), spriteSheet.getSprite(4, runningRow).getSubImage(0, 0, width, height),
 			spriteSheet.getSprite(5, runningRow).getSubImage(0, 0, width, height),spriteSheet.getSprite(6, runningRow).getSubImage(0, 0, width, height),spriteSheet.getSprite(7, runningRow).getSubImage(0, 0, width, height)};
@@ -156,15 +157,18 @@ public class Player implements Oberservable{
 					+ "\nyellow blocks" + yellowBlocks
 					+ "\npink blocks" + pinkBlocks
 					+ "\ngreen blocks" + greenBlocks, startx + delta*2, starty);
-
-
+		if(prx != null && pry != null){
+			g.setColor(Color.orange);
+			g.drawRect(prx.getX() - shiftX, prx.getY() - shiftY, prx.getWidth(), prx.getHeight());
+			g.setColor(Color.pink);
+			g.drawRect(pry.getX() - shiftX, pry.getY() - shiftY, pry.getWidth(), pry.getHeight());
+		}
 	}
+	Rectangle prx;
+    Rectangle pry;
 
 	//logic for the player
 	public void update(GameContainer gc, int delta, Map m){
-	    	if(Math.abs(dy) < Helper.GRAVITY || !inAir)
-	    	    dy = Helper.GRAVITY;
-
 		//update all of the player's projectiles
 		for(Projectile p : projectiles)
 			p.update(delta);
@@ -180,56 +184,38 @@ public class Player implements Oberservable{
 			dx = 0f;
 		}
 
+
+
+		boolean inAirCheck = true;
+		boolean updatex = true;
+		boolean updatey= true;
+		Rectangle prx = new Rectangle(x + dx, y, width, height);
+		Rectangle pry = new Rectangle(x, y + dy, width, height + 1);
+//		if(dy == 0)
+	    for(Rectangle r : m.mapCollision){
+	    	if(prx.intersects(r)){
+	    		updatex = false;
+	    		//dx = 0;
+	    		System.out.println("prx is intersecting!, dx = " + dx + ", dy = " + dy + ", inAir = " + inAir);
+	    	}
+	    	
+	    	if(pry.intersects(r)){
+	    		inAirCheck = false;
+	    		dy = 0;
+	    		System.out.println("pry is intersecting!, y = " + (y+height) + ", ry = " + r.getY());
+	    	}
+	    }
+	    inAir = inAirCheck;
+	    
 		if(inAir)
 		    dy += Helper.GRAVITY;
-
-
-
-		//make sure we dont hit any collison
-		boolean updatex = true;
-		boolean updatey = true;
-		for(Rectangle r : m.mapCollision){
-		    Rectangle prx = new Rectangle(x + dx, y, width, height);
-		    Rectangle pry = new Rectangle(x, y + dy, width, height);
-		    if(r.intersects(prx)){
-			updatex = false;
-			if(dx > 0){
-			    x += ((int)r.getX() - (x + width)) - 1;
-			}else{
-			    x -= ((int)r.getX() - (x + width)) - 1;
-			}
-		    }
-		    if(r.intersects(pry)){
-			updatey = false;
-			dy = Helper.GRAVITY;
-			if(dy > 0){
-			    y += ((int)r.getY() - (y + height)) - 1;
-			    dy = Helper.GRAVITY;
-			}else{
-			    y -= ((int)r.getY() - (y + height)) - 1;
-			    dy = Helper.GRAVITY;
-			}
-		    }
-		}
-
-		//let's find out if we are in the air ;)
-		if(inAir){
-        		boolean end = true;
-        		Rectangle prect = new Rectangle(x, y + Helper.GRAVITY, width, height);
-        		for(Rectangle r : m.mapCollision){
-        		    if(prect.intersects(r))
-        			end = false;
-        		}
-        		inAir = end;
-		}
-
-		if(updatex){
-		    x += dx;
-		}
-
-		if(updatey){
-		    y += dy;
-		}
+		else
+			dy = 0;
+		
+		if(updatex)
+			x+=dx;
+	    if(updatey)
+	    	y+=dy;
 	}
 
 	public void moveLeft(){
