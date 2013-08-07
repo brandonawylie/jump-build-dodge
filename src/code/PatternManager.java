@@ -18,7 +18,7 @@ public class PatternManager implements Oberserver{
 	private int TT_MARGIN = 5;
 	private int TT_SIZE = 5;
 	public void draw(Graphics g, int vpX, int vpY){
-		
+
 		if(pRectArray != null){
 			System.out.println("===================================");
 			for(int r = 0; r < curArr.length; r++){
@@ -28,10 +28,10 @@ public class PatternManager implements Oberserver{
 			}
 			int rowSize = pRectArray.length;
 			int colSize = pRectArray[0].length;
-			
+
 			float startX = pRectArray[0][0].getX();
 			float startY = pRectArray[0][0].getY();
-			
+
 			g.setColor(Color.gray);
 			//g.fillRoundRect(startX - vpX, startY - vpY, rowSize*pRectArray[0][0].getHeight(), colSize*pRectArray[0][0].getWidth(), 2);
 			for(int r = pRectArray.length - 1; r >= 0 ; r--){
@@ -135,7 +135,7 @@ public class PatternManager implements Oberserver{
 				String result = "e";
 				for(CollectableBlock block : blocks){
 					Rectangle brect = new Rectangle(block.getX(), block.getY(), block.width, block.height);
-					if(brect.intersects(rect)){ 
+					if(brect.intersects(rect)){
 						Color color = block.getColor();
 						if(color.equals(color.red)){
 							result = "r";
@@ -160,7 +160,7 @@ public class PatternManager implements Oberserver{
 			pArr.add(row);
 			r++;
 		}while(highestY - (by + bheight) > bheight);
-		
+
 		float ttLowestX = (playerX + player.width) + 5;
 		float ttLowestY = playerY + 5;
 		tempArray = new Rectangle[r][c];
@@ -170,7 +170,7 @@ public class PatternManager implements Oberserver{
 			}
 		}
 		pRectArray = tempArray;
-		
+
 		//change the List<List<String>> to a String arr
 		System.out.println("=================");
 		if(pArr.size() > 0 && pArr.get(0).size() > 0){
@@ -193,7 +193,7 @@ public class PatternManager implements Oberserver{
 		    }
 		}
 	}
-	
+
 	public boolean matchPatternArray(String[][] arr){
 		System.out.println("---------------------------------------");
 		String[][] pArr = arr;
@@ -205,7 +205,7 @@ public class PatternManager implements Oberserver{
 					isFirst = false;
 				}else
 					System.out.print(", " + pArr[r][cc]);
-					
+
 			}
 			System.out.println();
 		}
@@ -218,7 +218,7 @@ public class PatternManager implements Oberserver{
 					isFirst = false;
 				}else
 					System.out.print(", " + pArr[r][cc]);
-					
+
 			}
 			System.out.println();
 		}
@@ -233,7 +233,7 @@ public class PatternManager implements Oberserver{
 		}catch(Exception e){ return false; }
 		return true;
 	}
-	
+
 	public void updateToolTipBlocks(){
 		for(int r = 0; r < pRectArray.length; r++){
 			for(int c = 0; c < pRectArray[r].length; c++){
@@ -245,7 +245,7 @@ public class PatternManager implements Oberserver{
 	@Override
 	public void changeColorNotification(int[] colors) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void changePositionNotification(float x, float y) {
