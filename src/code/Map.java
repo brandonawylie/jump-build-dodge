@@ -172,6 +172,7 @@ public class Map{
 		mapHeight = mapTileHeight * Integer.parseInt(tiledMap.getMapProperty("height", "" + DEFAULT_MAPWIDTH));
 		//System.out.println("object group count = " + tiledMap.getObjectGroupCount());
 		for(int i = 0; i < tiledMap.getObjectGroupCount(); i++){
+		    	System.out.println("OBJECT GROUP TITLE = " + tiledMap.getLayerProperty(i, "name", ""));
 			for(int j = 0; j < tiledMap.getObjectCount(i); j++){
 				String objectType = tiledMap.getObjectName(j, i);
 				System.out.println("OBJECT TITLE = " + objectType);
@@ -209,9 +210,6 @@ public class Map{
 		}else{
 			System.out.println("map: object not recognized");
 		}
-
-
-
 	}
 
 	/***

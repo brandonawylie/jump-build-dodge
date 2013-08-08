@@ -3,17 +3,17 @@
  <tileset firstgid="1" name="tileset" tilewidth="70" tileheight="70" spacing="1">
   <image source="tilesets/realtilesheet.png" trans="ff00ff" width="852" height="856"/>
  </tileset>
- <layer name="background" width="50" height="10" visible="0">
+ <layer name="background" width="50" height="10">
   <data encoding="base64" compression="zlib">
    eJzTZ2Bg0B/Fo3gUj+JRPIpH8ZDGAGlRW80=
   </data>
  </layer>
- <layer name="foreground" width="50" height="10" visible="0">
+ <layer name="foreground" width="50" height="10">
   <data encoding="base64" compression="zlib">
    eJxjYBgFgwE4D7QDqAT8BtoBFAJLNDxUQQgaHkwAOWwVGDDDHITFoPKD0R8wN5LipsHkD3T3DzV/4HI/Jf7QY8CeDmmJcbmfEn8AAPejGWs=
   </data>
  </layer>
- <objectgroup name="collision" width="50" height="10" visible="0">
+ <objectgroup name="collision" width="50" height="10">
   <properties>
    <property name="name" value="collision"/>
   </properties>
@@ -32,7 +32,7 @@
   </properties>
   <object name="player" x="210" y="490" width="70" height="70"/>
  </objectgroup>
- <objectgroup name="collectable-blocks" width="50" height="10" visible="0">
+ <objectgroup name="collectable-blocks" width="50" height="10">
   <properties>
    <property name="name" value="collectable-blocks"/>
   </properties>
@@ -54,6 +54,32 @@
   <object name="collectable-block" x="1260" y="490" width="70" height="70">
    <properties>
     <property name="color" value="g"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="pattern-1" width="50" height="10">
+  <properties>
+   <property name="array" value="[r,b;b,b]"/>
+   <property name="name" value="pattern-1"/>
+  </properties>
+  <object name="pattern-block" x="3010" y="140" width="70" height="70">
+   <properties>
+    <property name="color" value="r"/>
+   </properties>
+  </object>
+  <object name="pattern-block" x="3080" y="140" width="70" height="70">
+   <properties>
+    <property name="color" value="g"/>
+   </properties>
+  </object>
+  <object name="pattern-block" x="3010" y="210" width="70" height="70">
+   <properties>
+    <property name="color" value="b"/>
+   </properties>
+  </object>
+  <object name="pattern-block" x="3080" y="210" width="70" height="70">
+   <properties>
+    <property name="color" value="b"/>
    </properties>
   </object>
  </objectgroup>
