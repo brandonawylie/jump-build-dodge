@@ -50,7 +50,7 @@ public class PatternManager implements Oberserver{
 					}//else
 //						System.out.println("no color recognized");
 					//Rectangle rec = pRectArray[r][c];
-//					System.out.println("Pattern Manager: at " + r + ", " + c + " || temp=" + temp);
+					System.out.println("Pattern Manager: at " + r + ", " + c + " || temp=" + temp);
 					float x = playerX + playerWidth + TT_SIZE*c;
 					float y = playerY + TT_SIZE*r;
 					float w = TT_SIZE;
@@ -250,6 +250,6 @@ public class PatternManager implements Oberserver{
 		playerY = y;
 		if(pRectArray != null)
 			updateToolTipBlocks();
-		//System.out.println("change in pos");
+		System.out.println("change in pos");
 	}
 }

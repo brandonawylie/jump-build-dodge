@@ -165,9 +165,6 @@ public class GameplayState extends BasicGameState{
 				map.placeCollectableBlock(player , Color.yellow);
 				lastClickTime = System.currentTimeMillis();
 			}else if(gc.getInput().isKeyDown(Input.KEY_4)){
-				map.placeCollectableBlock(player, Color.pink);
-				lastClickTime = System.currentTimeMillis();
-			}else if(gc.getInput().isKeyDown(Input.KEY_5)){
 				map.placeCollectableBlock(player, Color.green);
 				lastClickTime = System.currentTimeMillis();
 			}

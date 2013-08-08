@@ -275,10 +275,15 @@ public class Player implements Oberservable{
 		if(inAir)
 		    dy += Helper.GRAVITY;
 
-		if(updatex)
-			x+=dx;
-	    if(updatey)
+		if(updatex){
+		    x+=dx;
+		    notifyPositionChange();
+		}
+	    if(updatey){
 	    	y+=dy;
+	    	notifyPositionChange();
+	    }
+
 	}
 
 	public void moveLeft(){

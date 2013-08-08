@@ -123,6 +123,7 @@ public class Map{
 		}else if(c == Color.yellow){
 			path = COLLLECTABLEBLOCK_YELLOW_PATH;
 		}
+		System.out.println("path = " + path);
 		CollectableBlock cb =  new CollectableBlock(this, p.x + (p.width - blockWidth)/2, p.y + p.width - blockHeight, path);
 		p.y -= cb.width + 15;
 		placedCollectableBlocks.add(cb);
