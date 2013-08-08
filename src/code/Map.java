@@ -35,7 +35,7 @@ public class Map{
 	public static String COLLLECTABLEBLOCK_BLUE_PATH =  "assets/blocks/collectableblock_blue.png";
 	public static String COLLLECTABLEBLOCK_GREEN_PATH =  "assets/blocks/collectableblock_green.png";
 	public static String COLLLECTABLEBLOCK_YELLOW_PATH =  "assets/blocks/collectableblock_yellow.png";
-	
+
 	//game objects that belong to the map
 	public List<TileSet> tilesets = new ArrayList<>();
 	public List<Platform> platforms = new ArrayList<>();
@@ -167,8 +167,8 @@ public class Map{
 		tiledMap = new TiledMap(path);
 		mapTileWidth = Integer.parseInt(tiledMap.getMapProperty("tilewidth", "" + DEFAULT_MAPTILEWIDTH));
 		mapTileHeight = Integer.parseInt(tiledMap.getMapProperty("tileheight", "" + DEFAULT_MAPTILEHEIGHT));
-		mapWidth = Integer.parseInt(tiledMap.getMapProperty("width", "" + DEFAULT_MAPWIDTH));; 
-		mapHeight = Integer.parseInt(tiledMap.getMapProperty("height", "" + DEFAULT_MAPWIDTH));
+		mapWidth = mapTileWidth * Integer.parseInt(tiledMap.getMapProperty("width", "" + DEFAULT_MAPWIDTH));;
+		mapHeight = mapTileHeight * Integer.parseInt(tiledMap.getMapProperty("height", "" + DEFAULT_MAPWIDTH));
 		//System.out.println("object group count = " + tiledMap.getObjectGroupCount());
 		for(int i = 0; i < tiledMap.getObjectGroupCount(); i++){
 			for(int j = 0; j < tiledMap.getObjectCount(i); j++){
@@ -180,7 +180,7 @@ public class Map{
 
 		return true;
 	}
-	
+
 	public void loadObject(int groupid, int objectid){
 		String object = tiledMap.getObjectName(groupid, objectid);
 		System.out.println(object);
@@ -205,12 +205,12 @@ public class Map{
 		}else if(object.equals("collision")){
 			mapCollision.add(new Rectangle(x, y, width, height));
 			System.out.println("adding collision " + x + ", " + y);
-		}else{	
+		}else{
 			System.out.println("map: object not recognized");
 		}
-		
-				
-		
+
+
+
 	}
 
 	/***

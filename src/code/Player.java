@@ -1,7 +1,7 @@
 package code;
+
 import java.util.ArrayList;
 import java.util.List;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -9,31 +9,40 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
-
 import org.newdawn.slick.Animation;
+
 public class Player implements Oberservable{
+    	Dragon petDragon;
+
 	float x, y, dx, dy, speed, ratioX, ratioY;
 	int width = 40;
 	int height = 48;
+
+	//animation info
+	float tileWidth = .75f;
+	float tileHeight = .75f;
 	int idleRow = 0;
 	int runningRow = 1;
 	int jumpingRow = 2;
-	float jumpSpeed = 10;
+	org.newdawn.slick.Animation walkingLeft, walkingRight, idleLeft, idleRight, startJumpingLeft, startJumpingRight, jumpingLeft, jumpingRight, landingLeft, landingRight;
+	int jumpAnimationFrames = 3;
+	int fallAnimationFrames = 4;
+
+	float jumpSpeed = 5;
 	boolean movingLeft = false;
 	boolean movingRight = false;
+	boolean facingRight = true;
 	boolean inAir = false;
 	long gravityTimer;
+
 	int blueBlocks = 0;
 	int redBlocks = 0;
 	int yellowBlocks = 0;
-	int pinkBlocks = 0;
 	int greenBlocks = 0;
 
 	public float MAX_SPEED = 5*GameplayState.VIEWPORT_RATIO_X;
 
-	org.newdawn.slick.Animation walkingLeft, walkingRight, idle, startJumping, jumpingLeft, jumpingRight, landingLeft, landingRight;
-	int jumpAnimationFrames = 3;
-	int fallAnimationFrames = 4;
+
 	List<Projectile> projectiles = new ArrayList<Projectile>();
 
 	public Rectangle redR;
@@ -51,7 +60,7 @@ public class Player implements Oberservable{
 
 	SpriteSheet spriteSheet = null;
 	int n = 0;
-	public Player(String path, float x, float y){
+	public Player(Map m, String path, float x, float y){
 		this.x = x; this.y = y;
 		dx = 0; dy = Helper.GRAVITY;
 		speed = .075f*GameplayState.VIEWPORT_RATIO_X;
@@ -66,62 +75,82 @@ public class Player implements Oberservable{
 		greenR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
 
 		try {
-			spriteSheet = new SpriteSheet(path, width,height);
+			spriteSheet = new SpriteSheet(path, width, height);
 		} catch (SlickException e) { }
-		
-		Image[] walkL = {spriteSheet.getSprite(0, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(1, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),
-				spriteSheet.getSprite(2, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(3, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(4, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),
-				spriteSheet.getSprite(5, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),spriteSheet.getSprite(6, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),spriteSheet.getSprite(7, runningRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height)};
-		
+		int realWidth = (int) (m.mapTileWidth*tileWidth);
+		int realHeight= (int) (m.mapTileHeight*tileHeight);
+		width = realWidth - 2;
+		height = realHeight - 2;
+		Image[] walkL = {spriteSheet.getSprite(0, runningRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(1, runningRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight),
+				spriteSheet.getSprite(2, runningRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(3, runningRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(4, runningRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight),
+				spriteSheet.getSprite(5, runningRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(6, runningRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(7, runningRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight)};
+
 		int[] walkDur = {200,200,200,200,200,200,200,200};
 		walkingLeft = new Animation(walkL, walkDur);
 
 		//walking right animation
-
-		Image[] walkR = {spriteSheet.getSprite(0, runningRow).getSubImage(0, 0, width, height), spriteSheet.getSprite(1, runningRow).getSubImage(0, 0, width, height),
-			spriteSheet.getSprite(2, runningRow).getSubImage(0, 0, width, height), spriteSheet.getSprite(3, runningRow).getSubImage(0, 0, width, height), spriteSheet.getSprite(4, runningRow).getSubImage(0, 0, width, height),
-			spriteSheet.getSprite(5, runningRow).getSubImage(0, 0, width, height),spriteSheet.getSprite(6, runningRow).getSubImage(0, 0, width, height),spriteSheet.getSprite(7, runningRow).getSubImage(0, 0, width, height)};
+		Image[] walkR = {spriteSheet.getSprite(0, runningRow).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(1, runningRow).getScaledCopy(realWidth, realHeight),
+			spriteSheet.getSprite(2, runningRow).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(3, runningRow).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(4, runningRow).getScaledCopy(realWidth, realHeight),
+			spriteSheet.getSprite(5, runningRow).getScaledCopy(realWidth, realHeight),spriteSheet.getSprite(6, runningRow).getScaledCopy(realWidth, realHeight),spriteSheet.getSprite(7, runningRow).getScaledCopy(realWidth, realHeight)};
 		walkingRight = new Animation(walkR, walkDur);
 
 		//start jumping animation
-		Image[] startJump = {spriteSheet.getSprite(0, jumpingRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(1, jumpingRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),
-				spriteSheet.getSprite(2, jumpingRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height), spriteSheet.getSprite(3, jumpingRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height)};
+		Image[] startJumpLeft = {spriteSheet.getSprite(0, jumpingRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(1, jumpingRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight),
+				spriteSheet.getSprite(2, jumpingRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(3, jumpingRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight)};
 		int[] startJumpDur = {200,200,200,200};
-		startJumping = new Animation(startJump, startJumpDur);
+		startJumpingLeft = new Animation(startJumpLeft, startJumpDur);
+
+		Image[] startJumpRight = {spriteSheet.getSprite(0, jumpingRow).getFlippedCopy(false, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(1, jumpingRow).getFlippedCopy(false, false).getScaledCopy(realWidth, realHeight),
+			spriteSheet.getSprite(2, jumpingRow).getFlippedCopy(false, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(3, jumpingRow).getFlippedCopy(false, false).getScaledCopy(realWidth, realHeight)};
+		startJumpingRight = new Animation(startJumpRight, startJumpDur);
 
 		//jumping right animation
-		Image[] jumpR = {spriteSheet.getSprite(4, jumpingRow).getFlippedCopy(false, false).getSubImage(0, 0, width, height),
-				spriteSheet.getSprite(5, jumpingRow).getFlippedCopy(false, false).getSubImage(0, 0, width, height)};
+		Image[] jumpR = {spriteSheet.getSprite(4, jumpingRow).getFlippedCopy(false, false).getScaledCopy(realWidth, realHeight),
+				spriteSheet.getSprite(5, jumpingRow).getFlippedCopy(false, false).getScaledCopy(realWidth, realHeight)};
 		int[] jumpDur = {200,200};
 		jumpingRight = new Animation(jumpR, jumpDur);
 
 		//jumping left animation
-		Image[] jumpL = {spriteSheet.getSprite(4, jumpingRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height),
-				spriteSheet.getSprite(5, jumpingRow).getFlippedCopy(true, false).getSubImage(0, 0, width, height)};
+		Image[] jumpL = {spriteSheet.getSprite(4, jumpingRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight),
+				spriteSheet.getSprite(5, jumpingRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight)};
 		jumpingLeft = new Animation(jumpL, jumpDur);
 
-		Image[] idleImg = {spriteSheet.getSprite(0, idleRow), spriteSheet.getSprite(1, idleRow),
-				spriteSheet.getSprite(2, idleRow), spriteSheet.getSprite(3, idleRow)};
-		int[] idleDur = {300,300,300,300};
-		idle = new Animation(idleImg, idleDur);
+
+
+		Image[] idleImgL = {spriteSheet.getSprite(0, idleRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(1, idleRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight),
+			spriteSheet.getSprite(2, idleRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(3, idleRow).getFlippedCopy(true, false).getScaledCopy(realWidth, realHeight)};
+        	int[] idleDur = {300,300,300,300};
+		idleLeft = new Animation(idleImgL, idleDur);
+
+		Image[] idleImg = {spriteSheet.getSprite(0, idleRow).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(1, idleRow).getScaledCopy(realWidth, realHeight),
+			spriteSheet.getSprite(2, idleRow).getScaledCopy(realWidth, realHeight), spriteSheet.getSprite(3, idleRow).getScaledCopy(realWidth, realHeight)};
+		idleRight = new Animation(idleImg, idleDur);
+
 		//height = 30;
+
+		petDragon = new Dragon("assets/characters/dragon_red.png", (int)(x + width), (int)y);
 	}
 	long timer = 0;
 	boolean startJump = false;
 	int startJumpFrames = 0;
 	public void render(Graphics g, float shiftX, float shiftY){
-
+	    petDragon.draw(g, shiftX, shiftY);
 		for(Projectile p : projectiles)
 			p.draw(g, shiftX, shiftY);
 		//jumpingRight.draw(x - shiftX, y - shiftY);
 		if(startJump){
-		  System.out.println("start jumping");
-		  startJumping.draw(x - shiftX, y - shiftY);
-		  if(startJumping.getFrame() == startJumping.getFrameCount() - 1){
+		  if(facingRight){
+		      startJumpingRight.draw(x-shiftX, y-shiftY);
+		      startJumpingLeft.setCurrentFrame(startJumpingRight.getFrame());
+		  }else{
+		      startJumpingLeft.draw(x-shiftX, y-shiftY);
+		      startJumpingRight.setCurrentFrame(startJumpingRight.getFrame());
+		  }
+		  if(startJumpingLeft.getFrame() == startJumpingLeft.getFrameCount() - 1){
 		      startJump = false;
 		  }
 		}else if(inAir){
-		    if(movingRight)
+		    if(facingRight)
 			jumpingRight.draw(x-shiftX, y-shiftY);
 		    else
 			jumpingLeft.draw(x-shiftX, y-shiftY);
@@ -129,9 +158,12 @@ public class Player implements Oberservable{
 		    	walkingRight.draw(x - shiftX, y - shiftY);
 		else if(movingLeft)
 		    	walkingLeft.draw(x - shiftX, y - shiftY);
-		else
-		    idle.draw(x-shiftX, y-shiftY);
-
+		else{
+		    if(!facingRight)
+			idleLeft.draw(x-shiftX, y-shiftY);
+		    else
+			idleRight.draw(x-shiftX, y-shiftY);
+		}
 		int n = 0;
 		g.setColor(Color.blue);
 		g.fillRect(startx, starty + delta*n, iwidth, iheight);
@@ -152,11 +184,6 @@ public class Player implements Oberservable{
 		g.setColor(Color.green);
 		g.fillRect(startx, starty + delta*n, iwidth, iheight);
 
-		g.drawString("blue blocks: " + blueBlocks
-					+ "\nred blocks" + redBlocks
-					+ "\nyellow blocks" + yellowBlocks
-					+ "\npink blocks" + pinkBlocks
-					+ "\ngreen blocks" + greenBlocks, startx + delta*2, starty);
 		if(prx != null && pry != null){
 			g.setColor(Color.orange);
 			g.drawRect(prx.getX() - shiftX, prx.getY() - shiftY, prx.getWidth(), prx.getHeight());
@@ -169,6 +196,7 @@ public class Player implements Oberservable{
 
 	//logic for the player
 	public void update(GameContainer gc, int delta, Map m){
+	    petDragon.update(this);
 		//update all of the player's projectiles
 		for(Projectile p : projectiles)
 			p.update(delta);
@@ -191,27 +219,62 @@ public class Player implements Oberservable{
 		boolean updatey= true;
 		Rectangle prx = new Rectangle(x + dx, y, width, height);
 		Rectangle pry = new Rectangle(x, y + dy, width, height + 1);
-//		if(dy == 0)
+		System.out.println("===========================");
 	    for(Rectangle r : m.mapCollision){
 	    	if(prx.intersects(r)){
 	    		updatex = false;
 	    		//dx = 0;
 	    		System.out.println("prx is intersecting!, dx = " + dx + ", dy = " + dy + ", inAir = " + inAir);
 	    	}
-	    	
+
 	    	if(pry.intersects(r)){
-	    		inAirCheck = false;
-	    		dy = 0;
-	    		System.out.println("pry is intersecting!, y = " + (y+height) + ", ry = " + r.getY());
+	    	    updatey = false;
+	    	    inAirCheck = false;
+	    		//dy = 0;
+	    		System.out.println("pry is intersecting!, y = " + (y+height) + ", ry = " + r.getY()+ ", inAir = " + inAir);
+	    	}
+	    }
+
+	    for(int i = 0; i < m.collectableBlocks.size(); i++){
+		CollectableBlock b = m.collectableBlocks.get(i);
+		Rectangle r = new Rectangle(b.x, b.y, b.width, b.height);
+
+		if(prx.intersects(r)){
+	    		addBlock(b.color);
+	    		m.collectableBlocks.remove(b);
+	    		continue;
+	    	}
+
+	    	if(pry.intersects(r)){
+	    	    updatey = false;
+	    	    inAirCheck = false;
+	    		//dy = 0;
+	    		System.out.println("pry is intersecting!, y = " + (y+height) + ", ry = " + r.getY()+ ", inAir = " + inAir);
+	    	}
+	    }
+
+	    for(int i = 0; i < m.placedCollectableBlocks.size(); i++){
+		CollectableBlock b = m.placedCollectableBlocks.get(i);
+		Rectangle r = new Rectangle(b.x, b.y, b.width, b.height);
+
+		if(prx.intersects(r)){
+	    		addBlock(b.color);
+	    		m.collectableBlocks.remove(b);
+	    		continue;
+	    	}
+
+	    	if(pry.intersects(r)){
+	    	    updatey = false;
+	    	    inAirCheck = false;
+	    		//dy = 0;
+	    		System.out.println("pry is intersecting!, y = " + (y+height) + ", ry = " + r.getY()+ ", inAir = " + inAir);
 	    	}
 	    }
 	    inAir = inAirCheck;
-	    
+
 		if(inAir)
 		    dy += Helper.GRAVITY;
-		else
-			dy = 0;
-		
+
 		if(updatex)
 			x+=dx;
 	    if(updatey)
@@ -219,6 +282,7 @@ public class Player implements Oberservable{
 	}
 
 	public void moveLeft(){
+	    facingRight = false;
 		movingLeft = true;
 		if(dx > -MAX_SPEED){
 			dx -= .2f;
@@ -226,6 +290,7 @@ public class Player implements Oberservable{
 	}
 
 	public void moveRight(){
+	    facingRight = true;
 		movingRight = true;
 		if(dx < MAX_SPEED){
 			dx += .2f;
@@ -282,14 +347,14 @@ public class Player implements Oberservable{
 		blue
 		green
 	*/
-	public void addBlock(Color c){
-		if(c == Color.blue)
+	public void addBlock(String c){
+		if(c.equals("blue"))
 			blueBlocks++;
-		else if(c == Color.yellow)
+		else if(c.equals("yellow"))
 				yellowBlocks++;
-		else if (c == Color.pink)
-				pinkBlocks++;
-		else if(c == Color.green)
+		else if (c.equals("red"))
+				redBlocks++;
+		else if(c.equals("green"))
 				greenBlocks++;
 		notifyColorChange();
 	}
@@ -300,7 +365,7 @@ public class Player implements Oberservable{
 		res[0] = blueBlocks;
 		res[1] = greenBlocks;
 		res[2] = redBlocks;
-		res[3] = pinkBlocks;
+		res[3] = redBlocks;
 		for(Oberserver o : colorObs)
 			o.changeColorNotification(res);
 

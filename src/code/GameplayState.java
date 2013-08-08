@@ -46,7 +46,7 @@ public class GameplayState extends BasicGameState{
 		try {
 			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/player.png"));
 		} catch (IOException e1) {	}
-		player = new Player("assets/player.png", 100, 100);
+
 		//Initialize the map, to be loaded in the next line
 		map = new Map();
 
@@ -59,7 +59,7 @@ public class GameplayState extends BasicGameState{
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		player = new Player(map, "assets/player.png", 100, 100);
 		//Initialize the viewport shifts by the player startin
 //		Pattern p = new Pattern(70, 135);
 //		p.addBlock(new ColoredBlock(70,135, Color.green));
@@ -94,7 +94,7 @@ public class GameplayState extends BasicGameState{
 	 */
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		//render the player
-		
+
 		//render the map and all associated objects
 		map.draw(g, VIEWPORT_X, VIEWPORT_Y);
 		player.render(g, VIEWPORT_X, VIEWPORT_Y);
@@ -200,7 +200,7 @@ public class GameplayState extends BasicGameState{
 				CollectableBlock b = map.collectableBlocks.get(i);
 				Rectangle r = new Rectangle(b.getX() - 2, b.getY() - 2, b.width + 12, b.height + 12);
 				if(r.intersects(mouseclick)){
-					player.addBlock(b.getColor());
+					player.addBlock(b.color);
 					map.removeBlock(b);
 
 					System.out.println("got it");
@@ -212,7 +212,7 @@ public class GameplayState extends BasicGameState{
 				CollectableBlock b = map.placedCollectableBlocks.get(i);
 				Rectangle r = new Rectangle(b.getX() - 2, b.getY() - 2, b.width + 12, b.height + 12);
 				if(r.intersects(mouseclick)){
-					player.addBlock(b.getColor());
+				    	player.addBlock(b.color);
 					map.removeBlock(b);
 
 					System.out.println("got it");

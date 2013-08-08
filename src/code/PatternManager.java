@@ -136,20 +136,17 @@ public class PatternManager implements Oberserver{
 				for(CollectableBlock block : blocks){
 					Rectangle brect = new Rectangle(block.getX(), block.getY(), block.width, block.height);
 					if(brect.intersects(rect)){
-						Color color = block.getColor();
-						if(color.equals(color.red)){
+						String color = block.color;
+						if(color.equals("red")){
 							result = "r";
 							break;
-						}else if(color.equals(color.blue)){
+						}else if(color.equals("blue")){
 							result = "b";
 							break;
-						}else if(color.equals(color.yellow)){
+						}else if(color.equals("yellow")){
 							result = "y";
 							break;
-						}else if(color.equals(color.pink)){
-							result = "p";
-							break;
-						}else if(color.equals(color.green)){
+						}else if(color.equals("green")){
 						    result = "g";
 						    break;
 						}

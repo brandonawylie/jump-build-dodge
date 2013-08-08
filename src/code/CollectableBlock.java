@@ -13,9 +13,9 @@ public class CollectableBlock {
 	//basic variables to store position, width/height and the x/y ratios of the map
 	public float x, y, ratioX, ratioY, width, height;
 	//colors for the inside and outline of the platform
-	private Color color = Color.black;
 	private Color outline = Color.white;
 	Image image;
+	public String color;
 	public CollectableBlock(float x, float y, String path){
 		this.x = x;
 		this.y = y;
@@ -26,6 +26,8 @@ public class CollectableBlock {
 		image = new Image(t);
 		width = image.getWidth();
 		height = image.getHeight();
+		color = path.substring(path.lastIndexOf("_"));
+		color = color.substring(1, color.indexOf(".png"));
 	}
 
 	//contains most the logic for this collectable block
@@ -46,10 +48,5 @@ public class CollectableBlock {
 	//returns the y coordinate of this platform
 	public float getY(){
 		return y;
-	}
-
-	//returns the color of this collectable block
-	public Color getColor(){
-		return color;
 	}
 }
