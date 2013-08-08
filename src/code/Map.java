@@ -123,7 +123,7 @@ public class Map{
 		}else if(c == Color.yellow){
 			path = COLLLECTABLEBLOCK_YELLOW_PATH;
 		}
-		CollectableBlock cb =  new CollectableBlock(p.x + (p.width - blockWidth)/2, p.y + p.width - blockHeight, path);
+		CollectableBlock cb =  new CollectableBlock(this, p.x + (p.width - blockWidth)/2, p.y + p.width - blockHeight, path);
 		p.y -= cb.width + 15;
 		placedCollectableBlocks.add(cb);
 		pManager.checkPattern(placedCollectableBlocks, p);
@@ -195,13 +195,13 @@ public class Map{
 		}else if(object.equals("collectable-block")){
 			String color = tiledMap.getObjectProperty(groupid, objectid, "color", "");
 			if(color.equals("r"))
-				collectableBlocks.add(new CollectableBlock(x, y, COLLLECTABLEBLOCK_RED_PATH));
+				collectableBlocks.add(new CollectableBlock(this, x, y, COLLLECTABLEBLOCK_RED_PATH));
 			else if(color.equals("b"))
-				collectableBlocks.add(new CollectableBlock(x, y, COLLLECTABLEBLOCK_BLUE_PATH));
+				collectableBlocks.add(new CollectableBlock(this, x, y, COLLLECTABLEBLOCK_BLUE_PATH));
 			else if(color.equals("g"))
-				collectableBlocks.add(new CollectableBlock(x, y, COLLLECTABLEBLOCK_GREEN_PATH));
+				collectableBlocks.add(new CollectableBlock(this, x, y, COLLLECTABLEBLOCK_GREEN_PATH));
 			else if(color.equals("y"))
-				collectableBlocks.add(new CollectableBlock(x, y, COLLLECTABLEBLOCK_YELLOW_PATH));
+				collectableBlocks.add(new CollectableBlock(this, x, y, COLLLECTABLEBLOCK_YELLOW_PATH));
 		}else if(object.equals("collision")){
 			mapCollision.add(new Rectangle(x, y, width, height));
 			System.out.println("adding collision " + x + ", " + y);

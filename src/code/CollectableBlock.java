@@ -12,18 +12,20 @@ public class CollectableBlock {
 
 	//basic variables to store position, width/height and the x/y ratios of the map
 	public float x, y, ratioX, ratioY, width, height;
+	public float tileWidth = 1;
+	public float tileHeight = 1;
 	//colors for the inside and outline of the platform
 	private Color outline = Color.white;
 	Image image;
 	public String color;
-	public CollectableBlock(float x, float y, String path){
+	public CollectableBlock(Map m, float x, float y, String path){
 		this.x = x;
 		this.y = y;
 		Texture t = null;
 		try {
 			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path));
 		} catch (IOException e) {}
-		image = new Image(t);
+		image = new Image(t).getScaledCopy((int)(m.mapTileWidth*tileWidth), (int)(m.mapTileHeight*tileHeight));
 		width = image.getWidth();
 		height = image.getHeight();
 		color = path.substring(path.lastIndexOf("_"));
