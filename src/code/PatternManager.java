@@ -14,56 +14,9 @@ public class PatternManager implements Oberserver{
 	String[][] curArr;
 	Rectangle[][] pRectArray;
 	float playerX, playerY, playerWidth, playerHeight;
-	private int TT_SPACING = 3;
-	private int TT_MARGIN = 5;
-	private int TT_SIZE = 5;
+	PatternToolTip patternTT = new PatternToolTip();
 	public void draw(Graphics g, int vpX, int vpY){
-
-		if(pRectArray != null){
-			System.out.println("===================================");
-			for(int r = 0; r < curArr.length; r++){
-				for(int c = 0; c < curArr[r].length; c++){
-					System.out.println(curArr[r][c]);
-				}
-			}
-			int rowSize = pRectArray.length;
-			int colSize = pRectArray[0].length;
-
-			float startX = pRectArray[0][0].getX();
-			float startY = pRectArray[0][0].getY();
-
-			g.setColor(Color.gray);
-			//g.fillRoundRect(startX - vpX, startY - vpY, rowSize*pRectArray[0][0].getHeight(), colSize*pRectArray[0][0].getWidth(), 2);
-			for(int r = pRectArray.length - 1; r >= 0 ; r--){
-				for(int c = 0; c < pRectArray[r].length; c++){
-					String temp = curArr[r][c];
-					if(temp.equals("b")){
-						g.setColor(Color.blue);
-					}else if(temp.equals("g")){
-						g.setColor(Color.green);
-					}else if(temp.equals("r")){
-						g.setColor(Color.red);
-					}else if(temp.equals("p")){
-						g.setColor(Color.pink);
-					}else if(temp.equals("e")){
-						g.setColor(Color.white);
-					}//else
-//						System.out.println("no color recognized");
-					//Rectangle rec = pRectArray[r][c];
-					System.out.println("Pattern Manager: at " + r + ", " + c + " || temp=" + temp);
-					float x = playerX + playerWidth + TT_SIZE*c;
-					float y = playerY + TT_SIZE*r;
-					float w = TT_SIZE;
-					float h = TT_SIZE;
-					g.fillRect(x - vpX,y - vpY,w,h);
-//					g.fillRect(c*rec.getWidth() + playerX + playerWidth - vpX, r*rec.getHeight() + playerY - vpY, rec.getWidth(), rec.getHeight());
-				}
-			}
-//			System.out.println("PM===============================");
-			//			g.setColor(Color.white);
-//			g.drawLine(pRectArray[0][0].getX(), pRectArray[0][0].getY(), pRectArray[0][0].getX() + pRectArray[pRectArray.length - 1][0].getX(), pRectArray[0][0].getY() + pRectArray[pRectArray.length - 1][0].getY() + 2);
-		}//else
-//			System.out.println("PM: null");
+	    patternTT.draw(g, curArr, playerX + playerWidth, playerY, vpX, vpY);
 	}
 	/***
 	 * This method goes through the blocks and tries to guess the pattern in a String[][]
@@ -231,14 +184,6 @@ public class PatternManager implements Oberserver{
 		return true;
 	}
 
-	public void updateToolTipBlocks(){
-		for(int r = 0; r < pRectArray.length; r++){
-			for(int c = 0; c < pRectArray[r].length; c++){
-				pRectArray[r][c].setX(playerX + playerWidth + TT_MARGIN + TT_SPACING);
-				pRectArray[r][c].setY(playerY);
-			}
-		}
-	}
 	@Override
 	public void changeColorNotification(int[] colors) {
 		// TODO Auto-generated method stub
@@ -248,8 +193,5 @@ public class PatternManager implements Oberserver{
 	public void changePositionNotification(float x, float y) {
 		playerX = x;
 		playerY = y;
-		if(pRectArray != null)
-			updateToolTipBlocks();
-		System.out.println("change in pos");
 	}
 }

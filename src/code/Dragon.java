@@ -6,6 +6,8 @@ import org.newdawn.slick.SpriteSheet;
 
 public class Dragon {
     int x, y;
+    float tileWidth = 1;
+    float tileHeight = 1;
     int width = 200;
     int height = 236;
     int flyingRow = 0;
