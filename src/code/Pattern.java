@@ -7,7 +7,7 @@ import org.newdawn.slick.Graphics;
 
 public class Pattern {
 	public int x, y;
-	public List<ColoredBlock> blocks = new ArrayList<>();
+	public List<CollectableBlock> blocks = new ArrayList<>();
 	public String[][] pArr;
 	
 	public Pattern(int x, int y){
@@ -16,11 +16,11 @@ public class Pattern {
 	}
 	
 	public void draw(Graphics g, int shiftX, int shiftY){
-		for(ColoredBlock b : blocks)
+		for(CollectableBlock b : blocks)
 			b.draw(g, shiftX, shiftY);
 	}
 	
-	public void addBlock(ColoredBlock block){
+	public void addBlock(CollectableBlock block){
 		blocks.add(block);
 	}
 	

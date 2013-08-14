@@ -54,12 +54,12 @@ public class GameplayState extends BasicGameState{
 		try {
 			//System.out.println(getClass().getClassLoader().getResource("./res/level_1_1.map").getPath());
 			map.loadMap(getClass().getClassLoader().getResource("assets/level1.tmx").getPath());
-			player.x = map.playerX;
-			player.y = map.playerY;
+			//player.x = map.playerX;
+			//player.y = map.playerY;
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		player = new Player(map, "assets/player.png", 100, 100);
+		player = new Player(map, "assets/player.png", 500, 100);
 		//Initialize the viewport shifts by the player startin
 //		Pattern p = new Pattern(70, 135);
 //		p.addBlock(new ColoredBlock(70,135, Color.green));

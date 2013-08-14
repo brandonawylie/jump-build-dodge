@@ -17,14 +17,14 @@
   <properties>
    <property name="name" value="collision"/>
   </properties>
-  <object name="collision" x="0" y="0" width="68" height="692"/>
-  <object name="collision" x="70" y="630" width="1960" height="72"/>
-  <object name="collision" x="2034" y="564" width="552" height="136"/>
-  <object name="collision" x="2170" y="492" width="420" height="72"/>
-  <object name="collision" x="2314" y="424" width="276" height="64"/>
-  <object name="collision" x="2458" y="348" width="140" height="72"/>
-  <object name="collision" x="2660" y="350" width="488" height="64"/>
-  <object name="collision" x="3224" y="212" width="276" height="488"/>
+  <object name="collision" type="a" x="0" y="0" width="68" height="692"/>
+  <object name="collision" type="a" x="70" y="630" width="1960" height="72"/>
+  <object name="collision" type="a" x="2034" y="564" width="552" height="136"/>
+  <object name="collision" type="a" x="2170" y="492" width="420" height="72"/>
+  <object name="collision" type="a" x="2314" y="424" width="276" height="64"/>
+  <object name="collision" type="a" x="2458" y="348" width="140" height="72"/>
+  <object name="collision" type="a" x="2660" y="350" width="488" height="64"/>
+  <object name="collision" type="a" x="3224" y="212" width="276" height="488"/>
  </objectgroup>
  <objectgroup name="player" width="50" height="10">
   <properties>
@@ -44,16 +44,19 @@
   <object name="collectable-block" x="980" y="490" width="70" height="70">
    <properties>
     <property name="color" value="b"/>
+    <property name="name" value="collectable-block"/>
    </properties>
   </object>
   <object name="collectable-block" x="1120" y="490" width="70" height="70">
    <properties>
     <property name="color" value="y"/>
+    <property name="name" value="collectable-block"/>
    </properties>
   </object>
   <object name="collectable-block" x="1260" y="490" width="70" height="70">
    <properties>
     <property name="color" value="g"/>
+    <property name="name" value="collectable-block"/>
    </properties>
   </object>
  </objectgroup>
