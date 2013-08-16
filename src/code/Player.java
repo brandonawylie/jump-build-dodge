@@ -191,10 +191,13 @@ public class Player implements Oberservable{
 			g.drawRect(pry.getX() - shiftX, pry.getY() - shiftY, pry.getWidth(), pry.getHeight());
 		}
 	}
-	Rectangle prx;
-    Rectangle pry;
 
-	//logic for the player
+	/*
+	 * Method: update
+	 * Handles all the collision detection between the map and the player as well as current velocity.
+	 */
+	Rectangle prx;
+	Rectangle pry;
 	public void update(GameContainer gc, int delta, Map m){
 	    petDragon.update(this);
 		//update all of the player's projectiles
@@ -215,26 +218,28 @@ public class Player implements Oberservable{
 
 
 		boolean inAirCheck = true;
+		//should player update x or y, we shall see
 		boolean updatex = true;
 		boolean updatey= true;
-		Rectangle prx = new Rectangle(x + dx, y, width, height);
-		Rectangle pry = new Rectangle(x, y + dy, width, height + 1);
-		System.out.println("===========================");
+		//where the player will be
+		prx = new Rectangle(x + dx, y, width, height);
+		pry = new Rectangle(x, y + dy, width, height + 1);
+
+		//start collision with static map collision rects
 	    for(Rectangle r : m.mapCollision){
 	    	if(prx.intersects(r)){
 	    		updatex = false;
-	    		//dx = 0;
-	    		System.out.println("prx is intersecting!, dx = " + dx + ", dy = " + dy + ", inAir = " + inAir);
 	    	}
 
 	    	if(pry.intersects(r)){
 	    	    updatey = false;
 	    	    inAirCheck = false;
-	    		//dy = 0;
-	    		System.out.println("pry is intersecting!, y = " + (y+height) + ", ry = " + r.getY()+ ", inAir = " + inAir);
+
 	    	}
 	    }
+	    //end collision with static map collision rects
 
+	    //start collision with collectable blocks, both placed and those on the map by default
 	    for(int i = 0; i < m.collectableBlocks.size(); i++){
 		CollectableBlock b = m.collectableBlocks.get(i);
 		Rectangle r = new Rectangle(b.x, b.y, b.width, b.height);
@@ -248,8 +253,6 @@ public class Player implements Oberservable{
 	    	if(pry.intersects(r)){
 	    	    updatey = false;
 	    	    inAirCheck = false;
-	    		//dy = 0;
-	    		System.out.println("pry is intersecting!, y = " + (y+height) + ", ry = " + r.getY()+ ", inAir = " + inAir);
 	    	}
 	    }
 
@@ -266,10 +269,10 @@ public class Player implements Oberservable{
 	    	if(pry.intersects(r)){
 	    	    updatey = false;
 	    	    inAirCheck = false;
-	    		//dy = 0;
-	    		System.out.println("pry is intersecting!, y = " + (y+height) + ", ry = " + r.getY()+ ", inAir = " + inAir);
 	    	}
 	    }
+	    //end collision with collectable blocks
+
 	    inAir = inAirCheck;
 
 		if(inAir)
@@ -342,7 +345,7 @@ public class Player implements Oberservable{
 		p.dx = dx;
 		p.dy = dy;
 		projectiles.add(p);
-		System.out.println("Bullet\ndx=" + dx + ", dy=" + dy);
+		//System.out.println("Bullet\ndx=" + dx + ", dy=" + dy);
 	}
 
 	/*Adds the color block to the player's inventory

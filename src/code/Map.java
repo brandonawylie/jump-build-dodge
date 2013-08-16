@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,9 +15,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.tiled.GroupObject;
-import org.newdawn.slick.tiled.ObjectGroup;
-import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.tiled.TiledMapPlus;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -33,6 +30,7 @@ public class Map{
 	public static int DEFAULT_MAPTILEHEIGHT = 70;
 	public static int DEFAULT_MAPWIDTH = 1000;
 	public static int DEFAULT_MAPHEIGHT = 1000;
+	//different paths
 	public static String COLLLECTABLEBLOCK_RED_PATH =  "assets/blocks/collectableblock_red.png";
 	public static String COLLLECTABLEBLOCK_BLUE_PATH =  "assets/blocks/collectableblock_blue.png";
 	public static String COLLLECTABLEBLOCK_GREEN_PATH =  "assets/blocks/collectableblock_green.png";
@@ -41,6 +39,7 @@ public class Map{
 	public static String PATTERNBLOCK_BLUE_PATH =  "assets/blocks/patternblock_blue.png";
 	public static String PATTERNBLOCK_GREEN_PATH =  "assets/blocks/patternblock_green.png";
 	public static String PATTERNBLOCK_YELLOW_PATH =  "assets/blocks/patternblock_yellow.png";
+
 	//game objects that belong to the map
 	public List<TileSet> tilesets = new ArrayList<>();
 	public List<Platform> platforms = new ArrayList<>();
@@ -67,15 +66,7 @@ public class Map{
 	 * @param player the map uses the player to react given the circumestances
 	 */
 	public void update(Player player){
-		for(Platform p : platforms){
-			double distance = Math.sqrt(Math.pow((p.x + p.width/2) - (player.x + player.width/2), 2) + Math.pow((p.y + p.height/2) - (player.y + player.height/2), 2));
-			if(!p.isRandom && distance < 30){
-				p.setRandomColor(System.currentTimeMillis());
-			}else if(p.isRandom && distance >= 16)
-				p.resetColor();
-
-			p.update();
-		}
+		pManager.update(this);
 	}
 
 	/**
@@ -88,15 +79,7 @@ public class Map{
 	 */
 	public void draw(Graphics g, int viewportX, int viewportY){
 		tiledMap.render(-viewportX, -viewportY);
-//		for(int r = 0; r < tiles.length; r++){
-//			for(int c = 0; c < tiles[r].length; c++){
-//				if(tiles[r][c] != null)
-//					g.drawImage(tiles[r][c], c*mapTileWidth - viewportX, r*mapTileHeight - viewportY);
-//			}
-//		}
 
-		for(Platform p : platforms)
-			p.draw(g, viewportX, viewportY);
 		for(CollectableBlock b : collectableBlocks)
 			b.draw(g, viewportX, viewportY);
 
@@ -181,86 +164,61 @@ public class Map{
 		try {
 			db = dbf.newDocumentBuilder();
 			dom = db.parse(path);
-		} catch (ParserConfigurationException e) { } 
+		} catch (ParserConfigurationException e) { }
 		catch (SAXException e) {	}
-		
+
 		NodeList nl = dom.getElementsByTagName("objectgroup");
 		System.out.println(nl.getLength());
-		
+
 		for(int i = 0; i < nl.getLength(); i++){
 			Node objectGroup = nl.item(i);
 			String objectGroupName = objectGroup.getNodeName();
 			loadObjectGroup(objectGroup);
-		
+
 		}
-		
-		
-		
-//		//System.out.println("object group count = " + tiledMap.getObjectGroupCount());
-//		ArrayList<ObjectGroup> groups = tiledMap.getObjectGroups();
-//		TiledMap tMap = (TiledMap)tiledMap;
-//		for(int i = 0; i < groups.size(); i++){
-//			ObjectGroup obGroup = groups.get(i);
-//			//this is where you look at object layer properties
-//			String objectGroupName = obGroup.name;
-//			System.out.println("group anme = " + objectGroupName);
-//			if(objectGroupName.contains("pattern-")){
-//				Pattern newPattern = new Pattern(0,0);
-//				String arrString = obGroup.props.getProperty("array");
-//				System.out.println(arrString);
-//				for(GroupObject o : obGroup.objects){
-//					System.out.println("in pattern! = " + o.name);
-//					int x = o.x;
-//					int y = o.y;
-//					int width = o.width;
-//					int height = o.height;
-//					String color = o.props.getProperty("color");
-//					String cbPath = "";
-//					if(color.equals("r")){
-//						cbPath = PATTERNBLOCK_RED_PATH;
-//					}else if(color.equals("b")){
-//						cbPath = PATTERNBLOCK_BLUE_PATH;
-//					}else if(color.equals("g")){
-//						cbPath = PATTERNBLOCK_GREEN_PATH;
-//					}else if(color.equals("y")){
-//						cbPath = PATTERNBLOCK_YELLOW_PATH;
-//					}
-//					newPattern.addBlock(new CollectableBlock(this, x, y, cbPath));
-//				}
-//			}else if(objectGroupName.equals("collision")){
-//				System.out.println("in collision");
-//				for(GroupObject o :obGroup.objects){
-//					int x = o.x;
-//					int y = o.y;
-//					int width = o.width;
-//					int height = o.height;
-//					System.out.println("adding rectanlge, " + x + ", " + y + ", " + width + ", " + height);
-//					//mapCollision.add(new Rectangle(x, y, width, height));
-//				}
-//			}else if(!objectGroupName.equals("player")){
-//				for(GroupObject o : obGroup.objects){
-//					//System.out.println("name=" + o.name);
-//					loadObject(o);
-//				}
-//			}
-//		}
+
 		return true;
 	}
-	
-	public void loadObjectGroup(Node objectGroup){	
+
+	public void loadObjectGroup(Node objectGroup){
 		NamedNodeMap groupAttributes = objectGroup.getAttributes();
 		String objectGroupName = groupAttributes.getNamedItem("name").getNodeValue();
 		System.out.println("in loadObjectGroup: " + objectGroupName);
 		NodeList objectGroupChildNodes = objectGroup.getChildNodes();
-		
+
 		List<Node> objectNodes = new ArrayList<Node>();
 		HashMap<String, String> properties = getProperties(objectGroupChildNodes, objectNodes);
-		
+
 		//put the nodes that aren't marked properties into this list
 		if(objectGroupName.contains("pattern-")){
 			Pattern newPattern = new Pattern(0,0);
+			String arrayStr = properties.get("array");
+			//System.out.println(arrayStr);
+			String[] rowsStr = arrayStr.substring(1, arrayStr.length() - 1).split(";");
+			int columnLength = 0;
+			List<String[]> columns = new ArrayList<>();
+			for(String row : rowsStr){
+			    //System.out.println("row = " + row);
+			    String[] column = row.split(",");
+			    columns.add(column);
+			}
+			String[][] array = new String[columns.size()][columns.get(0).length];
+			int i = 0;
+			int j = 0;
+			for(String[] pp : columns){
+			    j=0;
+			    for(String gg : pp){
+				//System.out.print(gg + ", ");
+				array[i][j] = gg;
+				j++;
+			    }
+			    //System.out.println();
+			    i++;
+			}
+
+			newPattern.pArr = array;
 			for(Node n: objectNodes){
-				System.out.println("in pattern: " + n.getNodeName());
+				//System.out.println("in pattern: " + n.getNodeName());
 				List<Node> realObjects = new ArrayList<Node>();
 				HashMap<String, String> objectProperties = getProperties(n.getChildNodes(), objectNodes);
 				//System.out.println(attr.getNamedItem("name").getNodeValue());
@@ -281,9 +239,10 @@ public class Map{
 				}else if(color.equals("y")){
 					cbPath = PATTERNBLOCK_YELLOW_PATH;
 				}
-				//TODO parse array
+				System.out.println(array);
 				newPattern.addBlock(new CollectableBlock(this, x, y, cbPath));
 			}
+			patterns.add(newPattern);
 		}else if(objectGroupName.contains("collision")){
 			//System.out.println("in collision");
 			for(Node n : objectNodes){
@@ -327,10 +286,10 @@ public class Map{
 			}
 		}
 	}
-	
+
 	public HashMap<String, String> getProperties(NodeList nl, List<Node> objectNodes){
 		HashMap<String, String> properties = new HashMap<String, String>();
-		for(int i = 0; i < nl.getLength(); i++){	
+		for(int i = 0; i < nl.getLength(); i++){
 			Node n = nl.item(i);
 			if(n.getNodeName().equals("properties")){
 				NodeList props = n.getChildNodes();
@@ -338,13 +297,13 @@ public class Map{
 					Node n2 = props.item(j);
 					//System.out.println("int second for loop: " + n2.getNodeName());
 					if(n2.getNodeName().equals("property")){
-						System.out.println("found property = " + n2.getAttributes().getNamedItem("name").getNodeValue() + ", " + n2.getAttributes().getNamedItem("value").getNodeValue());
+						//System.out.println("found property = " + n2.getAttributes().getNamedItem("name").getNodeValue() + ", " + n2.getAttributes().getNamedItem("value").getNodeValue());
 						String key = n2.getAttributes().getNamedItem("name").getNodeValue();
 						String value = n2.getAttributes().getNamedItem("value").getNodeValue();
 	//					if(value.equals("collectable-blocks"))
 	//						printNode(n);
 						properties.put(n2.getAttributes().getNamedItem("name").getNodeValue(), n2.getAttributes().getNamedItem("value").getNodeValue());
-						
+
 					}
 				}
 			}else if(!n.getNodeName().equals("#text")){
@@ -354,15 +313,15 @@ public class Map{
 		}
 		return properties;
 	}
-	
+
 	  /** Prints the specified node, recursively. */
-	  public static void printNode(Node node) 
+	  public static void printNode(Node node)
 	  {
 	    int type = node.getNodeType();
 	    switch (type)
 	    {
 	      // print the document element
-	      case Node.DOCUMENT_NODE: 
+	      case Node.DOCUMENT_NODE:
 	        {
 	          System.out.println("<?xml version=\"1.0\" ?>");
 	          printNode(((Document)node).getDocumentElement());
@@ -370,13 +329,13 @@ public class Map{
 	        }
 
 	         // print element and any attributes
-	      case Node.ELEMENT_NODE: 
+	      case Node.ELEMENT_NODE:
 	        {
 	          System.out.print("<");
 	          System.out.print(node.getNodeName());
 
 	          if (node.hasAttributes())
-	          {          
+	          {
 	            NamedNodeMap attrs = node.getAttributes();
 	            for (int i = 0; i < attrs.getLength(); i++)
 	              printNode(attrs.item(i));
@@ -408,7 +367,7 @@ public class Map{
 	        }
 
 	        // handle entity reference nodes
-	      case Node.ENTITY_REFERENCE_NODE: 
+	      case Node.ENTITY_REFERENCE_NODE:
 	        {
 	          System.out.print("&");
 	          System.out.print(node.getNodeName());
@@ -417,7 +376,7 @@ public class Map{
 	        }
 
 	        // print cdata sections
-	      case Node.CDATA_SECTION_NODE: 
+	      case Node.CDATA_SECTION_NODE:
 	        {
 	          System.out.print("<![CDATA[");
 	          System.out.print(node.getNodeValue());
@@ -426,7 +385,7 @@ public class Map{
 	        }
 
 	        // print text
-	      case Node.TEXT_NODE: 
+	      case Node.TEXT_NODE:
 	        {
 	          System.out.print(node.getNodeValue());
 	          break;
@@ -441,7 +400,7 @@ public class Map{
 	        }
 
 	        // print processing instruction
-	      case Node.PROCESSING_INSTRUCTION_NODE: 
+	      case Node.PROCESSING_INSTRUCTION_NODE:
 	        {
 	          System.out.print("<?");
 	          System.out.print(node.getNodeName());

@@ -10,11 +10,22 @@ import org.newdawn.slick.geom.Rectangle;
 public class PatternManager implements Oberserver{
 	//public List<CollectableBlock> blocks = new ArrayList<CollectableBlock>();
 	public List<Rectangle> patternRects = new ArrayList<Rectangle>();
-	public List<String[][]> patterns = new ArrayList<>();
 	String[][] curArr;
 	Rectangle[][] pRectArray;
 	float playerX, playerY, playerWidth, playerHeight;
 	PatternToolTip patternTT = new PatternToolTip();
+
+	public void update(Map map){
+	    for(int i = 0; i < map.patterns.size(); i++){
+		Pattern p = map.patterns.get(i);
+
+		if(matchPatterns(p.pArr)){
+		    System.out.println("GREAAAAT SUCCESS");
+		    map.patterns.remove(p);
+		}
+	    }
+	}
+
 	public void draw(Graphics g, int vpX, int vpY){
 	    patternTT.draw(g, curArr, playerX + playerWidth, playerY, vpX, vpY);
 	}
@@ -182,6 +193,27 @@ public class PatternManager implements Oberserver{
 			}
 		}catch(Exception e){ return false; }
 		return true;
+	}
+
+	public boolean matchPatterns(String[][] arr){
+	   if(curArr == null || arr == null)
+	       return false;
+
+	   if(curArr.length != arr.length)
+	       return false;
+
+	   for(int r = 0; r < curArr.length; r++){
+	       if(curArr[r].length != arr[r].length){
+		   return false;
+	       }
+
+	       for(int c = 0; c < curArr[r].length; c++){
+		   if(!curArr[r][c].equals(arr[r][c])){
+		       return false;
+		   }
+	       }
+	   }
+	   return true;
 	}
 
 	@Override

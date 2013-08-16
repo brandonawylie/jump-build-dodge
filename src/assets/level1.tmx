@@ -62,7 +62,7 @@
  </objectgroup>
  <objectgroup name="pattern-1" width="50" height="10">
   <properties>
-   <property name="array" value="[r,b;b,b]"/>
+   <property name="array" value="[r,g;b,b]"/>
    <property name="name" value="pattern-1"/>
   </properties>
   <object name="pattern-block" x="3010" y="140" width="70" height="70">
