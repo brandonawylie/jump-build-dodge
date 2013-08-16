@@ -6,6 +6,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
@@ -40,6 +41,8 @@ public class Player implements Oberservable{
 	int yellowBlocks = 0;
 	int greenBlocks = 0;
 
+	boolean doubleJump = true;
+	boolean jumpKeyReset = true;
 	public float MAX_SPEED = 5*GameplayState.VIEWPORT_RATIO_X;
 
 
@@ -199,6 +202,9 @@ public class Player implements Oberservable{
 	Rectangle prx;
 	Rectangle pry;
 	public void update(GameContainer gc, int delta, Map m){
+	    if(!gc.getInput().isKeyDown(Input.KEY_W))
+		jumpKeyReset = true;
+
 	    petDragon.update(this);
 		//update all of the player's projectiles
 		for(Projectile p : projectiles)
@@ -234,6 +240,7 @@ public class Player implements Oberservable{
 	    	if(pry.intersects(r)){
 	    	    updatey = false;
 	    	    inAirCheck = false;
+	    	    doubleJump = true;
 
 	    	}
 	    }
@@ -276,7 +283,7 @@ public class Player implements Oberservable{
 	    inAir = inAirCheck;
 
 		if(inAir)
-		    dy += Helper.GRAVITY;
+		    dy += Helper.GRAVITY*delta/25;
 
 		if(updatex){
 		    x+=dx;
@@ -306,7 +313,9 @@ public class Player implements Oberservable{
 	}
 
 	public void jump(){
-		if(!inAir){
+		if((!inAir || doubleJump) && jumpKeyReset){
+		    jumpKeyReset = false;
+
 			dy = (float) -jumpSpeed;
 			inAir = true;
 			startJump = true;
