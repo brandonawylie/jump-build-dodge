@@ -1,5 +1,5 @@
 package code;
-
+import gamestates.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.newdawn.slick.Color;
@@ -15,7 +15,7 @@ import org.newdawn.slick.Animation;
 public class Player implements Oberservable{
     	Dragon petDragon;
 
-	float x, y, dx, dy, speed, ratioX, ratioY;
+	public float x, y, dx, dy, speed, ratioX, ratioY;
 	int width = 40;
 	int height = 48;
 
@@ -29,9 +29,9 @@ public class Player implements Oberservable{
 	int jumpAnimationFrames = 3;
 	int fallAnimationFrames = 4;
 
-	float jumpSpeed = 5;
-	boolean movingLeft = false;
-	boolean movingRight = false;
+	float jumpSpeed = 7.5f;
+	public boolean movingLeft = false;
+	public boolean movingRight = false;
 	boolean facingRight = true;
 	boolean inAir = false;
 	long gravityTimer;
@@ -43,7 +43,7 @@ public class Player implements Oberservable{
 
 	boolean doubleJump = true;
 	boolean jumpKeyReset = true;
-	public float MAX_SPEED = 5*GameplayState.VIEWPORT_RATIO_X;
+	public float MAX_SPEED = 7.5f*GameplayState.VIEWPORT_RATIO_X;
 
 
 	List<Projectile> projectiles = new ArrayList<Projectile>();
@@ -66,7 +66,7 @@ public class Player implements Oberservable{
 	public Player(Map m, String path, float x, float y){
 		this.x = x; this.y = y;
 		dx = 0; dy = Helper.GRAVITY;
-		speed = .075f*GameplayState.VIEWPORT_RATIO_X;
+		speed = 2*GameplayState.VIEWPORT_RATIO_X;
 		redR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
 		n++;
 		blueR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
@@ -133,6 +133,7 @@ public class Player implements Oberservable{
 
 		petDragon = new Dragon("assets/characters/dragon_red.png", (int)(x + width), (int)y);
 	}
+	
 	long timer = 0;
 	boolean startJump = false;
 	int startJumpFrames = 0;
@@ -203,7 +204,7 @@ public class Player implements Oberservable{
 	Rectangle pry;
 	public void update(GameContainer gc, int delta, Map m){
 	    if(!gc.getInput().isKeyDown(Input.KEY_W))
-		jumpKeyReset = true;
+	    	jumpKeyReset = true;
 
 	    petDragon.update(this);
 		//update all of the player's projectiles
@@ -315,7 +316,8 @@ public class Player implements Oberservable{
 	public void jump(){
 		if((!inAir || doubleJump) && jumpKeyReset){
 		    jumpKeyReset = false;
-
+		    if(inAir)
+		    	doubleJump = false;
 			dy = (float) -jumpSpeed;
 			inAir = true;
 			startJump = true;

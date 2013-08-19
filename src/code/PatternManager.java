@@ -1,9 +1,10 @@
 package code;
 
+import gamestates.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
@@ -17,12 +18,12 @@ public class PatternManager implements Oberserver{
 
 	public void update(Map map){
 	    for(int i = 0; i < map.patterns.size(); i++){
-		Pattern p = map.patterns.get(i);
+	    	Pattern p = map.patterns.get(i);
 
-		if(matchPatterns(p.pArr)){
-		    System.out.println("GREAAAAT SUCCESS");
-		    map.patterns.remove(p);
-		}
+			if(matchPatterns(p.pArr)){
+			    System.out.println("GREAAAAT SUCCESS");
+			    map.patterns.remove(p);
+			}
 	    }
 	}
 

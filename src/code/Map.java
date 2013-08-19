@@ -47,7 +47,7 @@ public class Map{
 	public List<CollectableBlock> placedCollectableBlocks = new ArrayList<>();
 	public List<Pattern> patterns = new ArrayList<>();
 	Image[][] tiles;
-	PatternManager pManager = new PatternManager();
+	public PatternManager pManager = new PatternManager();
 
 	//map settings
 	TiledMapPlus tiledMap;

@@ -1,8 +1,8 @@
 package code;
-
+import gamestates.*;
+import code.*;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-
 public class HUD implements Oberserver{
 	private Image hudBottom, hudTop;
 	private int rBlockCount, bBlockCount, pBlockCount, gBlockCount;
