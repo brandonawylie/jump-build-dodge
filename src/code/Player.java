@@ -1,5 +1,4 @@
 package code;
-import gamestates.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.newdawn.slick.Color;
@@ -11,6 +10,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.Animation;
+
+import code.gamestates.*;
 
 public class Player implements Oberservable{
     	Dragon petDragon;
@@ -279,6 +280,25 @@ public class Player implements Oberservable{
 	    	    inAirCheck = false;
 	    	}
 	    }
+	    
+	    for(int i = 0; i < m.patterns.size(); i++){
+	    	Pattern p = m.patterns.get(i);
+	    	for(int j = 0; j < p.blocks.size(); j++){
+				CollectableBlock b = p.blocks.get(j);
+				Rectangle r = new Rectangle(b.x, b.y, b.width, b.height);
+	
+				if(prx.intersects(r)){
+			    		updatex = false;
+			    	}
+	
+			    	if(pry.intersects(r)){
+			    	    updatey = false;
+			    	    inAirCheck = false;
+			    	}
+		    }
+	    }
+	    
+	    
 	    //end collision with collectable blocks
 
 	    inAir = inAirCheck;

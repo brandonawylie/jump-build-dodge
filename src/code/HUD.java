@@ -1,6 +1,7 @@
 package code;
-import gamestates.*;
 import code.*;
+import code.gamestates.*;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 public class HUD implements Oberserver{

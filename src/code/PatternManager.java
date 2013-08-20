@@ -1,12 +1,13 @@
 package code;
 
-import gamestates.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
+
+import code.gamestates.*;
 
 public class PatternManager implements Oberserver{
 	//public List<CollectableBlock> blocks = new ArrayList<CollectableBlock>();

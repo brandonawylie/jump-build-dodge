@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="500" height="100" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="realtilesheet" tilewidth="70" tileheight="70" spacing="1">
+  <image source="tilesets/realtilesheet.png" trans="ff00ff" width="852" height="856"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="500" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt3U1r2zAAgOGw2+7tbedSxi4j5/7/vzUKCxgh25IsWZL9PCDy2cQ9vZGiJI8HAAAAAAAAANDCW+8DAAAO+9n7AADgxt52RovHrDEAgDTvj7KevjceAEB7eg4A89NzALiGs3r+JzIAgHrMzwFgbtbbAWB+I/TcGjwAHNe75wBAXXoOAPN7X5yO0nP74gGg3Cg9BwCO03MAuJaRem4dHgDqGWF+rusAAAAAAFCHtXYAmJ/fcAMAAAAAAAAAAAAAAAAAACCHz6kDAAAAAECes9fUnyc9DwDQzvOh6QBQ4jO43Ht/m54DQL5Yz3vuXddzANgXdjrseXjd52K0Zr0dANIt59+pnW7Z8+dinPXaAQCupGfPYx0PBwCwL6fntfv6Wltfa7meAzCT5Tx1ZLW7u/V4eg7AbGr1vNd3q6d0eW3f3fK28DwAzKRGz2f7bZRY52NdB4BZ/FqMEZzRUmvtAFzNWs/X1s9bv8/euqWl6/MAMLLU+fkzOG0ltbdH9sGFp+F5PQdgNik9f0ZGeHstLVtqbg7Ale3tZ4v1/LlzW+keu1Y91XIArujH/9OUvel7za7Z8xZ0HICR/S687uuR9znxIz3v2XRzcgBG93Vg5H5efLaer31XjJYD0MrHxvi7Mnr1NXzPPLytd89zOq7nABwR6/aatZ73NuL8POdzbloOQInUfodG73nsup49X57XcQBqKWn40mg9T+n0WU0vmY9rOQC5jnT8Zcaex+5X+/tmwjZrOQCtHG35t9F6/i2lz3s9T1mvD6112dwcgJZq9HxUW70+uvc+Nl49Xrs+1u3YZQDIdeWef9vq7nKkdPrIeBTcHwBS1Xj/fBY11sJrdXzruQEg1117Hutm7Tl2af8BINddet670ynt1nMASt2h5aER58/m5wAccZf5+Z4ajS9tspYDUMPde7629p7zdznzeu+ZA9DC3Xvemn1vAJxBzwFgfnoOAAAAAAAAwJ19bIyruNr/AwChtY5vdb7FSDmuu41UOY9zh9dvAHdUszu9+7fVpV7PPdrxaTjA9fXu8FX6NfKxAXBfWgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBZ/gFcAdVo
+  </data>
+ </layer>
+ <objectgroup name="collision" width="500" height="100">
+  <object x="210" y="420" width="560" height="70"/>
+  <object x="700" y="490" width="490" height="70"/>
+  <object x="1470" y="280" width="70" height="140"/>
+  <object x="1680" y="420" width="1680" height="280"/>
+  <object x="3360" y="420" width="70" height="70"/>
+  <object x="1820" y="700" width="1540" height="350"/>
+  <object x="1750" y="700" width="70" height="70"/>
+  <object x="1750" y="840" width="70" height="140"/>
+  <object x="2100" y="1050" width="1260" height="70"/>
+  <object x="2030" y="1050" width="70" height="140"/>
+  <object x="2940" y="1120" width="420" height="350"/>
+  <object x="2590" y="1120" width="350" height="280"/>
+  <object x="2380" y="1120" width="210" height="210"/>
+  <object x="2240" y="1120" width="140" height="140"/>
+  <object x="2170" y="1120" width="70" height="70"/>
+  <object x="3570" y="700" width="350" height="70"/>
+  <object x="4060" y="910" width="210" height="70"/>
+  <object x="4620" y="1120" width="280" height="70"/>
+  <object x="5040" y="1330" width="280" height="70"/>
+  <object x="5250" y="1400" width="210" height="70"/>
+  <object x="5320" y="1610" width="70" height="70"/>
+  <object x="5320" y="1680" width="350" height="70"/>
+  <object x="6020" y="2240" width="350" height="70"/>
+  <object x="5670" y="2450" width="210" height="70"/>
+  <object x="5460" y="2590" width="70" height="70"/>
+  <object x="5460" y="2660" width="280" height="70"/>
+  <object x="5530" y="2730" width="70" height="70"/>
+  <object x="5740" y="2730" width="210" height="70"/>
+  <object x="5880" y="2800" width="70" height="210"/>
+  <object x="5950" y="2940" width="70" height="140"/>
+  <object x="6020" y="3010" width="420" height="70"/>
+  <object x="6370" y="3080" width="700" height="70"/>
+  <object x="7350" y="2870" width="490" height="630"/>
+  <object x="7840" y="2870" width="140" height="210"/>
+  <object x="7840" y="3080" width="70" height="350"/>
+  <object x="7630" y="2450" width="70" height="140"/>
+  <object x="7700" y="2520" width="70" height="350"/>
+  <object x="7630" y="2730" width="70" height="140"/>
+  <object x="7490" y="2800" width="140" height="70"/>
+  <object x="7770" y="2800" width="70" height="70"/>
+  <object x="4830" y="4200" width="2170" height="490"/>
+  <object x="4620" y="4690" width="210" height="70"/>
+  <object x="4900" y="4690" width="140" height="70"/>
+  <object x="5600" y="4690" width="770" height="70"/>
+  <object x="6580" y="4690" width="280" height="70"/>
+  <object x="7000" y="4270" width="70" height="350"/>
+  <object x="7070" y="4200" width="70" height="210"/>
+  <object x="7140" y="4270" width="70" height="70"/>
+  <object x="6580" y="3780" width="560" height="420"/>
+  <object x="7140" y="3430" width="350" height="420"/>
+  <object x="7140" y="3850" width="70" height="210"/>
+  <object x="7210" y="3850" width="70" height="140"/>
+  <object x="7280" y="3850" width="140" height="70"/>
+  <object x="7210" y="3290" width="140" height="140"/>
+  <object x="7280" y="3150" width="70" height="140"/>
+  <object x="5530" y="3220" width="70" height="350"/>
+  <object x="5670" y="3360" width="630" height="70"/>
+  <object x="5600" y="3360" width="70" height="70"/>
+  <object x="5180" y="2590" width="70" height="420"/>
+  <object x="4900" y="2730" width="140" height="70"/>
+  <object x="4970" y="2800" width="210" height="70"/>
+  <object x="4130" y="3500" width="560" height="840"/>
+  <object x="4200" y="4340" width="630" height="210"/>
+  <object x="4410" y="4550" width="420" height="70"/>
+  <object x="4340" y="4550" width="140" height="70"/>
+  <object x="4690" y="3640" width="70" height="560"/>
+  <object x="4760" y="3990" width="70" height="280"/>
+  <object x="5040" y="4130" width="140" height="70"/>
+  <object x="5390" y="4130" width="280" height="70"/>
+  <object x="6090" y="4060" width="490" height="140"/>
+  <object x="6230" y="3990" width="490" height="70"/>
+  <object x="6510" y="3850" width="70" height="140"/>
+  <object x="5950" y="4130" width="140" height="70"/>
+  <object x="6720" y="3710" width="420" height="70"/>
+  <object x="6860" y="3640" width="280" height="70"/>
+  <object x="7000" y="3570" width="140" height="70"/>
+  <object x="7070" y="3500" width="70" height="70"/>
+  <object x="7490" y="3500" width="70" height="210"/>
+  <object x="7560" y="3500" width="70" height="140"/>
+  <object x="7630" y="3500" width="140" height="70"/>
+  <object x="6300" y="4760" width="350" height="70"/>
+  <object x="3640" y="3430" width="350" height="350"/>
+  <object x="3990" y="3500" width="70" height="630"/>
+  <object x="4060" y="3570" width="70" height="350"/>
+  <object x="3780" y="3780" width="70" height="70"/>
+  <object x="3920" y="3780" width="70" height="490"/>
+  <object x="3780" y="3990" width="140" height="140"/>
+  <object x="3850" y="4130" width="70" height="70"/>
+  <object x="4130" y="4480" width="70" height="70"/>
+  <object x="3990" y="4200" width="140" height="140"/>
+  <object x="4690" y="4620" width="140" height="70"/>
+  <object x="3850" y="3290" width="70" height="140"/>
+  <object x="4200" y="3430" width="70" height="140"/>
+  <object x="3710" y="3360" width="70" height="70"/>
+  <object x="4270" y="3080" width="350" height="70"/>
+  <object x="4200" y="3150" width="140" height="70"/>
+  <object x="3430" y="3290" width="350" height="70"/>
+  <object x="3010" y="3010" width="210" height="210"/>
+  <object x="3150" y="2520" width="70" height="490"/>
+  <object x="3080" y="3500" width="140" height="70"/>
+  <object x="3010" y="3570" width="140" height="70"/>
+  <object x="2870" y="3640" width="210" height="70"/>
+  <object x="2800" y="3710" width="140" height="70"/>
+  <object x="1750" y="3780" width="1050" height="70"/>
+  <object x="840" y="3780" width="420" height="70"/>
+  <object x="770" y="3780" width="70" height="140"/>
+  <object x="490" y="3850" width="280" height="70"/>
+  <object x="140" y="3990" width="210" height="70"/>
+  <object x="70" y="4130" width="70" height="560"/>
+  <object x="140" y="4340" width="70" height="210"/>
+  <object x="140" y="4620" width="70" height="350"/>
+  <object x="0" y="5250" width="420" height="280"/>
+  <object x="0" y="5180" width="490" height="70"/>
+  <object x="490" y="5250" width="1890" height="210"/>
+  <object x="2380" y="5390" width="840" height="70"/>
+  <object x="2660" y="5250" width="2800" height="280"/>
+  <object x="3990" y="5180" width="140" height="70"/>
+  <object x="5460" y="5250" width="1750" height="210"/>
+  <object x="7280" y="5390" width="1750" height="70"/>
+  <object x="7210" y="5320" width="1820" height="140"/>
+  <object x="7910" y="5250" width="560" height="70"/>
+  <object x="8680" y="5250" width="490" height="70"/>
+ </objectgroup>
+</map>
