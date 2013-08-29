@@ -41,6 +41,7 @@ public class Player implements Oberservable{
 	int redBlocks = 0;
 	int yellowBlocks = 0;
 	int greenBlocks = 0;
+	int health = 10000;
 
 	boolean doubleJump = true;
 	boolean jumpKeyReset = true;
@@ -345,38 +346,8 @@ public class Player implements Oberservable{
 	}
 
 	public void shoot(float x, float y){
-		Projectile p = new Projectile(this.x + this.width/2, this.y + this.height/2);
-		float dx, dy;
-
-		if(x < this.x && y < this.y){
-			System.out.println("quadrant 2");
-			dx = x - this.x;
-			dy = y - this.y;
-		}
-		else if(x > this.x && y < this.y){
-			System.out.println("quadrant 1");
-			dx = x - this.x;
-			dy = y - this.y;
-		}
-		else if(x < this.x && y > this.y){
-			System.out.println("quadrant 3");
-			dx = x - this.x;
-			dy = y - this.y;
-		}else{
-			System.out.println("quadrant 4");
-			dx = x - this.x;
-			dy = y - this.y;
-		}
-
-
-
-		float v = (float) Math.sqrt(dx*dx + dy*dy);
-		dx /= v;
-		dy /= v;
-		p.dx = dx;
-		p.dy = dy;
+		Projectile p = new Projectile(this.x + this.width/2, this.y + this.height/2, x, y);
 		projectiles.add(p);
-		//System.out.println("Bullet\ndx=" + dx + ", dy=" + dy);
 	}
 
 	/*Adds the color block to the player's inventory

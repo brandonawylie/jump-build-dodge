@@ -51,6 +51,8 @@ public class PatternToolTip {
 					g.setColor(Color.pink);
 				}else if(temp.equals("e")){
 					g.setColor(Color.white);
+				}else if(temp.equals("y")){
+					g.setColor(Color.yellow);
 				}
 				float x = desX + TT_SPACING + TT_SIZE*c + c;
 				float y = desY + TT_SPACING + TT_SIZE*r + r;

@@ -27,4 +27,10 @@ How to write .tmx files for this engine:
 				array - the array associated with this pattern
 			Object Properties:
 				color - the color you want the pattern to be [r,y,b,g]	
+				
+		shooting-enemy
+			Object-Layer Properties:
+				no properties yet
+			Object Properties:
+				no properties yet
 			

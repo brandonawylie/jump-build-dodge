@@ -31,6 +31,8 @@ public class GameplayState extends BasicGameState{
 	Map map;
 	HUD hud;
 	int mouseX = 0; int mouseY = 0;
+	
+	ShootingEnemy se = new ShootingEnemy(500, 500, 19, 19);
 	public GameplayState(int ID){
 		this.stateID = ID;
 	}
@@ -60,28 +62,16 @@ public class GameplayState extends BasicGameState{
 		//grab the map
 		try {
 			//System.out.println(getClass().getClassLoader().getResource("./res/level_1_1.map").getPath());
-			map.loadMap(getClass().getClassLoader().getResource("assets/level2.tmx").getPath());
+			map.loadMap(getClass().getClassLoader().getResource("assets/level1.tmx").getPath());
 			//player.x = map.playerX;
 			//player.y = map.playerY;
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		player = new Player(map, "assets/player.png", 500, 100);
-		//Initialize the viewport shifts by the player startin
-//		Pattern p = new Pattern(70, 135);
-//		p.addBlock(new ColoredBlock(70,135, Color.green));
-//		p.addBlock(new ColoredBlock(90,135, Color.red));
-//		p.addBlock(new ColoredBlock(110,135, Color.blue));
-//		String[][] temp = new String[1][3];
-//		temp[0][0] = "g";
-//		temp[0][1] = "r";
-//		temp[0][2] = "b";
-//		p.setPatternArray(temp);
-//		map.patterns.add(p);
 
 
 		//initialize the hud
-
 		try {
 			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/hud-bottom.png"));
 		} catch (IOException e) {}
@@ -101,10 +91,9 @@ public class GameplayState extends BasicGameState{
 	 */
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		//render the player
-
 		//render the map and all associated objects
 		map.draw(g, VIEWPORT_X, VIEWPORT_Y);
-		player.render(g, VIEWPORT_X, VIEWPORT_Y);
+		player.render(g, VIEWPORT_X, VIEWPORT_Y);se.draw(g, VIEWPORT_X, VIEWPORT_Y);
 		hud.draw(g);
 		menu.draw(g);
 	}
@@ -114,6 +103,7 @@ public class GameplayState extends BasicGameState{
 	 *
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		se.update(delta, player);
 		menu.update(this, gc, map);
 		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE))
 			menu.visible = !menu.visible;

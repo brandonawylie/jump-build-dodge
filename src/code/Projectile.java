@@ -9,16 +9,43 @@ public class Projectile {
 	//stores the x/y position, velocity
 	float x, y, dx, dy;
 	//width & height
-	int width = 2;
-	int height = 2;
+	int width = 5;
+	int height = 6;
 	//color of the bullets
-	Color color = Color.green;
+	Color color = Color.red;
 	
 	//constructors that take x and y of the starting position
-	public Projectile(float x, float y){
+	public Projectile(float x, float y, float desX, float desY){
 		this.x = x;
 		this.y = y;
-		dx = BULLET_SPEED;
+
+		if(x < desX && y < desY){
+			System.out.println("quadrant 4");
+			dx = x - desX;
+			dy = y - desY;
+		}
+		else if(x > desX && y < desY){
+			System.out.println("quadrant 3");
+			dx = x - desX;
+			dy = y - desY;
+		}
+		else if(x < desX && y > desY){
+			System.out.println("quadrant 1");
+			dx = x - desX;
+			dy = y - desY;
+
+		}else{
+			System.out.println("quadrant 2");
+			dx = x - desX;
+			dy = y - desY;
+		}
+		dx = -dx;
+		dy = -dy;
+
+
+		float v = (float) Math.sqrt(dx*dx + dy*dy);
+		dx /= v;
+		dy /= v;
 	}
 	
 	public void draw(Graphics g, float shiftX, float shiftY){
