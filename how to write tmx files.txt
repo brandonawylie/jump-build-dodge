@@ -1,6 +1,6 @@
 How to write .tmx files for this engine:
 
-1. All your tile layers will be rendered as a static image in the backgroun
+1. All your tile layers will be rendered as a static image in the background
 	a. There is no layer capability yet, will be implemented soon
 2. Each object layer corresponds to a single type, or group of similar types.
 	a. A list of object-layers is as follows:
@@ -28,9 +28,9 @@ How to write .tmx files for this engine:
 			Object Properties:
 				color - the color you want the pattern to be [r,y,b,g]	
 				
-		shooting-enemy
+		enemies
 			Object-Layer Properties:
 				no properties yet
 			Object Properties:
-				no properties yet
+				type - type of enemy
 			

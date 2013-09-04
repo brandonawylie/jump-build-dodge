@@ -45,6 +45,7 @@ public class Map{
 	public List<Platform> platforms = new ArrayList<>();
 	public List<CollectableBlock> collectableBlocks = new ArrayList<>();
 	public List<CollectableBlock> placedCollectableBlocks = new ArrayList<>();
+	public List<ShootingEnemy> shootingEnemies = new ArrayList<>();
 	public List<Pattern> patterns = new ArrayList<>();
 	Image[][] tiles;
 	public PatternManager pManager = new PatternManager();
@@ -95,6 +96,14 @@ public class Map{
 		for(CollectableBlock b : placedCollectableBlocks){
 			b.draw(g, viewportX, viewportY);
 		}
+		
+		///////////////////////////////////////////////////////
+		
+		
+		for(ShootingEnemy e : shootingEnemies)
+			e.draw(g, viewportX, viewportY);
+		
+		///////////////////////////////////////////////////////
 
 		pManager.draw(g, viewportX, viewportY);
 	}
@@ -244,7 +253,7 @@ public class Map{
 			}
 			patterns.add(newPattern);
 		}else if(objectGroupName.contains("collision")){
-			//System.out.println("in collision");
+			System.out.println("in collision");
 			for(Node n : objectNodes){
 				NamedNodeMap attr = n.getAttributes();
 				int x = Integer.parseInt(attr.getNamedItem("x").getNodeValue());
@@ -262,7 +271,7 @@ public class Map{
 				int y = Integer.parseInt(attr.getNamedItem("y").getNodeValue());
 				int width = Integer.parseInt(attr.getNamedItem("width").getNodeValue());
 				int height = Integer.parseInt(attr.getNamedItem("height").getNodeValue());
-				HashMap<String, String> props=getProperties(n.getChildNodes(), new ArrayList<Node>());
+				HashMap<String, String> props = getProperties(n.getChildNodes(), new ArrayList<Node>());
 				String color = props.get("color");
 				//System.out.println("found collectable with color: " + color);
 				if(color.equals("r"))
@@ -284,6 +293,23 @@ public class Map{
 				playerX = x;
 				playerY = y;
 			}
+		}else if(objectGroupName.contains("enemies")){
+			for(Node n : objectNodes){
+				NamedNodeMap attr = n.getAttributes();
+				int x = Integer.parseInt(attr.getNamedItem("x").getNodeValue());
+				int y = Integer.parseInt(attr.getNamedItem("y").getNodeValue());
+				int width = Integer.parseInt(attr.getNamedItem("width").getNodeValue());
+				int height = Integer.parseInt(attr.getNamedItem("height").getNodeValue());
+				HashMap<String, String> props = getProperties(n.getChildNodes(), new ArrayList<Node>());
+				String type = props.get("type");
+				
+				if(type.equals("shooting-enemy")){
+					shootingEnemies.add(new ShootingEnemy(x, y, width, height));
+				}else if(type.equals("melee-enemy")){
+					
+				}
+			}
+			
 		}
 	}
 

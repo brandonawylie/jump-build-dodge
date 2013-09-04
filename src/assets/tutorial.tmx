@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="200" height="50" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="realtilesheet" tilewidth="70" tileheight="70" spacing="1">
+  <image source="tilesets/realtilesheet.png" trans="ff00ff" width="852" height="856"/>
+ </tileset>
+ <tileset firstgid="145" name="t1" tilewidth="100" tileheight="200" spacing="1">
+  <image source="tutorial/tutorial_1.png" trans="ff00ff" width="100" height="200"/>
+ </tileset>
+ <tileset firstgid="146" name="t2" tilewidth="100" tileheight="200" spacing="1">
+  <image source="tutorial/tutorial_2.png" trans="ff00ff" width="100" height="200"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="200" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt0rENwDAQAzG3GcljOhNnCkNCngSuV6G1AAAAAAAAAAAAAAAAAAAAoM9JDwAAoMKbHsAVW9Ho9iga3dL/mB7d0v+YHgAAAAAAAAAAAAAAAAAAAAAA//QBFfIgpA==
+  </data>
+ </layer>
+ <objectgroup name="collectable-blocks" width="200" height="50">
+  <object x="2520" y="1470" width="70" height="70">
+   <properties>
+    <property name="color" value="b"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="pattern-1" width="200" height="50">
+  <properties>
+   <property name="array" value="[b]"/>
+  </properties>
+  <object x="6020" y="1540" width="70" height="70">
+   <properties>
+    <property name="color" value="b"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="collision" width="200" height="50" visible="0">
+  <object x="0" y="1680" width="3430" height="280"/>
+  <object x="3430" y="1680" width="3290" height="280"/>
+ </objectgroup>
+ <objectgroup name="player" width="200" height="50"/>
+</map>
