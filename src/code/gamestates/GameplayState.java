@@ -22,7 +22,7 @@ public class GameplayState extends BasicGameState{
     public static int VIEWPORT_HEIGHT = 720;
     public static int VIEWPORT_X, VIEWPORT_Y;
     public static int VIEWPORT_RATIO_X, VIEWPORT_RATIO_Y;
-    
+
 	int stateID = 1;
 	public boolean paused = false;
 	Menu menu;
@@ -31,7 +31,8 @@ public class GameplayState extends BasicGameState{
 	Map map;
 	HUD hud;
 	int mouseX = 0; int mouseY = 0;
-	
+	FourFireEnemy testEnemy = new FourFireEnemy(200, 200, 70, 70);
+
 	ShootingEnemy se = new ShootingEnemy(500, 500, 19, 19);
 	public GameplayState(int ID){
 		this.stateID = ID;
@@ -46,7 +47,7 @@ public class GameplayState extends BasicGameState{
 	 *
 	 */
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		menu = new Menu(gc.getWidth(), gc.getHeight());	
+		menu = new Menu(gc.getWidth(), gc.getHeight());
 		//initialize the viewport & associated ratios
 		VIEWPORT_RATIO_X = PlatformerGame.WIDTH/VIEWPORT_WIDTH;
 		VIEWPORT_RATIO_Y = PlatformerGame.HEIGHT/VIEWPORT_HEIGHT;
@@ -62,7 +63,7 @@ public class GameplayState extends BasicGameState{
 		//grab the map
 		try {
 			//System.out.println(getClass().getClassLoader().getResource("./res/level_1_1.map").getPath());
-			map.loadMap(getClass().getClassLoader().getResource("assets/tutorial.tmx").getPath());
+			map.loadMap(getClass().getClassLoader().getResource("assets/level1.tmx").getPath());
 			//player.x = map.playerX;
 			//player.y = map.playerY;
 		}catch (Exception e) {
@@ -96,6 +97,7 @@ public class GameplayState extends BasicGameState{
 		player.render(g, VIEWPORT_X, VIEWPORT_Y);se.draw(g, VIEWPORT_X, VIEWPORT_Y);
 		hud.draw(g);
 		menu.draw(g);
+		testEnemy.draw(g, VIEWPORT_X, VIEWPORT_Y);
 	}
 
 	/**
@@ -113,6 +115,7 @@ public class GameplayState extends BasicGameState{
 
 		map.update(player);
 		player.update(gc, delta, map);
+		testEnemy.update(delta, player);
 
 
 		//adjust the vieaaaaaaort to center around the player. everything will obey this shift.
