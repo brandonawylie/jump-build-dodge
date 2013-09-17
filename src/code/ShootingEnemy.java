@@ -37,7 +37,7 @@ public class ShootingEnemy {
 	//post: this contains the "logic" of a ShootingEnemy
 	long timeLastFired = 0;//in milliseconds
 	Vector2f direction = null;
-	public void update(int delta, Player player){
+	public void update(int delta, Player player, Map map){
 		//TODO calculate the distance + compare it to the range.
 		boolean canFire = true;
 		float distanceToPlayer = (float) Math.sqrt(Math.pow(player.x - x, 2) + Math.pow(player.y - y, 2));
@@ -63,7 +63,12 @@ public class ShootingEnemy {
 			if(this instanceof FourFireEnemy)
 			    System.out.println("ff enemny");
 		}
-
+		for(int i =0; i < projectiles.size(); i++){
+		    Projectile p = projectiles.get(i);
+		    if((p.x >= map.mapWidth || p.x <= 0) && (p.y >= map.mapHeight || p.y <= 0)){
+			projectiles.remove(p);
+		    }
+		}
 	}
 
 	//pre : --
