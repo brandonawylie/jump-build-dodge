@@ -7,11 +7,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
 
 public class ShootingEnemy {
-	int range = 100;//range that the ShootingEnemy can fire in.
+	int range = 1000;//range that the ShootingEnemy can fire in.
 	int fireRate = 2;//rate the ShootingEnemy fires (in secs).
 	float x, y, dx, dy;
 	int width, height;
-	private int SPEED = 1;
+	protected int SPEED = 1;
 
 	List<Projectile> projectiles = new ArrayList<>();
 	//post: initializes an enemy that shoots at the player
@@ -42,17 +42,11 @@ public class ShootingEnemy {
 		boolean canFire = true;
 		float distanceToPlayer = (float) Math.sqrt(Math.pow(player.x - x, 2) + Math.pow(player.y - y, 2));
 
-		boolean updatex = true;
-		boolean updatey = true;
 		if(distanceToPlayer > range){
-			updatex = true;
-			updatey = true;
 			canFire = false;
 			direction = Helper.pointsToDirectionVector(x, y, player.x, player.y);
 		}//DO NOT USE direction ABOVE THIS LINE---------------------------------------------------------------------------------------------------------------------------------------------
 		else{
-			updatex = false;
-			updatey = false;
 			canFire = true;
 		}
 		//update the ShootingEnemy's projectiles
@@ -66,13 +60,10 @@ public class ShootingEnemy {
 		if(System.currentTimeMillis() - timeLastFired > fireRate*1000 && canFire){
 			fire(targetX, targetY);
 			timeLastFired = System.currentTimeMillis();
+			if(this instanceof FourFireEnemy)
+			    System.out.println("ff enemny");
 		}
 
-
-		if(updatex)
-			x -= direction.x*SPEED;
-		if(updatey)
-			y -= direction.y*SPEED;
 	}
 
 	//pre : --
