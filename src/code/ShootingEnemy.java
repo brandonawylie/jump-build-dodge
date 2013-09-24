@@ -9,17 +9,19 @@ import org.newdawn.slick.geom.Vector2f;
 public class ShootingEnemy {
 	int range = 1000;//range that the ShootingEnemy can fire in.
 	int fireRate = 2;//rate the ShootingEnemy fires (in secs).
-	float x, y, dx, dy;
-	int width, height;
+	float x, y, dx, dy, width, height;;
+
 	protected int SPEED = 1;
+	public float tileWidth = .5f;
+	public float tileHeight = .5f;
 
 	List<Projectile> projectiles = new ArrayList<>();
 	//post: initializes an enemy that shoots at the player
 	public ShootingEnemy(float x, float y, int width, int height){
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
+		this.width = width*tileWidth;
+		this.height = height*tileHeight;
 	}
 
 	//pre : graphics != null

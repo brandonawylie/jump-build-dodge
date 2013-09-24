@@ -31,9 +31,6 @@ public class GameplayState extends BasicGameState{
 	Map map;
 	HUD hud;
 	int mouseX = 0; int mouseY = 0;
-	FourFireEnemy testEnemy = new FourFireEnemy(200, 200, 70, 70);
-
-	ShootingEnemy se = new ShootingEnemy(500, 500, 19, 19);
 	public GameplayState(int ID){
 		this.stateID = ID;
 	}
@@ -94,10 +91,9 @@ public class GameplayState extends BasicGameState{
 		//render the player
 		//render the map and all associated objects
 		map.draw(g, VIEWPORT_X, VIEWPORT_Y);
-		player.render(g, VIEWPORT_X, VIEWPORT_Y);se.draw(g, VIEWPORT_X, VIEWPORT_Y);
+		player.render(g, VIEWPORT_X, VIEWPORT_Y);
 		hud.draw(g);
 		menu.draw(g);
-		testEnemy.draw(g, VIEWPORT_X, VIEWPORT_Y);
 	}
 
 	/**
@@ -105,7 +101,6 @@ public class GameplayState extends BasicGameState{
 	 *
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		se.update(delta, player);
 		menu.update(this, gc, map);
 		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE))
 			menu.visible = !menu.visible;
@@ -113,9 +108,8 @@ public class GameplayState extends BasicGameState{
 			gc.exit();
 		//update game elements
 
-		map.update(player);
+		map.update(delta, player);
 		player.update(gc, delta, map);
-		testEnemy.update(delta, player);
 
 
 		//adjust the vieaaaaaaort to center around the player. everything will obey this shift.

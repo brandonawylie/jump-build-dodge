@@ -18,32 +18,32 @@ public class FourFireEnemy extends ShootingEnemy{
 
 
 	shape = new Polygon();
-	float pointX = x + width/2;
+	float pointX = x + this.width/2;
 	float pointY = y;
 
 	shape.addPoint(pointX, pointY);
-	pointX = x  + 2*width/3;
-	pointY = y + height/3;
+	pointX = x  + 2*this.width/3;
+	pointY = y + this.height/3;
 	shape.addPoint(pointX, pointY);
-	pointX = x  + width;
-	pointY = y + height/2;
+	pointX = x  + this.width;
+	pointY = y + this.height/2;
 	shape.addPoint(pointX, pointY);
-	pointX = x  + 2*width/3;
-	pointY = y + 2*height/3;
+	pointX = x  + 2*this.width/3;
+	pointY = y + 2*this.height/3;
 	shape.addPoint(pointX, pointY);
-	pointX = x  + width/2;
-	pointY = y + height;
+	pointX = x  + this.width/2;
+	pointY = y + this.height;
 
 	shape.addPoint(pointX, pointY);
-	pointX = x  + width/3;
-	pointY = y + 2*height/3;
+	pointX = x  + this.width/3;
+	pointY = y + 2*this.height/3;
 	shape.addPoint(pointX, pointY);
 	pointX = x;
-	pointY = y + height/2;
+	pointY = y + this.height/2;
 
 	shape.addPoint(pointX, pointY);
-	pointX = x  + width/3;
-	pointY = y + height/3;
+	pointX = x  + this.width/3;
+	pointY = y + this.height/3;
 	shape.addPoint(pointX, pointY);
     }
 
@@ -61,15 +61,17 @@ public class FourFireEnemy extends ShootingEnemy{
 	shape.setY(y);
     }
 
-    public void update(int delta, Player player){
+    public void update(int delta, Player player, Map map){
+	int count = 0;
+	firePoints.clear();
 	for(int i = 0; i < shape.getPointCount(); i++){
 	    float[] point = shape.getPoint(i);
-	    if(i%2 == 0 && firePoints.get(i) == null){
+	    if(i%2 == 0){
 		firePoints.add(point);
-	    }else
-		firePoints.set(i, point);
+	    }
 	}
-	super.update(delta, player);
+	System.out.println("there are  "+firePoints.size());
+	super.update(delta, player, map);
     }
 
     public void fire(float targetX, float targetY){

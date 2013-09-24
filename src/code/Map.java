@@ -66,8 +66,11 @@ public class Map{
 	 *
 	 * @param player the map uses the player to react given the circumestances
 	 */
-	public void update(Player player){
+	public void update(int delta, Player player){
 		pManager.update(this);
+
+		for(ShootingEnemy e : shootingEnemies)
+		    e.update(delta, player, this);
 	}
 
 	/**
@@ -96,13 +99,13 @@ public class Map{
 		for(CollectableBlock b : placedCollectableBlocks){
 			b.draw(g, viewportX, viewportY);
 		}
-		
+
 		///////////////////////////////////////////////////////
-		
-		
+
+
 		for(ShootingEnemy e : shootingEnemies)
 			e.draw(g, viewportX, viewportY);
-		
+
 		///////////////////////////////////////////////////////
 
 		pManager.draw(g, viewportX, viewportY);
@@ -301,15 +304,17 @@ public class Map{
 				int width = Integer.parseInt(attr.getNamedItem("width").getNodeValue());
 				int height = Integer.parseInt(attr.getNamedItem("height").getNodeValue());
 				HashMap<String, String> props = getProperties(n.getChildNodes(), new ArrayList<Node>());
-				String type = props.get("type");
-				
+				String type = attr.getNamedItem("name").getNodeValue();
+
 				if(type.equals("shooting-enemy")){
-					shootingEnemies.add(new ShootingEnemy(x, y, width, height));
-				}else if(type.equals("melee-enemy")){
-					
+					//shootingEnemies.add(new ShootingEnemy(x, y, width, height));
+				}else if(type.equals("four-fire-enemy")){
+					shootingEnemies.add(new FourFireEnemy(x,y,width,height));
+				}else if(type.equals("single-fire-enemy")){
+					shootingEnemies.add(new SingleFireEnemy(x,y,width,height));
 				}
 			}
-			
+
 		}
 	}
 
