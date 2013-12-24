@@ -1,6 +1,4 @@
 package code.gamestates;
-import java.io.IOException;
-
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
@@ -24,15 +22,16 @@ public class PlatformerGame extends StateBasedGame{
 	public PlatformerGame() {
 		super("platformer");
 		this.addState(new GameplayState(1));
-
+		this.addState(new PauseState(2));
 
 	}
 
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
-		//this.getState(menu).init(gc, this);
+		this.getState(2).init(gc, this);
 		this.getState(game).init(gc, this);
 		this.enterState(game);
+		
 	}
 
 }

@@ -87,12 +87,6 @@
   </object>
  </objectgroup>
  <objectgroup name="enemies" width="50" height="10">
-  <object name="shooting-enemy" x="280" y="280" width="70" height="70">
-   <properties>
-    <property name="type" value="shooting-enemy"/>
-   </properties>
-  </object>
-  <object name="four-fire-enemy" x="420" y="280" width="70" height="70"/>
   <object name="single-fire-enemy" x="560" y="280" width="70" height="70"/>
  </objectgroup>
 </map>

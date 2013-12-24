@@ -10,18 +10,23 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.GameState;
 
 import code.Map;
 import code.gamestates.GameplayState;
+import code.gamestates.PauseState;
 
 public class Menu {
 	Rectangle menu;
 	Rectangle resume, levelSelect, settings, exit;
-	int buttonPadding = 10;
-	int textHeight = 6;
+	int buttonPadding = 16;
+	int textHeight = 7;
 	public boolean visible = false;
-	public Menu(int windowWidth, int windowHeight){
+	PauseMenuObserver ob;
+	public Menu(int windowWidth, int windowHeight, PauseMenuObserver ob){
 		menu = new Rectangle(windowWidth/3, 0, windowWidth/3, windowHeight);
+		this.ob = ob;
 		int topSpacing = windowHeight/5;
 		int buttonWidth = (int) (menu.getWidth() - 2*buttonPadding);
 		int buttonHeight = 20;
@@ -47,7 +52,7 @@ public class Menu {
 		exit = new Rectangle(x, y, buttonWidth, buttonHeight);
 	}
 	
-	public void update(GameplayState game, GameContainer gc,  Map m){
+	public void update(GameState pauseState, GameContainer gc,  Map m){
 		if(visible){
 			Input input = gc.getInput();
 			int x = input.getMouseX();
@@ -56,7 +61,6 @@ public class Menu {
 			if(r.intersects(resume)){
 				if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 					visible = false;
-					game.paused = false;
 				}
 			}
 			
@@ -67,7 +71,6 @@ public class Menu {
 					int returnValue = chooser.showOpenDialog(null);
 					if(returnValue == JFileChooser.APPROVE_OPTION){
 						visible = false;
-						game.paused = false;
 						try {
 							m.loadMap(chooser.getSelectedFile().getAbsolutePath());
 						} catch (SlickException | IOException e) {	}
@@ -77,22 +80,19 @@ public class Menu {
 			
 			if(r.intersects(resume)){
 				if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
-					visible = false;
-					game.paused = false;
+					ob.resume();
 				}
 			}
 			
-			if(r.intersects(resume)){
+			if(r.intersects(settings)){
 				if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
-					visible = false;
-					game.paused = false;
+					ob.settings();
 				}
 			}
 			
-			if(r.intersects(resume)){
+			if(r.intersects(exit)){
 				if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
-					visible = false;
-					game.paused = false;
+					ob.exit();
 				}
 			}
 		}
@@ -102,15 +102,19 @@ public class Menu {
 		if(visible){
 			//outline, present for all
 			g.setColor(Color.black);
-			g.fill(menu);
+			//g.fill(menu);
 			
 			//main settings menu;
+			g.setColor(Color.black);
+			g.fill(resume);
+			g.fill(levelSelect);
+			g.fill(settings);
+			g.fill(exit);
 			g.setColor(Color.white);
 			g.draw(resume);
 			g.draw(levelSelect);
 			g.draw(settings);
 			g.draw(exit);
-			g.setColor(Color.white);
 			String str = "resume";
 			g.drawString(str, resume.getX() + resume.getWidth()/2 - str.length()*4, resume.getY() + resume.getHeight()/2 - textHeight);
 			str = "level select";

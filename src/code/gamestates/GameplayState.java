@@ -1,7 +1,9 @@
 package code.gamestates;
 
 import java.io.IOException;
+
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -12,9 +14,14 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.ResourceLoader;
 
-import code.*;
+import code.CollectableBlock;
+import code.HUD;
+import code.Map;
+import code.Player;
 import code.uielements.Menu;
 
 public class GameplayState extends BasicGameState{
@@ -22,21 +29,20 @@ public class GameplayState extends BasicGameState{
     public static int VIEWPORT_HEIGHT = 720;
     public static int VIEWPORT_X, VIEWPORT_Y;
     public static int VIEWPORT_RATIO_X, VIEWPORT_RATIO_Y;
-
-	int stateID = 1;
+    public static int ID = 1;
 	public boolean paused = false;
-	Menu menu;
+
 	Player player;
 	long lastClickTime = 0;
 	Map map;
 	HUD hud;
 	int mouseX = 0; int mouseY = 0;
-	public GameplayState(int ID){
-		this.stateID = ID;
+	public GameplayState(int id){
+		this.ID = id;
 	}
 
 	public int getID() {
-		return stateID;
+		return ID;
 	}
 
 	/**
@@ -44,7 +50,7 @@ public class GameplayState extends BasicGameState{
 	 *
 	 */
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		menu = new Menu(gc.getWidth(), gc.getHeight());
+		
 		//initialize the viewport & associated ratios
 		VIEWPORT_RATIO_X = PlatformerGame.WIDTH/VIEWPORT_WIDTH;
 		VIEWPORT_RATIO_Y = PlatformerGame.HEIGHT/VIEWPORT_HEIGHT;
@@ -93,7 +99,7 @@ public class GameplayState extends BasicGameState{
 		map.draw(g, VIEWPORT_X, VIEWPORT_Y);
 		player.render(g, VIEWPORT_X, VIEWPORT_Y);
 		hud.draw(g);
-		menu.draw(g);
+		
 	}
 
 	/**
@@ -101,9 +107,10 @@ public class GameplayState extends BasicGameState{
 	 *
 	 */
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		menu.update(this, gc, map);
-		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE))
-			menu.visible = !menu.visible;
+		
+		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
+			sbg.enterState(PauseState.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+		}
 		if(gc.getInput().isKeyPressed(Input.KEY_F1))
 			gc.exit();
 		//update game elements
