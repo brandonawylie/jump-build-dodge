@@ -9,7 +9,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 import code.gamestates.*;
 
-public class PatternManager implements Oberserver{
+public class PatternManager implements PlayerObserver{
 	//public List<CollectableBlock> blocks = new ArrayList<CollectableBlock>();
 	public List<Rectangle> patternRects = new ArrayList<Rectangle>();
 	String[][] curArr;
@@ -219,13 +219,21 @@ public class PatternManager implements Oberserver{
 	}
 
 	@Override
-	public void changeColorNotification(int[] colors) {
-		// TODO Auto-generated method stub
-
+	public void playerPostitionChanged(Player p) {
+		playerX = p.x;
+		playerY = p.y;
+		
 	}
+
 	@Override
-	public void changePositionNotification(float x, float y) {
-		playerX = x;
-		playerY = y;
+	public void playerInventoryChanged(Player p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playerHealthChanged(Player p) {
+		// TODO Auto-generated method stub
+		
 	}
 }

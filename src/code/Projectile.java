@@ -11,6 +11,7 @@ public class Projectile {
 	//width & height
 	int width = 5;
 	int height = 6;
+	int damage = 5;
 	//color of the bullets
 	Color color = Color.red;
 
@@ -20,22 +21,18 @@ public class Projectile {
 		this.y = y;
 		speed = DEFAULT_BULLET_SPEED;
 		if(x < desX && y < desY){
-			System.out.println("quadrant 4");
 			dx = x - desX;
 			dy = y - desY;
 		}
 		else if(x > desX && y < desY){
-			System.out.println("quadrant 3");
 			dx = x - desX;
 			dy = y - desY;
 		}
 		else if(x < desX && y > desY){
-			System.out.println("quadrant 1");
 			dx = x - desX;
 			dy = y - desY;
 
 		}else{
-			System.out.println("quadrant 2");
 			dx = x - desX;
 			dy = y - desY;
 		}

@@ -13,14 +13,27 @@ import org.newdawn.slick.Animation;
 
 import code.gamestates.*;
 
-public class Player implements Oberservable{
-    	Dragon petDragon;
+/**
+ * Player class, this class handles both the display, updating and interactions between various game objects
+ * @author brandon
+ *
+ */
+public class Player{
+    Dragon petDragon;//^_^
 
-	public float x, y, dx, dy, speed, ratioX, ratioY;
+
+	//////////////////////////////////////////////////
+	// player position, speed and width/height      //
+	//////////////////////////////////////////////////
+	public float x, y, dx, dy, currentHealth, maxHealth;
 	int width = 40;
 	int height = 48;
+	//END
 
-	//animation info
+	/////////////////////////////////////
+	// player animation and display    //
+	/////////////////////////////////////
+	SpriteSheet spriteSheet = null;
 	float tileWidth = .75f;
 	float tileHeight = .75f;
 	int idleRow = 0;
@@ -29,55 +42,50 @@ public class Player implements Oberservable{
 	org.newdawn.slick.Animation walkingLeft, walkingRight, idleLeft, idleRight, startJumpingLeft, startJumpingRight, jumpingLeft, jumpingRight, landingLeft, landingRight;
 	int jumpAnimationFrames = 3;
 	int fallAnimationFrames = 4;
-
-	float jumpSpeed = 7.5f;
 	public boolean movingLeft = false;
 	public boolean movingRight = false;
 	boolean facingRight = true;
 	boolean inAir = false;
-	long gravityTimer;
-
+	//END
+	
+	/////////////////////////////////////
+	// player inventory and stats      //
+	/////////////////////////////////////
 	int blueBlocks = 0;
 	int redBlocks = 0;
 	int yellowBlocks = 0;
 	int greenBlocks = 0;
 	int health = 10000;
-
+	List<Projectile> projectiles = new ArrayList<Projectile>();
+	//END
+	
+	/////////////////////////////////////
+	// player movement and jumping     //
+	/////////////////////////////////////
 	boolean doubleJump = true;
 	boolean jumpKeyReset = true;
 	public float MAX_SPEED = 7.5f*GameplayState.VIEWPORT_RATIO_X;
+	float jumpSpeed = 7.5f;
+	long gravityTimer;
+	//END
 
+	//observers for player
+	List<PlayerObserver> observers = new ArrayList<PlayerObserver>();
 
-	List<Projectile> projectiles = new ArrayList<Projectile>();
-
-	public Rectangle redR;
-	public Rectangle blueR;
-	public Rectangle yellowR;
-	public Rectangle pinkR;
-	public Rectangle greenR;
-	float startx = 1;
-	float starty = 1;
-
-	float iwidth = 10;
-	float iheight = 10;
-
-	float delta = 22f;
-
-	SpriteSheet spriteSheet = null;
-	int n = 0;
+	
+	/**
+	 * Constructor for the Player class, loads the animations, sets the position
+	 * @param m map for the player to have knowledge of the tileset width and height
+	 * @param path ?
+	 * @param x x position of the player
+	 * @param y
+	 */
 	public Player(Map m, String path, float x, float y){
 		this.x = x; this.y = y;
+		currentHealth = 200;
+		maxHealth = 200;
+		notifyHealthChange();
 		dx = 0; dy = Helper.GRAVITY;
-		speed = 2*GameplayState.VIEWPORT_RATIO_X;
-		redR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
-		n++;
-		blueR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
-		n++;
-		yellowR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
-		n++;
-		pinkR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
-		n++;
-		greenR = new Rectangle(startx, starty + delta*n, iwidth, iheight);
 
 		try {
 			spriteSheet = new SpriteSheet(path, width, height);
@@ -136,10 +144,18 @@ public class Player implements Oberservable{
 		petDragon = new Dragon("assets/characters/dragon_red.png", (int)(x + width), (int)y);
 	}
 	
+	
+	/**
+	 * draw method for this player, draws the player's animations and projectiles
+	 * @param g graphics object for Player to draw to
+	 * @param shiftX the current x shift of viewport
+	 * @param shiftY the current y shift of viewport
+	 */
+	//variables that live just for this  method
 	long timer = 0;
 	boolean startJump = false;
 	int startJumpFrames = 0;
-	public void render(Graphics g, float shiftX, float shiftY){
+	public void draw(Graphics g, float shiftX, float shiftY){
 	    petDragon.draw(g, shiftX, shiftY);
 		for(Projectile p : projectiles)
 			p.draw(g, shiftX, shiftY);
@@ -170,25 +186,7 @@ public class Player implements Oberservable{
 		    else
 			idleRight.draw(x-shiftX, y-shiftY);
 		}
-		int n = 0;
-		g.setColor(Color.blue);
-		g.fillRect(startx, starty + delta*n, iwidth, iheight);
 
-		n++;
-		g.setColor(Color.red);
-		g.fillRect(startx, starty + delta*n, iwidth, iheight);
-
-		n++;
-		g.setColor(Color.yellow);
-		g.fillRect(startx, starty + delta*n, iwidth, iheight);
-
-		n++;
-		g.setColor(Color.pink);
-		g.fillRect(startx, starty + delta*n, iwidth, iheight);
-
-		n++;
-		g.setColor(Color.green);
-		g.fillRect(startx, starty + delta*n, iwidth, iheight);
 
 		if(prx != null && pry != null){
 			g.setColor(Color.orange);
@@ -202,10 +200,18 @@ public class Player implements Oberservable{
 	 * Method: update
 	 * Handles all the collision detection between the map and the player as well as current velocity.
 	 */
-	Rectangle prx;
+	
+	/**
+	 * Handles all the Player logic, running, jumping and shooting
+	 * @param gc GameContainer for this game
+	 * @param delta the delta since the last update
+	 * @param m map for the player's interactions with the map
+	 */
+	//variables that live only for update method
+	Rectangle prx;//draws the player trajectory 
 	Rectangle pry;
 	public void update(GameContainer gc, int delta, Map m){
-	    if(!gc.getInput().isKeyDown(Input.KEY_W))
+	    if(!gc.getInput().isKeyDown(Input.KEY_UP))
 	    	jumpKeyReset = true;
 
 	    petDragon.update(this);
@@ -244,7 +250,7 @@ public class Player implements Oberservable{
 	    	    updatey = false;
 	    	    inAirCheck = false;
 	    	    doubleJump = true;
-
+	    	    dy = 0;
 	    	}
 	    }
 	    //end collision with static map collision rects
@@ -299,6 +305,19 @@ public class Player implements Oberservable{
 		    }
 	    }
 	    
+	    for(int i = 0; i < m.shootingEnemies.size(); i++){
+	    	ShootingEnemy se = m.shootingEnemies.get(i);
+	    	for(int j = 0; j < se.projectiles.size(); j++){
+	    		Projectile p = se.projectiles.get(j);
+	    		Rectangle r = new Rectangle(p.x, p.y, p.width, p.height);
+	    		
+	    		if(prx.intersects(r) || pry.intersects(r)){
+	    			collideWith(p);
+	    			se.projectiles.remove(j);
+	    		}
+	    	}
+	    }
+	    
 	    
 	    //end collision with collectable blocks
 
@@ -317,7 +336,15 @@ public class Player implements Oberservable{
 	    }
 
 	}
-
+	
+	public void collideWith(Projectile p){
+		this.currentHealth -= 10;
+		notifyHealthChange();
+	}
+	
+	/**
+	 * Method to handle starting, or accelerating leftwards movement
+	 */
 	public void moveLeft(){
 	    facingRight = false;
 		movingLeft = true;
@@ -325,7 +352,10 @@ public class Player implements Oberservable{
 			dx -= .2f;
 		}
 	}
-
+	
+	/**
+	 * Method to handle starting, or accelerating rightwards movement
+	 */
 	public void moveRight(){
 	    facingRight = true;
 		movingRight = true;
@@ -334,6 +364,9 @@ public class Player implements Oberservable{
 		}
 	}
 
+	/**
+	 * Method to handle jumping, and doublejumping
+	 */
 	public void jump(){
 		if((!inAir || doubleJump) && jumpKeyReset){
 		    jumpKeyReset = false;
@@ -345,18 +378,22 @@ public class Player implements Oberservable{
 		}
 	}
 
+	/**
+	 * Method to handle shooting
+	 * @param x the dx of the bullet
+	 * @param y the dy of the bullet
+	 */
 	public void shoot(float x, float y){
 		Projectile p = new Projectile(this.x + this.width/2, this.y + this.height/2, x, y);
 		projectiles.add(p);
 	}
 
-	/*Adds the color block to the player's inventory
-
+	/**
+	 * Adds the color block to the player's inventory
 		colors supported:
-		yellow
-		blue
-		green
-	*/
+		red, yellow, blue, green
+	 * @param c string of the color
+	 */
 	public void addBlock(String c){
 		if(c.equals("blue"))
 			blueBlocks++;
@@ -366,25 +403,41 @@ public class Player implements Oberservable{
 				redBlocks++;
 		else if(c.equals("green"))
 				greenBlocks++;
-		notifyColorChange();
+		notifyInventoryChange();
 	}
-
-	@Override
-	public void notifyColorChange() {
-		int[] res = new int[4];
-		res[0] = blueBlocks;
-		res[1] = greenBlocks;
-		res[2] = redBlocks;
-		res[3] = redBlocks;
-		for(Oberserver o : colorObs)
-			o.changeColorNotification(res);
-
+	
+	/**
+	 * Add an observer to the player
+	 * @param observer Object who wants to view the change of the player
+	 */
+	public void addObserver(PlayerObserver observer){
+		observer.playerHealthChanged(this);
+		observer.playerInventoryChanged(this);
+		observer.playerPostitionChanged(this);
+		observers.add(observer);
 	}
-
-	@Override
-	public void notifyPositionChange() {
-		for(Oberserver o : positionObs)
-			o.changePositionNotification(x, y);
-
+	
+	/**
+	 * Notify the observers of a position change
+	 */
+	public void notifyPositionChange(){
+		for(PlayerObserver p : observers)
+			p.playerPostitionChanged(this);
+	}
+	
+	/**
+	 * Notify the observers of a inventory change
+	 */
+	public void notifyInventoryChange(){
+		for(PlayerObserver p : observers)
+			p.playerInventoryChanged(this);
+	}
+	
+	/**
+	 * Notify the observers of a health change
+	 */
+	public void notifyHealthChange(){
+		for(PlayerObserver p : observers)
+			p.playerHealthChanged(this);
 	}
 }

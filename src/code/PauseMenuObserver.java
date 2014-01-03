@@ -1,4 +1,4 @@
-package code.uielements;
+package code;
 
 public interface PauseMenuObserver {
 	public void resume();

@@ -83,8 +83,6 @@ public class ShootingEnemy {
 		if(System.currentTimeMillis() - timeLastFired > fireRate[fireRateIndex] && canFire){
 			fire(targetX, targetY);
 			timeLastFired = System.currentTimeMillis();
-			if(this instanceof FourFireEnemy)
-			    System.out.println("ff enemny");
 		}
 		fireRateIndex++;
 		if(fireRateIndex >= fireRate.length)

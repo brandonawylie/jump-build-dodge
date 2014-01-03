@@ -2,6 +2,7 @@ package code.gamestates;
 
 import java.io.IOException;
 
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
@@ -66,14 +67,15 @@ public class GameplayState extends BasicGameState{
 		//grab the map
 		try {
 			//System.out.println(getClass().getClassLoader().getResource("./res/level_1_1.map").getPath());
-			map.loadMap(getClass().getClassLoader().getResource("assets/level1.tmx").getPath());
+			map.loadMap(getClass().getClassLoader().getResource("assets/level3.tmx").getPath());
 			//player.x = map.playerX;
 			//player.y = map.playerY;
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		player = new Player(map, "assets/player.png", 500, 100);
-
+		player.x = map.playerX;
+		player.y = map.playerY;
 
 		//initialize the hud
 		try {
@@ -84,9 +86,9 @@ public class GameplayState extends BasicGameState{
 		float scaleY = i.getHeight()/PlatformerGame.HEIGHT;
 		hud = new HUD(i.getScaledCopy(PlatformerGame.WIDTH, PlatformerGame.HEIGHT/5));
 
-		player.colorObs.add(hud);
-		player.positionObs.add(hud);
-		player.positionObs.add(map.pManager);
+		player.addObserver(hud);
+		player.addObserver(map.pManager);
+		Display.setVSyncEnabled(true);
 	}
 
 	/**
@@ -97,7 +99,7 @@ public class GameplayState extends BasicGameState{
 		//render the player
 		//render the map and all associated objects
 		map.draw(g, VIEWPORT_X, VIEWPORT_Y);
-		player.render(g, VIEWPORT_X, VIEWPORT_Y);
+		player.draw(g, VIEWPORT_X, VIEWPORT_Y);
 		hud.draw(g);
 		
 	}
@@ -135,40 +137,40 @@ public class GameplayState extends BasicGameState{
 
 		//check for input
 		//up
-		if(gc.getInput().isKeyDown(Input.KEY_W)){
+		if(gc.getInput().isKeyDown(Input.KEY_UP)){
 			player.jump();
 		}else{
 
 		//down
-		}if(gc.getInput().isKeyDown(Input.KEY_S)){
+		}if(gc.getInput().isKeyDown(Input.KEY_DOWN)){
 
 		}else{
 
 		//left
-		}if(gc.getInput().isKeyDown(Input.KEY_A)){
+		}if(gc.getInput().isKeyDown(Input.KEY_LEFT)){
 			player.moveLeft();
 
 		}else {
 			player.movingLeft = false;
 		}
 		//right
-		if(gc.getInput().isKeyDown(Input.KEY_D)){
+		if(gc.getInput().isKeyDown(Input.KEY_RIGHT)){
 			player.moveRight();
 		}else{
 			player.movingRight = false;
 		}
 
 		if(System.currentTimeMillis()/100 - lastClickTime/100 > 4){
-			if(gc.getInput().isKeyDown(Input.KEY_1)){
+			if(gc.getInput().isKeyDown(Input.KEY_Q)){
 				map.placeCollectableBlock(player, Color.blue);
 				lastClickTime = System.currentTimeMillis();
-			}else if(gc.getInput().isKeyDown(Input.KEY_2)){
+			}else if(gc.getInput().isKeyDown(Input.KEY_W)){
 				map.placeCollectableBlock(player, Color.red);
 				lastClickTime = System.currentTimeMillis();
-			}else if(gc.getInput().isKeyDown(Input.KEY_3)){
+			}else if(gc.getInput().isKeyDown(Input.KEY_E)){
 				map.placeCollectableBlock(player , Color.yellow);
 				lastClickTime = System.currentTimeMillis();
-			}else if(gc.getInput().isKeyDown(Input.KEY_4)){
+			}else if(gc.getInput().isKeyDown(Input.KEY_R)){
 				map.placeCollectableBlock(player, Color.green);
 				lastClickTime = System.currentTimeMillis();
 			}
@@ -183,17 +185,6 @@ public class GameplayState extends BasicGameState{
 
 			//doesn't inclide the viewport shift
 			Rectangle mouseclick = new Rectangle(gc.getInput().getMouseX(), gc.getInput().getMouseY(), 1, 1);
-			if(mouseclick.intersects(player.redR)){
-				map.placeCollectableBlock(player, Color.red);
-			}else if(mouseclick.intersects(player.blueR)){
-				map.placeCollectableBlock(player, Color.blue);
-			}else if(mouseclick.intersects(player.yellowR)){
-				map.placeCollectableBlock(player , Color.yellow);
-			}else if(mouseclick.intersects(player.pinkR)){
-				map.placeCollectableBlock(player, Color.pink);
-			}else if(mouseclick.intersects(player.greenR)){
-				map.placeCollectableBlock(player, Color.green);
-			}
 
 			//includes the viewport shift
 			mouseclick = new Rectangle(gc.getInput().getMouseX() + VIEWPORT_X, gc.getInput().getMouseY()+ VIEWPORT_Y, 1, 1);
@@ -204,7 +195,7 @@ public class GameplayState extends BasicGameState{
 					player.addBlock(b.color);
 					map.removeBlock(b);
 
-					System.out.println("got it");
+					//System.out.println("got it");
 					map.collectableBlocks.remove(b);
 				}
 			}
@@ -216,7 +207,7 @@ public class GameplayState extends BasicGameState{
 				    	player.addBlock(b.color);
 					map.removeBlock(b);
 
-					System.out.println("got it");
+					//System.out.println("got it");
 					map.collectableBlocks.remove(b);
 				}
 			}

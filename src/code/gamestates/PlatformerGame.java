@@ -8,11 +8,17 @@ import org.newdawn.slick.state.StateBasedGame;
 public class PlatformerGame extends StateBasedGame{
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
-	public static void main(String[] args) throws SlickException{
-		AppGameContainer app = new AppGameContainer(new PlatformerGame());
-		app.setDisplayMode(WIDTH, HEIGHT, false);
-		app.setTargetFrameRate(60);
-		app.start();
+	public static void main(String[] args){
+		AppGameContainer app = null;
+		try {
+			app = new AppGameContainer(new PlatformerGame());
+			app.setDisplayMode(WIDTH, HEIGHT, false);
+			app.setTargetFrameRate(60);
+			app.start();
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static final int menu = 0;

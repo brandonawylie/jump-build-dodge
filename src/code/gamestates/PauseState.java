@@ -1,5 +1,9 @@
 package code.gamestates;
 
+import java.io.IOException;
+
+import javax.swing.JFileChooser;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -11,15 +15,16 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import code.Map;
+import code.PauseMenuObserver;
 import code.uielements.Menu;
-import code.uielements.PauseMenuObserver;
 
 public class PauseState extends BasicGameState implements PauseMenuObserver{
 	public static int ID = 2;
 	
 	Menu menu;
 	Map map;
-	
+	StateBasedGame sbg;
+	GameContainer gc;
 	public PauseState(int id){
 		this.ID = id;
 	}
@@ -28,6 +33,8 @@ public class PauseState extends BasicGameState implements PauseMenuObserver{
 			throws SlickException {
 		menu = new Menu(gc.getWidth(), gc.getHeight(), this);
 		menu.visible = true;
+		this.sbg = sbg;
+		this.gc = gc;
 	}
 
 	@Override
@@ -49,7 +56,7 @@ public class PauseState extends BasicGameState implements PauseMenuObserver{
 	}
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
+		sbg.enterState(GameplayState.ID, new FadeOutTransition(Color.white), new FadeInTransition(Color.white));
 		
 	}
 	@Override
@@ -59,12 +66,19 @@ public class PauseState extends BasicGameState implements PauseMenuObserver{
 	}
 	@Override
 	public void exit() {
-		// TODO Auto-generated method stub
+		gc.exit();
 		
 	}
 	@Override
 	public void levelSelect() {
-		// TODO Auto-generated method stub
+		//System.out.println("pressing level select");
+		JFileChooser chooser = new JFileChooser();
+		int returnValue = chooser.showOpenDialog(null);
+		if(returnValue == JFileChooser.APPROVE_OPTION){
+//			try {
+////				m.loadMap(chooser.getSelectedFile().getAbsolutePath());
+//			} catch (SlickException | IOException e) {	}
+		}
 		
 	}
 
