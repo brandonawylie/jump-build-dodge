@@ -1,4 +1,4 @@
-package code;
+package code.infrastructure;
 
 import org.newdawn.slick.geom.Vector2f;
 

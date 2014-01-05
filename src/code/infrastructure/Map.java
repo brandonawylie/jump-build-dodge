@@ -1,11 +1,9 @@
-package code;
+package code.infrastructure;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.*;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,6 +19,16 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import code.CollectableBlock;
+import code.Platform;
+import code.Player;
+import code.Projectile;
+import code.enemies.FourFireEnemy;
+import code.enemies.ShootingEnemy;
+import code.enemies.SingleFireEnemy;
+import code.patterns.Pattern;
+import code.patterns.PatternManager;
 
 public class Map{
 	//info about how the map is rendered. not sure how this fits with the new setup
@@ -71,6 +79,21 @@ public class Map{
 
 		for(ShootingEnemy e : shootingEnemies)
 		    e.update(delta, player, this);
+		
+		for(int i = 0; i < player.getProjectiles().size(); i++){
+			Projectile p = player.getProjectiles().get(i);
+			Rectangle pRect = new Rectangle(p.getX(), p.getY(), p.getWidth(), p.getHeight());
+			for(int j = 0; j < placedCollectableBlocks.size(); j++){
+				CollectableBlock c = placedCollectableBlocks.get(j);
+				Rectangle cRect = new Rectangle(c.x, c.y, c.width, c.height);
+				if(pRect.intersects(cRect)){
+					player.getProjectiles().remove(i);
+					player.addBlock(c.color);
+					placedCollectableBlocks.remove(j);
+				}
+			}
+
+		}
 	}
 
 	/**
@@ -125,7 +148,7 @@ public class Map{
 			path = COLLLECTABLEBLOCK_YELLOW_PATH;
 		}
 		System.out.println("path = " + path);
-		CollectableBlock cb =  new CollectableBlock(this, p.x + (p.width - blockWidth)/2, p.y + p.width - blockHeight, path);
+		CollectableBlock cb =  new CollectableBlock(this, p.x + (p.getWidth() - blockWidth)/2, p.y + p.getWidth() - blockHeight, path);
 		p.y -= cb.width + 15;
 		placedCollectableBlocks.add(cb);
 		pManager.checkPattern(placedCollectableBlocks, p);

@@ -1,6 +1,7 @@
 package code;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -11,7 +12,12 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.Animation;
 
+import code.enemies.ShootingEnemy;
 import code.gamestates.*;
+import code.infrastructure.Helper;
+import code.infrastructure.Map;
+import code.infrastructure.PlayerObserver;
+import code.patterns.Pattern;
 
 /**
  * Player class, this class handles both the display, updating and interactions between various game objects
@@ -45,17 +51,17 @@ public class Player{
 	public boolean movingLeft = false;
 	public boolean movingRight = false;
 	boolean facingRight = true;
+	boolean facingLeft = true;
 	boolean inAir = false;
 	//END
 	
 	/////////////////////////////////////
 	// player inventory and stats      //
 	/////////////////////////////////////
-	int blueBlocks = 0;
-	int redBlocks = 0;
-	int yellowBlocks = 0;
-	int greenBlocks = 0;
-	int health = 10000;
+	private int blueBlocks = 0;
+	private int redBlocks = 0;
+	private int yellowBlocks = 0;
+	private int greenBlocks = 0;
 	List<Projectile> projectiles = new ArrayList<Projectile>();
 	//END
 	
@@ -65,7 +71,7 @@ public class Player{
 	boolean doubleJump = true;
 	boolean jumpKeyReset = true;
 	public float MAX_SPEED = 7.5f*GameplayState.VIEWPORT_RATIO_X;
-	float jumpSpeed = 7.5f;
+	float jumpSpeed = 8.2f;
 	long gravityTimer;
 	//END
 
@@ -307,13 +313,13 @@ public class Player{
 	    
 	    for(int i = 0; i < m.shootingEnemies.size(); i++){
 	    	ShootingEnemy se = m.shootingEnemies.get(i);
-	    	for(int j = 0; j < se.projectiles.size(); j++){
-	    		Projectile p = se.projectiles.get(j);
-	    		Rectangle r = new Rectangle(p.x, p.y, p.width, p.height);
+	    	for(int j = 0; j < se.getProjectiles().size(); j++){
+	    		Projectile p = se.getProjectiles().get(j);
+	    		Rectangle r = new Rectangle(p.getX(), p.getY(), p.width, p.height);
 	    		
 	    		if(prx.intersects(r) || pry.intersects(r)){
 	    			collideWith(p);
-	    			se.projectiles.remove(j);
+	    			se.getProjectiles().remove(j);
 	    		}
 	    	}
 	    }
@@ -383,8 +389,23 @@ public class Player{
 	 * @param x the dx of the bullet
 	 * @param y the dy of the bullet
 	 */
-	public void shoot(float x, float y){
-		Projectile p = new Projectile(this.x + this.width/2, this.y + this.height/2, x, y);
+	public void shoot(){
+		float[] dir = new float[2];
+		float projectileX, projectileY, destinationX, destinationY;
+		if(!facingRight){
+			destinationY = y + height/2;
+			destinationX = x - 1;
+			projectileX = x;
+			projectileY = y + height/2;
+		}else{
+			destinationY = y + height/2;
+			destinationX = x + width + 1;
+			projectileX = x + width;
+			projectileY = y + height/2;
+		}
+		dir[1]	 = 0;
+		
+		Projectile p = new Projectile(projectileX, projectileY, destinationX, destinationY);
 		projectiles.add(p);
 	}
 
@@ -396,13 +417,13 @@ public class Player{
 	 */
 	public void addBlock(String c){
 		if(c.equals("blue"))
-			blueBlocks++;
+			setBlueBlocks(getBlueBlocks() + 1);
 		else if(c.equals("yellow"))
-			yellowBlocks++;
+			setYellowBlocks(getYellowBlocks() + 1);
 		else if (c.equals("red"))
-			redBlocks++;
+			setRedBlocks(getRedBlocks() + 1);
 		else if(c.equals("green"))
-			greenBlocks++;
+			setGreenBlocks(getGreenBlocks() + 1);
 		notifyInventoryChange();
 	}
 	
@@ -439,5 +460,65 @@ public class Player{
 	public void notifyHealthChange(){
 		for(PlayerObserver p : observers)
 			p.playerHealthChanged(this);
+	}
+	
+	public float getX(){
+		return x;
+	}
+	
+	public void setX(float x){
+		this.x = x;
+	}
+	
+	public float getY(){
+		return y;
+	}
+	
+	public void setY(float y){
+		this.y = y;
+	}
+	
+	public int getWidth(){
+		return width;
+	}
+	
+	public int getHeight(){
+		return height;
+	}
+
+	public int getBlueBlocks() {
+		return blueBlocks;
+	}
+
+	public void setBlueBlocks(int blueBlocks) {
+		this.blueBlocks = blueBlocks;
+	}
+
+	public int getRedBlocks() {
+		return redBlocks;
+	}
+
+	public void setRedBlocks(int redBlocks) {
+		this.redBlocks = redBlocks;
+	}
+
+	public int getYellowBlocks() {
+		return yellowBlocks;
+	}
+
+	public void setYellowBlocks(int yellowBlocks) {
+		this.yellowBlocks = yellowBlocks;
+	}
+
+	public int getGreenBlocks() {
+		return greenBlocks;
+	}
+
+	public void setGreenBlocks(int greenBlocks) {
+		this.greenBlocks = greenBlocks;
+	}
+	
+	public List<Projectile> getProjectiles(){
+		return projectiles;
 	}
 }

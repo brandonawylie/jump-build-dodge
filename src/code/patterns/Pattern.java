@@ -1,9 +1,11 @@
-package code;
+package code.patterns;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.Graphics;
+
+import code.CollectableBlock;
 
 public class Pattern {
 	public int x, y;

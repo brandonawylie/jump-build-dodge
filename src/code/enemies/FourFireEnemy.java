@@ -1,4 +1,4 @@
-package code;
+package code.enemies;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,10 @@ import java.util.List;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Polygon;
+
+import code.Player;
+import code.Projectile;
+import code.infrastructure.Map;
 
 public class FourFireEnemy extends ShootingEnemy{
     Polygon shape;
@@ -91,7 +95,7 @@ public class FourFireEnemy extends ShootingEnemy{
 				dir[1] = 0.0f;
 		    }
 	
-		    projectiles.add(new Projectile(point[0], point[1], dir));
+		    getProjectiles().add(new Projectile(point[0], point[1], dir));
 		    i++;
 		}
     }

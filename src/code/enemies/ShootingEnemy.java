@@ -1,10 +1,15 @@
-package code;
+package code.enemies;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
+
+import code.Player;
+import code.Projectile;
+import code.infrastructure.Helper;
+import code.infrastructure.Map;
 
 /**
  * Represents the base shooting enemy class, contains logic for firing based on rate etc
@@ -27,7 +32,7 @@ public class ShootingEnemy {
 	public float tileWidth = .5f;
 	public float tileHeight = .5f;
 
-	List<Projectile> projectiles = new ArrayList<>();
+	private List<Projectile> projectiles = new ArrayList<>();
 	
 	/**
 	 * Initializes the shooting enemy
@@ -51,7 +56,7 @@ public class ShootingEnemy {
 		//draw the ShootingEnemy
 		g.fillRect(x - shiftX, y - shiftY, width, height);
 
-		for(Projectile p : projectiles)
+		for(Projectile p : getProjectiles())
 			p.draw(g, shiftX, shiftY);
 
 	}
@@ -73,11 +78,11 @@ public class ShootingEnemy {
 			canFire = true;
 		}
 		//update the ShootingEnemy's projectiles
-		for(Projectile p : projectiles)
+		for(Projectile p : getProjectiles())
 			p.update(delta);
 
-		float targetX = player.x + player.width/2;
-		float targetY = player.y + player.height/2;
+		float targetX = player.x + player.getWidth()/2;
+		float targetY = player.y + player.getHeight()/2;
 
 		//if the time since the last shot was fired >= fireRate, then shoot again
 		if(System.currentTimeMillis() - timeLastFired > fireRate[fireRateIndex] && canFire){
@@ -87,10 +92,10 @@ public class ShootingEnemy {
 		fireRateIndex++;
 		if(fireRateIndex >= fireRate.length)
 			fireRateIndex = 0;
-		for(int i =0; i < projectiles.size(); i++){
-		    Projectile p = projectiles.get(i);
-		    if((p.x >= map.mapWidth || p.x <= 0) && (p.y >= map.mapHeight || p.y <= 0)){
-		    	projectiles.remove(p);
+		for(int i =0; i < getProjectiles().size(); i++){
+		    Projectile p = getProjectiles().get(i);
+		    if((p.getX() >= map.mapWidth || p.getX() <= 0) && (p.getY() >= map.mapHeight || p.getY() <= 0)){
+		    	getProjectiles().remove(p);
 		    }
 		}
 	}
@@ -99,7 +104,7 @@ public class ShootingEnemy {
 	//post: fires a Projectile at the given point
 	public void fire(float targetX, float targetY){
 		Projectile p = new Projectile(x + width/2, y + height/2, targetX, targetY);
-		projectiles.add(p);
+		getProjectiles().add(p);
 	}
 	
 	public int getRange() {
@@ -132,5 +137,9 @@ public class ShootingEnemy {
 
 	public void setY(float y) {
 		this.y = y;
+	}
+
+	public List<Projectile> getProjectiles() {
+		return projectiles;
 	}
 }

@@ -1,4 +1,4 @@
-package code;
+package code.infrastructure;
 
 public interface Oberserver {
 	public void changeColorNotification(int[] colors);

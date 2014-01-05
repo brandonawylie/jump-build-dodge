@@ -1,7 +1,9 @@
-package code;
+package code.enemies;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
+
+import code.Player;
 
 public class SingleFireEnemy extends ShootingEnemy{
 

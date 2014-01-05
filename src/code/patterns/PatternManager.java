@@ -1,4 +1,4 @@
-package code;
+package code.patterns;
 
 
 import java.util.ArrayList;
@@ -7,7 +7,11 @@ import java.util.List;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
+import code.CollectableBlock;
+import code.Player;
 import code.gamestates.*;
+import code.infrastructure.Map;
+import code.infrastructure.PlayerObserver;
 
 public class PatternManager implements PlayerObserver{
 	//public List<CollectableBlock> blocks = new ArrayList<CollectableBlock>();
@@ -37,8 +41,8 @@ public class PatternManager implements PlayerObserver{
 	 */
 	public void checkPattern(List<CollectableBlock> blocks, Player player){
 		if(playerWidth == 0){
-			playerWidth = player.width;
-			playerHeight = player.height;
+			playerWidth = player.getWidth();
+			playerHeight = player.getHeight();
 		}
 		patternRects.clear();
 		//go through all the blocks and see which one is leftmost, topmost, bottommost and rightmost
@@ -124,7 +128,7 @@ public class PatternManager implements PlayerObserver{
 			r++;
 		}while(highestY - (by + bheight) > bheight);
 
-		float ttLowestX = (playerX + player.width) + 5;
+		float ttLowestX = (playerX + player.getWidth()) + 5;
 		float ttLowestY = playerY + 5;
 		tempArray = new Rectangle[r][c];
 		for(int i = 0; i < r; i++){

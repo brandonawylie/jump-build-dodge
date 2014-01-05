@@ -7,7 +7,11 @@ public class Projectile {
 	//speed of bullet
 	final float DEFAULT_BULLET_SPEED = 2f;
 	//stores the x/y position, velocity
-	float x, y, dx, dy, speed;
+	private float x;
+	private float y;
+	float dx;
+	float dy;
+	float speed;
 	//width & height
 	int width = 5;
 	int height = 6;
@@ -17,8 +21,8 @@ public class Projectile {
 
 	//constructors that take x and y of the starting position
 	public Projectile(float x, float y, float desX, float desY){
-	    	this.x = x;
-		this.y = y;
+	    	this.setX(x);
+		this.setY(y);
 		speed = DEFAULT_BULLET_SPEED;
 		if(x < desX && y < desY){
 			dx = x - desX;
@@ -47,8 +51,8 @@ public class Projectile {
 	}
 
 	public Projectile(float x, float y, float[] dir){
-	    	this.x = x;
-		this.y = y;
+	    	this.setX(x);
+		this.setY(y);
 		speed = DEFAULT_BULLET_SPEED;
 		float dx = dir[0];
 		float dy = dir[1];
@@ -61,11 +65,34 @@ public class Projectile {
 
 	public void draw(Graphics g, float shiftX, float shiftY){
 		g.setColor(color);
-		g.drawRect(x - shiftX, y - shiftY, width, height);
+		g.drawRect(getX() - shiftX, getY() - shiftY, width, height);
 	}
 
 	public void update(int delta){
-		x += dx*speed*delta/10;
-		y += dy*speed * delta/10;
+		setX(getX() + dx*speed*delta/10);
+		setY(getY() + dy*speed * delta/10);
+	}
+
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+	
+	public int getWidth(){
+		return width;
+	}
+	public int getHeight(){
+		return height;
 	}
 }

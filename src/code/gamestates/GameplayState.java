@@ -20,9 +20,9 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.ResourceLoader;
 
 import code.CollectableBlock;
-import code.HUD;
-import code.Map;
 import code.Player;
+import code.infrastructure.Map;
+import code.uielements.HUD;
 import code.uielements.Menu;
 
 public class GameplayState extends BasicGameState{
@@ -173,13 +173,16 @@ public class GameplayState extends BasicGameState{
 			}else if(gc.getInput().isKeyDown(Input.KEY_R)){
 				map.placeCollectableBlock(player, Color.green);
 				lastClickTime = System.currentTimeMillis();
+			}else if(gc.getInput().isKeyDown(Input.KEY_A)){
+				player.shoot();
+				lastClickTime = System.currentTimeMillis();
 			}
 		}
 
 
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			//shoot a bullet, doo
-			player.shoot(x, y);
+			player.shoot();
 			mouseX = x;
 			mouseY = y;
 

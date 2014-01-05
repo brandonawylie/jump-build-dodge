@@ -8,6 +8,8 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+import code.infrastructure.Map;
+
 public class CollectableBlock {
 
 	//basic variables to store position, width/height and the x/y ratios of the map

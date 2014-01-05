@@ -1,4 +1,4 @@
-package code;
+package code.uielements;
 
 
 import org.newdawn.slick.Color;
@@ -6,7 +6,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
 
+import code.Player;
 import code.gamestates.PlatformerGame;
+import code.infrastructure.PlayerObserver;
 public class HUD implements PlayerObserver{
 	private Image hudBottom, hudTop;
 	private int rBlockCount, bBlockCount, yBlockCount, gBlockCount;
@@ -116,10 +118,10 @@ public class HUD implements PlayerObserver{
 
 	@Override
 	public void playerInventoryChanged(Player p) {
-		bBlockCount = p.blueBlocks;
-		rBlockCount = p.redBlocks;
-		yBlockCount = p.yellowBlocks;
-		gBlockCount = p.greenBlocks;
+		bBlockCount = p.getBlueBlocks();
+		rBlockCount = p.getRedBlocks();
+		yBlockCount = p.getYellowBlocks();
+		gBlockCount = p.getGreenBlocks();
 		
 	}
 

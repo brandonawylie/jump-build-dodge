@@ -13,10 +13,10 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.GameState;
 
-import code.Map;
-import code.PauseMenuObserver;
 import code.gamestates.GameplayState;
 import code.gamestates.PauseState;
+import code.infrastructure.Map;
+import code.infrastructure.PauseMenuObserver;
 
 public class Menu {
 	Rectangle menu;

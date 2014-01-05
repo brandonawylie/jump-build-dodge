@@ -14,8 +14,8 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
-import code.Map;
-import code.PauseMenuObserver;
+import code.infrastructure.Map;
+import code.infrastructure.PauseMenuObserver;
 import code.uielements.Menu;
 
 public class PauseState extends BasicGameState implements PauseMenuObserver{
