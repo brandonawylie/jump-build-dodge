@@ -1,29 +1,20 @@
 package code.gamestates;
 
-import java.io.IOException;
-
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
-import org.newdawn.slick.util.ResourceLoader;
-
 import code.CollectableBlock;
 import code.Player;
 import code.infrastructure.Map;
 import code.uielements.HUD;
-import code.uielements.Menu;
 
 public class GameplayState extends BasicGameState{
     public static int VIEWPORT_WIDTH = 1280;
@@ -39,7 +30,7 @@ public class GameplayState extends BasicGameState{
 	HUD hud;
 	int mouseX = 0; int mouseY = 0;
 	public GameplayState(int id){
-		this.ID = id;
+		GameplayState.ID = id;
 	}
 
 	public int getID() {
@@ -56,10 +47,10 @@ public class GameplayState extends BasicGameState{
 		VIEWPORT_RATIO_X = PlatformerGame.WIDTH/VIEWPORT_WIDTH;
 		VIEWPORT_RATIO_Y = PlatformerGame.HEIGHT/VIEWPORT_HEIGHT;
 		//Initialize the player, the x/y coordinates will be set via map.loadMap but defaults to the given 100, 100
-		Texture t = null;
-		try {
-			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/player.png"));
-		} catch (IOException e1) {	}
+//		Texture t = null;
+//		try {
+//			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/player.png"));
+//		} catch (IOException e1) {	}
 
 		//Initialize the map, to be loaded in the next line
 		map = new Map();
@@ -74,17 +65,17 @@ public class GameplayState extends BasicGameState{
 			e.printStackTrace();
 		}
 		player = new Player(map, "assets/player.png", 500, 100);
-		player.x = map.playerX;
-		player.y = map.playerY;
+		player.setX(map.playerX);
+		player.setY(map.playerY);
 
-		//initialize the hud
-		try {
-			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/hud-bottom.png"));
-		} catch (IOException e) {}
-		Image i = new Image(t);
-		float scaleX = i.getWidth()/PlatformerGame.WIDTH;
-		float scaleY = i.getHeight()/PlatformerGame.HEIGHT;
-		hud = new HUD(i.getScaledCopy(PlatformerGame.WIDTH, PlatformerGame.HEIGHT/5));
+//		//initialize the hud
+//		try {
+//			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/hud-bottom.png"));
+//		} catch (IOException e) {}
+//		Image i = new Image(t);
+//		float scaleX = i.getWidth()/PlatformerGame.WIDTH;
+//		float scaleY = i.getHeight()/PlatformerGame.HEIGHT;
+		hud = new HUD();
 
 		player.addObserver(hud);
 		player.addObserver(map.pManager);
@@ -122,8 +113,8 @@ public class GameplayState extends BasicGameState{
 
 
 		//adjust the vieaaaaaaort to center around the player. everything will obey this shift.
-		VIEWPORT_X = (int) (player.x - PlatformerGame.WIDTH/2);
-		VIEWPORT_Y = (int) (player.y - PlatformerGame.HEIGHT/2);
+		VIEWPORT_X = (int) (player.getX() - PlatformerGame.WIDTH/2);
+		VIEWPORT_Y = (int) (player.getY() - PlatformerGame.HEIGHT/2);
 //		if(VIEWPORT_X < 0)
 //			VIEWPORT_X = 0;
 //		if(VIEWPORT_Y < 0)
@@ -151,13 +142,13 @@ public class GameplayState extends BasicGameState{
 			player.moveLeft();
 
 		}else {
-			player.movingLeft = false;
+			player.setMovingLeft(false);
 		}
 		//right
 		if(gc.getInput().isKeyDown(Input.KEY_RIGHT)){
 			player.moveRight();
 		}else{
-			player.movingRight = false;
+			player.setMovingRight(false);
 		}
 
 		if(System.currentTimeMillis()/100 - lastClickTime/100 > 4){

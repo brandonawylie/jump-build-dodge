@@ -148,8 +148,8 @@ public class Map{
 			path = COLLLECTABLEBLOCK_YELLOW_PATH;
 		}
 		System.out.println("path = " + path);
-		CollectableBlock cb =  new CollectableBlock(this, p.x + (p.getWidth() - blockWidth)/2, p.y + p.getWidth() - blockHeight, path);
-		p.y -= cb.width + 15;
+		CollectableBlock cb =  new CollectableBlock(this, p.getX() + (p.getWidth() - blockWidth)/2, p.getY() + p.getWidth() - blockHeight, path);
+		p.setY(p.getY() - (cb.width + 15));
 		placedCollectableBlocks.add(cb);
 		pManager.checkPattern(placedCollectableBlocks, p);
 		//check if the placed pattern
@@ -158,7 +158,7 @@ public class Map{
 		Pattern pattern = null;
 		for(int i = 0; i < patterns.size(); i++){
 			pattern = patterns.get(i);
-			double temp = Math.sqrt(Math.pow(p.x - pattern.x, 2) + Math.pow(p.y - pattern.y, 2));
+			double temp = Math.sqrt(Math.pow(p.getX() - pattern.x, 2) + Math.pow(p.getY() - pattern.y, 2));
 			if(temp < mdist){
 				mdist = temp;
 				saveIndex = i;
@@ -208,7 +208,7 @@ public class Map{
 
 		for(int i = 0; i < nl.getLength(); i++){
 			Node objectGroup = nl.item(i);
-			String objectGroupName = objectGroup.getNodeName();
+//			String objectGroupName = objectGroup.getNodeName();
 			loadObjectGroup(objectGroup);
 
 		}
@@ -231,7 +231,6 @@ public class Map{
 			String arrayStr = properties.get("array");
 			//System.out.println(arrayStr);
 			String[] rowsStr = arrayStr.substring(1, arrayStr.length() - 1).split(";");
-			int columnLength = 0;
 			List<String[]> columns = new ArrayList<>();
 			for(String row : rowsStr){
 			    //System.out.println("row = " + row);
@@ -255,14 +254,13 @@ public class Map{
 			newPattern.pArr = array;
 			for(Node n: objectNodes){
 				//System.out.println("in pattern: " + n.getNodeName());
-				List<Node> realObjects = new ArrayList<Node>();
 				HashMap<String, String> objectProperties = getProperties(n.getChildNodes(), objectNodes);
 				//System.out.println(attr.getNamedItem("name").getNodeValue());
 				NamedNodeMap attr = n.getAttributes();
 				int x = Integer.parseInt(attr.getNamedItem("x").getNodeValue());
 				int y = Integer.parseInt(attr.getNamedItem("y").getNodeValue());
-				int width = Integer.parseInt(attr.getNamedItem("width").getNodeValue());
-				int height = Integer.parseInt(attr.getNamedItem("height").getNodeValue());
+//				int width = Integer.parseInt(attr.getNamedItem("width").getNodeValue());
+//				int height = Integer.parseInt(attr.getNamedItem("height").getNodeValue());
 				String color = objectProperties.get("color");
 				//String array = properties.get("array");
 				String cbPath = "";
@@ -296,8 +294,8 @@ public class Map{
 				NamedNodeMap attr = n.getAttributes();
 				int x = Integer.parseInt(attr.getNamedItem("x").getNodeValue());
 				int y = Integer.parseInt(attr.getNamedItem("y").getNodeValue());
-				int width = Integer.parseInt(attr.getNamedItem("width").getNodeValue());
-				int height = Integer.parseInt(attr.getNamedItem("height").getNodeValue());
+//				int width = Integer.parseInt(attr.getNamedItem("width").getNodeValue());
+//				int height = Integer.parseInt(attr.getNamedItem("height").getNodeValue());
 				HashMap<String, String> props = getProperties(n.getChildNodes(), new ArrayList<Node>());
 				String color = props.get("color");
 				//System.out.println("found collectable with color: " + color);
@@ -315,8 +313,8 @@ public class Map{
 				NamedNodeMap attr = n.getAttributes();
 				int x = Integer.parseInt(attr.getNamedItem("x").getNodeValue());
 				int y = Integer.parseInt(attr.getNamedItem("y").getNodeValue());
-				int width = Integer.parseInt(attr.getNamedItem("width").getNodeValue());
-				int height = Integer.parseInt(attr.getNamedItem("height").getNodeValue());
+//				int width = Integer.parseInt(attr.getNamedItem("width").getNodeValue());
+//				int height = Integer.parseInt(attr.getNamedItem("height").getNodeValue());
 				playerX = x;
 				playerY = y;
 			}
@@ -327,7 +325,7 @@ public class Map{
 				int y = Integer.parseInt(attr.getNamedItem("y").getNodeValue());
 				int width = Integer.parseInt(attr.getNamedItem("width").getNodeValue());
 				int height = Integer.parseInt(attr.getNamedItem("height").getNodeValue());
-				HashMap<String, String> props = getProperties(n.getChildNodes(), new ArrayList<Node>());
+//				HashMap<String, String> props = getProperties(n.getChildNodes(), new ArrayList<Node>());
 				String type = attr.getNamedItem("name").getNodeValue();
 
 				if(type.equals("shooting-enemy")){
@@ -354,8 +352,8 @@ public class Map{
 					//System.out.println("int second for loop: " + n2.getNodeName());
 					if(n2.getNodeName().equals("property")){
 						//System.out.println("found property = " + n2.getAttributes().getNamedItem("name").getNodeValue() + ", " + n2.getAttributes().getNamedItem("value").getNodeValue());
-						String key = n2.getAttributes().getNamedItem("name").getNodeValue();
-						String value = n2.getAttributes().getNamedItem("value").getNodeValue();
+//						String key = n2.getAttributes().getNamedItem("name").getNodeValue();
+//						String value = n2.getAttributes().getNamedItem("value").getNodeValue();
 	//					if(value.equals("collectable-blocks"))
 	//						printNode(n);
 						properties.put(n2.getAttributes().getNamedItem("name").getNodeValue(), n2.getAttributes().getNamedItem("value").getNodeValue());

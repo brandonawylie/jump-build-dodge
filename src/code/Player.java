@@ -31,28 +31,25 @@ public class Player{
 	//////////////////////////////////////////////////
 	// player position, speed and width/height      //
 	//////////////////////////////////////////////////
-	public float x, y, dx, dy, currentHealth, maxHealth;
-	int width = 40;
-	int height = 48;
+    private float x, y, dx, dy, currentHealth, maxHealth;
+	private int width = 40;
+	private int height = 48;
 	//END
 
 	/////////////////////////////////////
 	// player animation and display    //
 	/////////////////////////////////////
-	SpriteSheet spriteSheet = null;
-	float tileWidth = .75f;
-	float tileHeight = .75f;
-	int idleRow = 0;
-	int runningRow = 1;
-	int jumpingRow = 2;
-	org.newdawn.slick.Animation walkingLeft, walkingRight, idleLeft, idleRight, startJumpingLeft, startJumpingRight, jumpingLeft, jumpingRight, landingLeft, landingRight;
-	int jumpAnimationFrames = 3;
-	int fallAnimationFrames = 4;
-	public boolean movingLeft = false;
-	public boolean movingRight = false;
-	boolean facingRight = true;
-	boolean facingLeft = true;
-	boolean inAir = false;
+	private SpriteSheet spriteSheet = null;
+	private float tileWidth = .75f;
+	private float tileHeight = .75f;
+	private int idleRow = 0;
+	private int runningRow = 1;
+	private int jumpingRow = 2;
+	private org.newdawn.slick.Animation walkingLeft, walkingRight, idleLeft, idleRight, startJumpingLeft, startJumpingRight, jumpingLeft, jumpingRight;
+	private boolean movingLeft = false;
+	private boolean movingRight = false;
+	private boolean facingRight = true;
+	private boolean inAir = false;
 	//END
 	
 	/////////////////////////////////////
@@ -68,15 +65,14 @@ public class Player{
 	/////////////////////////////////////
 	// player movement and jumping     //
 	/////////////////////////////////////
-	boolean doubleJump = true;
-	boolean jumpKeyReset = true;
-	public float MAX_SPEED = 7.5f*GameplayState.VIEWPORT_RATIO_X;
-	float jumpSpeed = 8.2f;
-	long gravityTimer;
+	private boolean doubleJump = true;
+	private boolean jumpKeyReset = true;
+	private float MAX_SPEED = 7.5f*GameplayState.VIEWPORT_RATIO_X;
+	private float jumpSpeed = 8.2f;
 	//END
 
 	//observers for player
-	List<PlayerObserver> observers = new ArrayList<PlayerObserver>();
+	private List<PlayerObserver> observers = new ArrayList<PlayerObserver>();
 
 	
 	/**
@@ -88,8 +84,8 @@ public class Player{
 	 */
 	public Player(Map m, String path, float x, float y){
 		this.x = x; this.y = y;
-		currentHealth = 200;
-		maxHealth = 200;
+		setCurrentHealth(200);
+		setMaxHealth(200);
 		notifyHealthChange();
 		dx = 0; dy = Helper.GRAVITY;
 
@@ -167,7 +163,7 @@ public class Player{
 			p.draw(g, shiftX, shiftY);
 		//jumpingRight.draw(x - shiftX, y - shiftY);
 		if(startJump){
-		  if(facingRight){
+		  if(isFacingRight()){
 		      startJumpingRight.draw(x-shiftX, y-shiftY);
 		      startJumpingLeft.setCurrentFrame(startJumpingRight.getFrame());
 		  }else{
@@ -178,16 +174,16 @@ public class Player{
 		      startJump = false;
 		  }
 		}else if(inAir){
-		    if(facingRight)
+		    if(isFacingRight())
 			jumpingRight.draw(x-shiftX, y-shiftY);
 		    else
 			jumpingLeft.draw(x-shiftX, y-shiftY);
-		}else if(movingRight)
+		}else if(isMovingRight())
 		    	walkingRight.draw(x - shiftX, y - shiftY);
-		else if(movingLeft)
+		else if(isMovingLeft())
 		    	walkingLeft.draw(x - shiftX, y - shiftY);
 		else{
-		    if(!facingRight)
+		    if(!isFacingRight())
 			idleLeft.draw(x-shiftX, y-shiftY);
 		    else
 			idleRight.draw(x-shiftX, y-shiftY);
@@ -226,13 +222,13 @@ public class Player{
 			p.update(delta);
 
 		//deceleration
-		if(!movingLeft && dx < 0f){
+		if(!isMovingLeft() && dx < 0f){
 			dx += .2f;
 		}
-		if(!movingRight && dx > 0f){
+		if(!isMovingRight() && dx > 0f){
 			dx -= .2f;
 		}
-		if(!movingLeft && !movingRight && ((dx < 0 && dx > -.2f) || (dx > 0 && dx < .2f))){
+		if(!isMovingLeft() && !isMovingRight() && ((dx < 0 && dx > -.2f) || (dx > 0 && dx < .2f))){
 			dx = 0f;
 		}
 
@@ -344,7 +340,7 @@ public class Player{
 	}
 	
 	public void collideWith(Projectile p){
-		this.currentHealth -= 10;
+		this.setCurrentHealth(this.getCurrentHealth() - 10);
 		notifyHealthChange();
 	}
 	
@@ -352,8 +348,8 @@ public class Player{
 	 * Method to handle starting, or accelerating leftwards movement
 	 */
 	public void moveLeft(){
-	    facingRight = false;
-		movingLeft = true;
+	    setFacingRight(false);
+		setMovingLeft(true);
 		if(dx > -MAX_SPEED){
 			dx -= .2f;
 		}
@@ -363,8 +359,8 @@ public class Player{
 	 * Method to handle starting, or accelerating rightwards movement
 	 */
 	public void moveRight(){
-	    facingRight = true;
-		movingRight = true;
+	    setFacingRight(true);
+		setMovingRight(true);
 		if(dx < MAX_SPEED){
 			dx += .2f;
 		}
@@ -392,7 +388,7 @@ public class Player{
 	public void shoot(){
 		float[] dir = new float[2];
 		float projectileX, projectileY, destinationX, destinationY;
-		if(!facingRight){
+		if(!isFacingRight()){
 			destinationY = y + height/2;
 			destinationX = x - 1;
 			projectileX = x;
@@ -462,63 +458,82 @@ public class Player{
 			p.playerHealthChanged(this);
 	}
 	
+	////////////////////////////////
+	//	Getters/Setters           //
+	////////////////////////////////
 	public float getX(){
 		return x;
 	}
-	
 	public void setX(float x){
 		this.x = x;
 	}
-	
 	public float getY(){
 		return y;
 	}
-	
 	public void setY(float y){
 		this.y = y;
 	}
-	
 	public int getWidth(){
 		return width;
 	}
-	
 	public int getHeight(){
 		return height;
 	}
-
 	public int getBlueBlocks() {
 		return blueBlocks;
 	}
-
 	public void setBlueBlocks(int blueBlocks) {
 		this.blueBlocks = blueBlocks;
 	}
-
 	public int getRedBlocks() {
 		return redBlocks;
 	}
-
 	public void setRedBlocks(int redBlocks) {
 		this.redBlocks = redBlocks;
 	}
-
 	public int getYellowBlocks() {
 		return yellowBlocks;
 	}
-
 	public void setYellowBlocks(int yellowBlocks) {
 		this.yellowBlocks = yellowBlocks;
 	}
-
 	public int getGreenBlocks() {
 		return greenBlocks;
 	}
-
 	public void setGreenBlocks(int greenBlocks) {
 		this.greenBlocks = greenBlocks;
 	}
-	
 	public List<Projectile> getProjectiles(){
 		return projectiles;
+	}
+	public float getMaxHealth() {
+		return maxHealth;
+	}
+	public void setMaxHealth(float maxHealth) {
+		this.maxHealth = maxHealth;
+	}
+	public float getCurrentHealth() {
+		return currentHealth;
+	}
+	public void setCurrentHealth(float currentHealth) {
+		this.currentHealth = currentHealth;
+	}
+	public boolean isFacingRight() {
+		return facingRight;
+	}
+	public void setFacingRight(boolean facingRight) {
+		this.facingRight = facingRight;
+	}
+	public boolean isMovingLeft() {
+		return movingLeft;
+	}
+	public void setMovingLeft(boolean movingLeft) {
+		this.movingLeft = movingLeft;
+	}
+	public boolean isMovingRight() {
+		return movingRight;
+	}
+	public void setMovingRight(boolean movingRight) {
+		this.movingRight = movingRight;
 	}
 }

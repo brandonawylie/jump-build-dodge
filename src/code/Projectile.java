@@ -21,7 +21,7 @@ public class Projectile {
 
 	//constructors that take x and y of the starting position
 	public Projectile(float x, float y, float desX, float desY){
-	    	this.setX(x);
+	    this.setX(x);
 		this.setY(y);
 		speed = DEFAULT_BULLET_SPEED;
 		if(x < desX && y < desY){
@@ -45,13 +45,10 @@ public class Projectile {
 		float v = (float) Math.sqrt(dx*dx + dy*dy);
 		dx /= v;
 		dy /= v;
-		this.dx = dx;
-		this.dy = dy;
-
 	}
 
 	public Projectile(float x, float y, float[] dir){
-	    	this.setX(x);
+	    this.setX(x);
 		this.setY(y);
 		speed = DEFAULT_BULLET_SPEED;
 		float dx = dir[0];

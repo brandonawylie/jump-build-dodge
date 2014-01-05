@@ -1,20 +1,16 @@
 package code.uielements;
 
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
-
 import code.Player;
 import code.gamestates.PlatformerGame;
 import code.infrastructure.PlayerObserver;
+
 public class HUD implements PlayerObserver{
-	private Image hudBottom, hudTop;
 	private int rBlockCount, bBlockCount, yBlockCount, gBlockCount;
 	
-	public HUD(Image hubBottom){
-		this.hudBottom = hubBottom;
+	public HUD(){
 		rBlockCount = 1;
 		bBlockCount = 1;
 		yBlockCount = 1;
@@ -127,8 +123,8 @@ public class HUD implements PlayerObserver{
 
 	@Override
 	public void playerHealthChanged(Player p) {
-		this.maxHealth = p.maxHealth;
-		this.currentHealth = p.currentHealth;
+		this.maxHealth = p.getMaxHealth();
+		this.currentHealth = p.getCurrentHealth();
 		System.out.println("swag");
 	}
 }

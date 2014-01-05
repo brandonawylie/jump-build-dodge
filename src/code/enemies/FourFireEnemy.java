@@ -66,7 +66,6 @@ public class FourFireEnemy extends ShootingEnemy{
     }
 
     public void update(int delta, Player player, Map map){
-    	int count = 0;
 		firePoints.clear();
 		for(int i = 0; i < shape.getPointCount(); i++){
 		    float[] point = shape.getPoint(i);

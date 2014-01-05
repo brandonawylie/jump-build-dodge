@@ -6,8 +6,6 @@ import org.newdawn.slick.Graphics;
 public class PatternToolTip {
     	//size of the space between the gray and the actualblocks
 	private int TT_SPACING = 3;
-	//size from the player to the gray outline of the tooltip
-	private int TT_MARGIN = 5;
 	//size of the tool tip blocks
 	private int TT_SIZE = 5;
 	public void draw(Graphics g, String[][] colorArray, float desX, float desY, float shiftX, float shiftY){

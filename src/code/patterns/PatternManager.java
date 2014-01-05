@@ -57,7 +57,6 @@ public class PatternManager implements PlayerObserver{
 		float lowestX = 999999;
 		float lowestY = 999999;
 		float x,  y;
-		CollectableBlock leftmost, rightmost, topmost, bottommost;
 		for(int i = 0; i < blocks.size(); i++){
 			CollectableBlock b = blocks.get(i);
 			x = b.x;
@@ -224,8 +223,8 @@ public class PatternManager implements PlayerObserver{
 
 	@Override
 	public void playerPostitionChanged(Player p) {
-		playerX = p.x;
-		playerY = p.y;
+		playerX = p.getX();
+		playerY = p.getY();
 		
 	}
 

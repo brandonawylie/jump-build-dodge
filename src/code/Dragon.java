@@ -47,8 +47,8 @@ public class Dragon {
     }
 
     public void update(Player player){
-	facingRight = player.facingRight;
-	this.x = (int) (player.x - (2 + this.width));
-	this.y = (int) player.y;
+	facingRight = player.isFacingRight();
+	this.x = (int) (player.getX() - (2 + this.width));
+	this.y = (int) player.getY();
     }
 }

@@ -1,7 +1,6 @@
 package code;
-import java.io.IOException;
 
-import org.newdawn.slick.Color;
+import java.io.IOException;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.opengl.Texture;
@@ -16,8 +15,6 @@ public class CollectableBlock {
 	public float x, y, ratioX, ratioY, width, height;
 	public float tileWidth = 1;
 	public float tileHeight = 1;
-	//colors for the inside and outline of the platform
-	private Color outline = Color.white;
 	Image image;
 	public String color;
 	public CollectableBlock(Map m, float x, float y, String path){

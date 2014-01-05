@@ -68,11 +68,11 @@ public class ShootingEnemy {
 	public void update(int delta, Player player, Map map){
 		//TODO calculate the distance + compare it to the range.
 		boolean canFire = true;
-		float distanceToPlayer = (float) Math.sqrt(Math.pow(player.x - x, 2) + Math.pow(player.y - y, 2));
+		float distanceToPlayer = (float) Math.sqrt(Math.pow(player.getX() - x, 2) + Math.pow(player.getY() - y, 2));
 
 		if(distanceToPlayer > range){
 			canFire = false;
-			direction = Helper.pointsToDirectionVector(x, y, player.x, player.y);
+			direction = Helper.pointsToDirectionVector(x, y, player.getX(), player.getY());
 		}//DO NOT USE direction ABOVE THIS LINE---------------------------------------------------------------------------------------------------------------------------------------------
 		else{
 			canFire = true;
@@ -81,8 +81,8 @@ public class ShootingEnemy {
 		for(Projectile p : getProjectiles())
 			p.update(delta);
 
-		float targetX = player.x + player.getWidth()/2;
-		float targetY = player.y + player.getHeight()/2;
+		float targetX = player.getX() + player.getWidth()/2;
+		float targetY = player.getY() + player.getHeight()/2;
 
 		//if the time since the last shot was fired >= fireRate, then shoot again
 		if(System.currentTimeMillis() - timeLastFired > fireRate[fireRateIndex] && canFire){

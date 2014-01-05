@@ -1,9 +1,6 @@
 package code.gamestates;
 
-import java.io.IOException;
-
 import javax.swing.JFileChooser;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -13,7 +10,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
-
 import code.infrastructure.Map;
 import code.infrastructure.PauseMenuObserver;
 import code.uielements.Menu;
@@ -26,7 +22,7 @@ public class PauseState extends BasicGameState implements PauseMenuObserver{
 	StateBasedGame sbg;
 	GameContainer gc;
 	public PauseState(int id){
-		this.ID = id;
+		PauseState.ID = id;
 	}
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)

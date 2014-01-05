@@ -2,7 +2,6 @@ package code;
 import java.util.Random;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 
 public class Platform {
 
@@ -28,8 +27,8 @@ public class Platform {
 	public void update(){
 		//if the color on the block has lasted its duration, reset it
 		if( !isRandom && (resetRandomTime == -1 || (System.currentTimeMillis()/100 - resetRandomTime) >= colorStayTimeSecs)){
-			color = color.black;
-			outline = color.white;
+			color = Color.black;
+			outline = Color.white;
 		}
 
 	}
@@ -69,18 +68,18 @@ public class Platform {
 				color = Color.pink;
 				break;
 			case 2:
-				color = color.magenta;
+				color = Color.magenta;
 				break;
 			case 3:
-				color = color.cyan;
+				color = Color.cyan;
 				break;
 			case 4:
-				color = color.orange;
+				color = Color.orange;
 				break;
 			case 5:
-				color = color.green;
+				color = Color.green;
 			case 6:
-				color = color.yellow;
+				color = Color.yellow;
 				break;
 			case 7:
 				color = Color.blue;
