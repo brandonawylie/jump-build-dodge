@@ -48,21 +48,20 @@ public class FourFireEnemy extends ShootingEnemy{
     }
 
     public void draw(Graphics g, int shiftX, int shiftY){
-		super.draw(g, shiftX, shiftY);
-	
-		//shift the shape w/ shiftX & shiftY
-		shape.setX(x - shiftX);
-		shape.setY(y - shiftY);
-		g.setColor(Color.black);
-		g.fill(shape);
-	
-		//reset the shape
-		shape.setX(x);
-		shape.setY(y);
+    	g.setColor(Color.blue);
+    	g.fillOval(x - shiftX, y - shiftY, width, height);
+//		//shift the shape w/ shiftX & shiftY
+//		shape.setX(x - shiftX);
+//		shape.setY(y - shiftY);
+//		g.setColor(Color.red);
+//		g.fill(shape);
+//	
+//		//reset the shape
+//		shape.setX(x);
+//		shape.setY(y);
     }
 
     public void update(int delta, Player player, Map map){
-    	super.update(delta, player, map);
     	int count = 0;
 		firePoints.clear();
 		for(int i = 0; i < shape.getPointCount(); i++){

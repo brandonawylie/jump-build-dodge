@@ -398,11 +398,11 @@ public class Player{
 		if(c.equals("blue"))
 			blueBlocks++;
 		else if(c.equals("yellow"))
-				yellowBlocks++;
+			yellowBlocks++;
 		else if (c.equals("red"))
-				redBlocks++;
+			redBlocks++;
 		else if(c.equals("green"))
-				greenBlocks++;
+			greenBlocks++;
 		notifyInventoryChange();
 	}
 	

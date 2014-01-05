@@ -103,8 +103,9 @@ public class Map{
 		///////////////////////////////////////////////////////
 
 
-		for(ShootingEnemy e : shootingEnemies)
+		for(ShootingEnemy e : shootingEnemies){
 			e.draw(g, viewportX, viewportY);
+		}
 
 		///////////////////////////////////////////////////////
 
@@ -313,6 +314,7 @@ public class Map{
 				}else if(type.equals("single-fire-enemy")){
 					shootingEnemies.add(new SingleFireEnemy(x,y,width,height));
 				}
+				System.out.println("2");
 			}
 
 		}

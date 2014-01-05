@@ -38,6 +38,9 @@ public class HUD implements PlayerObserver{
 		g.drawString("" + yBlockCount, width*7/8, PlatformerGame.HEIGHT - height/2);
 		
 	
+		////////////////////////////////////////////////////////
+		//             Block Inventory Container              //
+		////////////////////////////////////////////////////////
 		int blockContainerWidth = 400;
 		int blockContainerHeight = 100;
 		int blockContainerX = 0;
@@ -63,22 +66,23 @@ public class HUD implements PlayerObserver{
 		g.setColor(Color.red);
 		g.fillRect(startx + n*delta,  starty, iwidth, iheight);
 		g.setColor(Color.black);
-		g.drawString("" + bBlockCount,startx + n*delta + 5, starty - 20);
+		g.drawString("" + rBlockCount,startx + n*delta + 5, starty - 20);
 		g.drawString("w", startx + n*delta + 5, starty + 20);
 
 		n++;
 		g.setColor(Color.yellow);
 		g.fillRect(startx + n*delta,  starty, iwidth, iheight);
 		g.setColor(Color.black);
-		g.drawString("" + bBlockCount,startx + n*delta + 5, starty - 20);
+		g.drawString("" + yBlockCount,startx + n*delta + 5, starty - 20);
 		g.drawString("e", startx + n*delta + 5, starty + 20);
 
 		n++;
 		g.setColor(Color.green);
 		g.fillRect(startx + n*delta,  starty, iwidth, iheight);
 		g.setColor(Color.black);
-		g.drawString("" + bBlockCount,startx + n*delta + 5, starty - 20);
+		g.drawString("" + gBlockCount,startx + n*delta + 5, starty - 20);
 		g.drawString("r", startx + n*delta + 5, starty + 20);
+		//END
 		
 		////////////////////////////////////////////////
 		//				Health Container              //
@@ -97,8 +101,11 @@ public class HUD implements PlayerObserver{
 		Rectangle r2 = new Rectangle(healthContainerX + healthContainerWidth/8, healthContainerY + healthContainerHeight/4, (float) currentHealthDistance, healthContainerHeight/2);
 		g.setColor(Color.orange);
 		g.fill(r1);
-		g.setColor(Color.green);
-		g.fill(r2);
+		if(currentHealth >= 0){
+			g.setColor(Color.green);
+			g.fill(r2);
+		}
+		//END
 	}
 
 	@Override
