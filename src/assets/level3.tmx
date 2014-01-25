@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="tileset" tilewidth="70" tileheight="70" spacing="1">
+  <image source="tilesets/realtilesheet.png" trans="ff00ff" width="852" height="856"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2U0OQEAMgNG5k7s5v6WV+JlWK95LbC18aZgaAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPpagy+uy35uS9J9eUaPOdHzokcvesSanRc9ct3to0cverzr7KyhRy965PL+qOX7qpbzYK2M/ZV9Il8WtRu3W4edOeAP/HOFYxv/gSdF
+  </data>
+ </layer>
+ <objectgroup name="pattern-1" width="100" height="100">
+  <properties>
+   <property name="array" value="[r,b;g,y]"/>
+   <property name="name" value="pattern-1"/>
+  </properties>
+  <object name="pattern-block" x="630" y="6580" width="70" height="70">
+   <properties>
+    <property name="color" value="r"/>
+   </properties>
+  </object>
+  <object name="pattern-block" x="702" y="6580" width="70" height="70">
+   <properties>
+    <property name="color" value="b"/>
+   </properties>
+  </object>
+  <object name="pattern-block" x="630" y="6652" width="70" height="70">
+   <properties>
+    <property name="color" value="g"/>
+   </properties>
+  </object>
+  <object name="pattern-block" x="702" y="6652" width="70" height="70">
+   <properties>
+    <property name="color" value="y"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="collectable-blocks" width="0" height="0">
+  <object name="collectable-block" x="1052" y="6650" width="70" height="70">
+   <properties>
+    <property name="color" value="b"/>
+   </properties>
+  </object>
+  <object name="collectable-block" x="1404" y="6510" width="70" height="70">
+   <properties>
+    <property name="color" value="y"/>
+   </properties>
+  </object>
+  <object name="collectable-block" x="1824" y="6370" width="70" height="70">
+   <properties>
+    <property name="color" value="g"/>
+   </properties>
+  </object>
+  <object name="collectable-block" x="560" y="6790" width="70" height="70">
+   <properties>
+    <property name="color" value="b"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="player" width="100" height="100">
+  <object name="player" x="140" y="6790" width="70" height="70"/>
+ </objectgroup>
+ <objectgroup name="collision" width="100" height="100">
+  <object x="0" y="7056" width="936" height="72"/>
+  <object x="980" y="6720" width="210" height="70"/>
+  <object x="630" y="6652" width="144" height="72"/>
+  <object x="1260" y="6582" width="350" height="70"/>
+  <object x="1680" y="6442" width="288" height="72"/>
+  <object x="1890" y="5880" width="72" height="576"/>
+  <object x="0" y="6580" width="490" height="70"/>
+  <object x="210" y="6440" width="216" height="72"/>
+  <object x="490" y="6370" width="216" height="72"/>
+  <object x="770" y="6300" width="216" height="72"/>
+  <object x="1050" y="6230" width="216" height="72"/>
+  <object x="1330" y="6090" width="280" height="70"/>
+  <object x="1050" y="5950" width="216" height="72"/>
+  <object x="770" y="5880" width="210" height="70"/>
+  <object x="490" y="5740" width="210" height="70"/>
+  <object x="210" y="5600" width="210" height="70"/>
+  <object x="560" y="5530" width="1152" height="72"/>
+  <object x="1680" y="5530" width="280" height="70"/>
+  <object x="1890" y="5600" width="72" height="288"/>
+  <object x="0" y="6860" width="910" height="70"/>
+ </objectgroup>
+ <objectgroup name="enemies" width="100" height="100">
+  <object name="single-fire-enemy" x="280" y="6230" width="72" height="72"/>
+  <object name="four-fire-enemy" x="560" y="6160" width="72" height="72"/>
+ </objectgroup>
+</map>

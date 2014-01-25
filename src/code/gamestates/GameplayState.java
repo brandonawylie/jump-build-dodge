@@ -41,26 +41,15 @@ public class GameplayState extends BasicGameState{
 	 * This method initiates the GameState, creating the map and initializing all the objects
 	 *
 	 */
-	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {	
 		//initialize the viewport & associated ratios
 		VIEWPORT_RATIO_X = PlatformerGame.WIDTH/VIEWPORT_WIDTH;
 		VIEWPORT_RATIO_Y = PlatformerGame.HEIGHT/VIEWPORT_HEIGHT;
-		//Initialize the player, the x/y coordinates will be set via map.loadMap but defaults to the given 100, 100
-//		Texture t = null;
-//		try {
-//			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/player.png"));
-//		} catch (IOException e1) {	}
 
 		//Initialize the map, to be loaded in the next line
 		map = new Map();
-
-		//grab the map
 		try {
-			//System.out.println(getClass().getClassLoader().getResource("./res/level_1_1.map").getPath());
 			map.loadMap(getClass().getClassLoader().getResource("assets/level3.tmx").getPath());
-			//player.x = map.playerX;
-			//player.y = map.playerY;
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -68,13 +57,6 @@ public class GameplayState extends BasicGameState{
 		player.setX(map.playerX);
 		player.setY(map.playerY);
 
-//		//initialize the hud
-//		try {
-//			t = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/hud-bottom.png"));
-//		} catch (IOException e) {}
-//		Image i = new Image(t);
-//		float scaleX = i.getWidth()/PlatformerGame.WIDTH;
-//		float scaleY = i.getHeight()/PlatformerGame.HEIGHT;
 		hud = new HUD();
 
 		player.addObserver(hud);
@@ -87,12 +69,9 @@ public class GameplayState extends BasicGameState{
 	 *
 	 */
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		//render the player
-		//render the map and all associated objects
 		map.draw(g, VIEWPORT_X, VIEWPORT_Y);
 		player.draw(g, VIEWPORT_X, VIEWPORT_Y);
-		hud.draw(g);
-		
+		hud.draw(g);		
 	}
 
 	/**
@@ -115,16 +94,14 @@ public class GameplayState extends BasicGameState{
 		//adjust the vieaaaaaaort to center around the player. everything will obey this shift.
 		VIEWPORT_X = (int) (player.getX() - PlatformerGame.WIDTH/2);
 		VIEWPORT_Y = (int) (player.getY() - PlatformerGame.HEIGHT/2);
-//		if(VIEWPORT_X < 0)
-//			VIEWPORT_X = 0;
-//		if(VIEWPORT_Y < 0)
-//			VIEWPORT_Y = 0;
+		if(VIEWPORT_X < 0)
+			VIEWPORT_X = 0;
+		if(VIEWPORT_Y < 0)
+			VIEWPORT_Y = 0;
 
 		//translate click events with the viewport coordinates
 		int x = gc.getInput().getMouseX() + VIEWPORT_X;
 		int y = gc.getInput().getMouseY() + VIEWPORT_Y;
-//		int tx = gc.getInput().getMouseX() - VIEWPORT_X;
-//		int ty = gc.getInput().getMouseY() - VIEWPORT_Y;
 
 		//check for input
 		//up
